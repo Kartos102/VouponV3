@@ -1,0 +1,169 @@
+﻿@using  Voupon.Merchant.WebApp.Services.SignUp.Commands.Create;
+@{
+    ViewData["Title"] = "Home Page";
+}
+@using  Voupon.Merchant.WebApp.Services.SignUp.Page
+@model VerifyTACPageViewModel
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration configuration
+
+@if (Model.UserId.HasValue)
+{
+    <div class="alert alert-warning">This account is already verified. Please login to continue</div>
+    <a href="/login">Login now</a>
+}
+else
+{
+    if (Model.TACVerifiedAt.HasValue)
+    {
+        <div class="row justify-content-center" style="padding-top:10vh">
+            <div class="col-lg-6 alert alert-warning" style="margin:10px;">This account is already verified. Please setup your password to continue.</div>
+            <div class="container col-lg-6 d-flex align-items-center justify-content-center" style="margin:10px;">
+                <a href="/signup/setup-password/@Model.Id">Continue to Password Setup</a>
+            </div>
+        </div>    
+}
+    else
+    {
+        <html>
+        <body>
+            <div class="row no-gutter">
+                <!-- The image half -->
+                <div class="col-md-6 d-none d-md-flex bg-image">
+                    <div class="description">
+                        <p>
+                            Expose your business to 17 million Malaysian online media consumers from our combined network of online publishers at no upfront cost.
+                        </p>
+                    </div>
+                    <div class="media-partners">
+                        <div>
+                            <img src="~/Images/Media Prima.png" />
+                        </div>
+                        <div>
+                            <img src="~/Images/astro.png" />
+                        </div>
+                        <div>
+                            <img src="~/Images/star-group-logo.png" />
+                        </div>
+                        <div>
+                            <img src="~/Images/sinchew-group-logo.png" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 bg-light">
+                    <div class="login d-flex align-items-center">
+                        <div class="container">
+                            <div class="row container-row">
+                                <div class="merchant-register-back"><i class="fas fa-angle-left"></i>&nbsp;&nbsp;<strong>Back</strong></div>
+                                <div class="col-lg-12 form-container">
+                                    <h1>Verification​</h1>
+                                    <p>
+                                        TAC has been send to *** *** @Model.MobileNumber.Substring(Model.MobileNumber.Length - 4)
+                                    </p>
+                                    <br />
+                                    <form id="verifyTACForm" class="selected" name="verifyTACForm" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input hidden asp-for="Id" class="form-control" />
+                                        <div class="form-group">
+                                            <input asp-for="TAC" class="form-control" placeholder="Enter TAC" />
+                                            <span asp-validation-for="TAC" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="row dont-have-account">
+                                            <div class="col-6">
+                                                <p id="btnRequestNewTAC">
+                                                    Didn't receive your TAC?
+                                                </p>
+                                            </div>
+                                            <div class="col-6">
+                                                <button type="submit" id="btnVerify" class="btn btn-primary btn-block text-uppercase mb-2 rounded-pill shadow-sm">Verify</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </body>
+    </html>
+    @*<form id="verifyTACForm" name="verifyTACForm">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label asp-for="BusinessName" class="control-label"><strong>@Model.BusinessName</strong></label>
+            </div>
+            <div class="form-group">
+                <label asp-for="TAC" class="control-label"></label>
+                <input asp-for="TAC" class="form-control" />
+                <span asp-validation-for="TAC" class="text-danger"></span>
+            </div>
+            <input hidden asp-for="Id" class="form-control" />
+
+            <button type="button" id="btnRequestNewTAC">Request New TAC</button>
+            <button type="submit" id="btnVerify">Verify</button>
+        </form>*@
+}
+}
+
+<script src="~/lib/plugins/toastr/toastr.min.js"></script>
+<link rel="stylesheet" href="~/lib/plugins/toastr/toastr.min.css" />
+
+@section scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+        toastr.options.fadeOut = 3000;
+        $(function () {
+            $(".merchant-register-back").click(function (e) {
+                 window.history.back()
+            });
+            $("#btnRequestNewTAC").click(function (e) {
+                e.preventDefault();
+                $("#btnRequestNewTAC").prop("disabled", true).text("Requesting...");
+                $.post("/signup/verify-tac/regenerate", $("#verifyTACForm").serialize())
+                    .done(function (response) {
+                        if (response.successful) {
+                            toastr.success('Successfully requested new TAC');
+                            $("#btnRequestNewTAC").prop("disabled", false).text("Didn't receive your TAC?");
+                        }
+                        else {
+                            toastr.error(response.message);
+                        }
+                    })
+                    .fail(function (response) {
+                        if (response.status == 400) {
+                            toastr.info(response.responseJSON.message);
+                        }
+                        $("#btnRequestNewTAC").prop("disabled", false).text("Didn't receive your TAC?");
+                    });
+            });
+
+            $("#btnVerify").click(function (e) {
+                e.preventDefault();
+                if ($("#verifyTACForm").valid()) {
+                    $("#btnVerify").prop("disabled", true).text("Verifying..");
+
+                    $.post("/signup/verify-tac/validate", $("#verifyTACForm").serialize())
+                        .done(function (response) {
+                            if (response.successful) {
+                                $("#btnVerify").prop("disabled", true).text("Redirecting...");
+                                location.href = "/signup/setup-password/" + "@Model.Id";
+                            }
+                            else {
+                                toastr.success(response.message);
+                            }
+                        })
+                        .fail(function (response) {
+                            if (response.status == 400) {
+                                toastr.error(response.responseJSON.message);
+                            }
+                            $("#btnVerify").prop("disabled", false).text("Verify");
+                        });
+                }
+            });
+        })
+    </script>
+}

@@ -1,0 +1,324 @@
+﻿@using System.Security.Claims
+@{
+    var identity = User.Identity as ClaimsIdentity;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Vodus Merchant</title>
+    <meta property="og:title" content="Vodus Merchant">
+    <meta property="og:type" content="Website">
+    <meta property="og:description" content="Helping businesses gain more Exposure, Sales and Insights at no upfront cost.">
+    <meta property="og:url" content="https://vodus.com">
+    <meta property="og:image" content="https://merchant.vodus.my/Images/Vodus%20V3%20Merchant%20Logo%20Small.svg">
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/lib/dashboard-assets/css/style.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/lib/dashboard-assets/fonts/material-design-iconic-font/css/materialdesignicons.min.css">
+    <link rel="shortcut icon" type="image/svg" href="~/Images/Vodus V3 Logo Favicon.svg">
+    <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/glacial-indifference" type="text/css" />
+
+    <link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/v5.15.3/css/pro.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="~/lib/plugins/toastr/toastr.min.css" />
+
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!-- jquery 3.3.1 -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/plugins/toastr/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js" integrity="sha256-0rguYS0qgS6L4qVzANq4kjxPLtvnp5nn2nB5G1lWRv4=" crossorigin="anonymous"></script>
+    <!-- bootstap bundle js -->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- slimscroll js -->
+    <script src="~/lib/dashboard-assets/slimscroll/jquery.slimscroll.min.js"></script>
+    <!-- main js -->
+    <script src="~/lib/dashboard-assets/js/main-js.min.js"></script>
+    <script src="~/lib/moment/js/moment-with-locales.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.21/datatables.min.css" />
+
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.21/datatables.min.js"></script>
+    <script src="~/lib/dashboard-assets/multi-select/js/jquery.multi-select.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.2.0/lazysizes.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <!-- ============================================================== -->
+    <!-- navbar -->
+    <!-- ============================================================== -->
+    <div class="dashboard-header">
+        <nav class="navbar navbar-expand-lg bg-white fixed-top">
+            <button type="button" id="sidebarCollapseOpen" class="navbar-btn in-header">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <a href="/App/Dashboard">
+                <img src="~/Images/Vodus V3 Merchant Logo Small.svg" class="img-responsive">
+            </a>
+            <div class="collapse navbar-collapse " id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto navbar-right-top">
+                    <li class="nav-item dropdown nav-user">
+                        <a class="nav-link nav-user-img" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><div class="std-font-1" aria-controls="user-options">@(identity.Name)</div></a>
+                        <div class="dropdown-menu dropdown-menu-right nav-user-dropdown" aria-labelledby="navbarDropdownMenuLink2" id="user-options">
+                            <a class="dropdown-item" href="~/App/EditProfile"><i class="fas fa-cog mr-2" id="EditProfile"></i> Edit Profile</a>
+                            <a class="dropdown-item" href="~/Logout"><i class="fas fa-power-off mr-2" id="SignOut"></i> Sign out</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end navbar -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- left sidebar -->
+    <!-- ============================================================== -->
+    <div class="nav-left-sidebar sidebar-dark" id="sidebar">
+        <div class="menu-list">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <a class="page-title img-container row" href="@Url.Action("Index","Dashboard")">
+                    <img src="~/Images/Vodus V3 Merchant Logo Small.svg" class="image">
+                    <h2>Merchant</h2>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" onclick="Collapse(this, 'navbarNav')">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav flex-column">
+                        <li class="nav-divider flex-center">
+                            <a href="#">
+                                <img class="img-responsive logo-img">
+                            </a>
+                            <p class="merchant-address"></p>
+                        </li>
+                        <li class="nav-item "> <a href="@Url.Action("Index","Dashboard")" class="nav-link"><i class="far fa-tv"></i>Dashboard</a></li>
+                        <li class="nav-item "> <a href="@Url.Action("Index","Chat")" class="nav-link"><i class="fas fa-comment-alt-dots"></i>Chat</a></li>
+                        @if (User.IsInRole("Merchant"))
+                        {
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#navSales" aria-controls="navSales" id="navSalesControl"><i class="fa fa-tags"></i>Sales</a>
+                            <div id="navSales" class="submenu collapse" style="background-color:transparent">
+                                <ul class="nav flex-column">
+
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="@Url.Action("PendingAction","Sales")">Pending Action</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="@Url.Action("Search","Sales")">Completed Sales</a>
+                                    </li>
+                                    <li class="nav-item d-none">
+                                        <a class="nav-link" href="@Url.Action("Index", "Sales")">Sales Summary</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="@Url.Action("Refunds","Sales")">Refunded Orders</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        }
+                        @if (User.IsInRole("Merchant"))
+                        {
+
+                        <li><a href="@Url.Action("Index", "Products")" class="nav-link"><i class="far fa-boxes-alt"></i> My Products</a></li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-4" aria-controls="submenu-4"><i class="fas fa-briefcase"></i>My Business</a>
+                            <div id="submenu-4" class="submenu collapse" style="background-color:transparent">
+                                <ul class="nav flex-column">
+                                    <li class="nav-item " style="display:-webkit-inline-box"> <a href="@Url.Action("Index", "Business")" class="nav-link"> Business Info</a><span class="badge badge-primary badge-pill" style="display:none;top: 7px;left:30%;position: relative;">3</span></li>
+                                    <li class="nav-item "> <a href="@Url.Action("Index", "Outlets")" class="nav-link"> Outlets</a></li>
+
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item d-none"> <a href="@Url.Action("Index", "Users")" class="nav-link"><i class="fas fa-users"></i>Users </a> </li>
+                        }
+                        @if (identity.Name.ToLower() == "merchant@vodus.my")
+                        {
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("GifteeVouchers","Sales")"><i class="fas fa-ticket-alt"></i>Giftee Vouchers</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("GifteeProducts","Sales")"><i class="fad fa-box"></i>Giftee Products</a>
+                        </li>
+                        }
+                        <li class="nav-item">
+                            <a class="nav-link" target="_blank" href="/resources"><i class="fas fa-book"></i>Learning Centre</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-5" aria-controls="submenu-5"><i class="fas fa-headphones"></i>Support</a>
+                            <div id="submenu-5" class="submenu collapse" style="background-color:transparent">
+                                <ul class="nav flex-column">
+                                    <li class="nav-item">
+                                        <a class="nav-link" target="_blank" href="/TermsAndConditions">FAQ</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="@Url.Action("ContactUs","Support")">Contact Us</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end left sidebar -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- wrapper  -->
+    <!-- ============================================================== -->
+
+    <div class="dashboard-wrapper">
+        @RenderBody()
+
+        <div class="footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                        Copyright © 2022 Vodus Research Sdn Bhd. All rights reserved.
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <div class="text-md-right footer-links d-none d-sm-block">
+                            <a href="/about">About</a>
+
+                            <a href="/contact">Contact Us</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+    <script>
+        function Collapse(iElement, elementId) {
+            var targetElement = $("#" + elementId);
+            if ($(iElement).hasClass("small-navbar")) {
+                if (!$(targetElement).hasClass("open")) {
+                    $(targetElement).toggleClass("open")
+                }
+                $("#sidebarCollapse").click();
+            }
+            else {
+                $(targetElement).toggleClass("show").toggleClass("open");
+                if ($(iElement).attr("aria-expanded") === "false") {
+                    $(iElement).attr("aria-expanded", "true");
+                } else {
+                    $(iElement).attr("aria-expanded", "false");
+                }
+            }
+        }
+
+        $(document).ready(function () {
+            var pathname = window.location.pathname.toLowerCase();
+            $("#navbarNav").find("a").each(function () {
+                if ($(this).attr("href").toLowerCase() == pathname) {
+                    $(this).addClass("active");
+                }
+
+            });
+        });
+
+        //Lazyload background images
+        document.addEventListener("DOMContentLoaded", function () {
+            var lazyloadImages;
+
+            if ("IntersectionObserver" in window) {
+
+                lazyloadImages = document.querySelectorAll(".lazy");
+                console.log(lazyloadImages);
+                var imageObserver = new IntersectionObserver(function (entries, observer) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            var image = entry.target;
+                            image.classList.remove("lazy");
+                            imageObserver.unobserve(image);
+                        }
+                    });
+                });
+
+                lazyloadImages.forEach(function (image) {
+                    imageObserver.observe(image);
+                });
+            } else {
+                var lazyloadThrottleTimeout;
+                lazyloadImages = document.querySelectorAll(".lazy");
+
+                function lazyload() {
+                    if (lazyloadThrottleTimeout) {
+                        clearTimeout(lazyloadThrottleTimeout);
+                    }
+
+                    lazyloadThrottleTimeout = setTimeout(function () {
+                        var scrollTop = window.pageYOffset;
+                        lazyloadImages.forEach(function (img) {
+                            if (img.offsetTop < (window.innerHeight + scrollTop)) {
+                                img.src = img.dataset.src;
+                                img.classList.remove('lazy');
+                            }
+                        });
+                        if (lazyloadImages.length == 0) {
+                            document.removeEventListener("scroll", lazyload);
+                            window.removeEventListener("resize", lazyload);
+                            window.removeEventListener("orientationChange", lazyload);
+                        }
+                    }, 20);
+                }
+
+                document.addEventListener("scroll", lazyload);
+                window.addEventListener("resize", lazyload);
+                window.addEventListener("orientationChange", lazyload);
+            }
+        })
+
+
+        function fingerprint() {
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext('2d');
+            var txt = 'i9asdm..$#po((^ddd!~cz';
+            ctx.textBaseline = "top";
+            ctx.font = "16px 'Arial'";
+            ctx.textBaseline = "alphabetic";
+            ctx.rotate(.05);
+            ctx.fillStyle = "#f60";
+            ctx.fillRect(125, 1, 62, 20);
+            ctx.fillStyle = "#069";
+            ctx.fillText(txt, 2, 15);
+            ctx.fillStyle = "rgba(102, 200, 0, 0.7)";
+            ctx.fillText(txt, 4, 17);
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = "blue";
+            ctx.fillRect(-20, 10, 234, 5);
+            var strng = canvas.toDataURL();
+
+            var hash = 0;
+            if (strng.length == 0) return;
+            for (i = 0; i < strng.length; i++) {
+                char = strng.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            console.log(hash);
+            //return hash;
+        }
+
+        fingerprint();
+    </script>
+
+
+
+</body>
+
+</html>

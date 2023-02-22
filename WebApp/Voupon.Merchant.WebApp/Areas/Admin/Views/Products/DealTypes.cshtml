@@ -1,0 +1,217 @@
+﻿@{
+    ViewData["Title"] = "Deal Types";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@model List<Voupon.Merchant.WebApp.Common.Services.DealTypes.Models.DealTypeModel>
+
+<div class="dashboard-main-wrapper">
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content ">
+            <h1>Deal Types</h1>
+            <div class="row deal-types-table-card col-lg-12 col-md-12" style="margin-top:45px;display:none">
+                <div class="col-12 row search-row">
+                    <div class="input-group col-md-10 col-xl-10 col-lg-10 col-sm-12 col-12">
+                        <input class="form-control py-2 border-right-0 border" type="search" value="" placeholder="search..." id="user-search-input">
+                        <span class="input-group-append">
+                            <button class="btn btn-outline-secondary border-left-0 border" type="button" id="user-search-btn">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+                @{
+                    int index = 1;
+                    foreach (var item in Model.OrderBy(x => x.CreatedAt))
+                    {
+                        if (index > 1)
+                        {
+                            <hr />
+                        }
+                        <div class="row card-table-row card-table-tamplate">
+                            <div class="mobile-card-row row col-12 col-md-8 col-sm-12">
+                                <div class="row col-12">
+                                    <div class="col-6 card-title-row">
+                                        Id:
+                                    </div>
+                                    <div class="col-6 card-record-row">
+                                        @item.Id
+                                    </div>
+                                </div>
+                                <div class="row col-12">
+                                    <div class="col-6 card-title-row">
+                                        Name:
+                                    </div>
+                                    <div class="col-6 card-record-row deal-type-name">
+                                        @item.Name
+                                    </div>
+                                </div>
+
+                                <div class="row col-12">
+                                    <div class="col-6 card-title-row">
+                                        Status:
+                                    </div>
+                                    <div class="col-6 card-record-row">
+                                        @{
+                                            if (item.IsActivated)
+                                            {
+                                                <div class="switch-button switch-button-success">
+                                                    <input class="activatedStatus" type="checkbox" checked="" name="switch_@item.Id" data-id="@item.Id" id="switch_@item.Id"><span>
+                                                        <label for="switch_@item.Id"></label>
+                                                    </span>
+                                                </div>
+
+                                            }
+                                            else
+                                            {
+                                                <div class="switch-button switch-button-success">
+                                                    <input class="activatedStatus" type="checkbox" name="switch_@item.Id" data-id="@item.Id" id="switch_@item.Id"><span>
+                                                        <label for="switch_@item.Id"></label>
+                                                    </span>
+                                                </div>
+
+                                            }
+
+                                        }
+                                    </div>
+                                </div>
+
+
+                                <div class="row col-12">
+                                    <div class="col-6 card-title-row">
+                                        Created At:
+                                    </div>
+                                    <div class="col-6 card-record-row">
+                                        @item.CreatedAt.ToString("dd/MM/yyyy")
+                                    </div>
+                                </div>
+                                <div class="row col-12">
+                                    <div class="col-6 card-title-row">
+                                        Action:
+                                    </div>
+                                    <div class="col-6 card-record-row user-action">
+                                        <a class="btn-edit" data-id="@item.Id" href="javascript:return false;">Edit</a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        index++;
+                    }
+                }
+            </div>
+            <div class="table-responsive-lg deal-types-table" style="display:none">
+                <table id="dtDealTypes" class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col" style="text-align: center;">Id</th>
+                            <th scope="col" style="text-align: center;">Name</th>
+                            <th scope="col" style="text-align: center;">Date Created</th>
+                            <th scope="col" style="text-align: center;">Created By</th>
+                            <th scope="col" style="text-align: center;">IsActivated</th>
+                            <th scope="col" style="text-align: center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <th scope="row">@item.Id</th>
+                                    <td>@item.Name</td>
+                                    <td>@item.CreatedAt.ToString("dd/MM/yyyy")</td>
+                                    <td>@item.CreatedByUserId</td>
+                                    <td>
+                                        @{
+                                            if (item.IsActivated)
+                                            {
+                                                <div class="switch-button switch-button-success">
+                                                    <input class="publishStatus" type="checkbox" checked="" name="switch_@item.Id" data-id="@item.Id" id="switch_@item.Id"><span>
+                                                        <label for="switch_@item.Id"></label>
+                                                    </span>
+                                                </div>
+
+                                            }
+                                            else
+                                            {
+                                                <div class="switch-button switch-button-success">
+                                                    <input class="publishStatus" type="checkbox" name="switch_@item.Id" data-id="@item.Id" id="switch_@item.Id"><span>
+                                                        <label for="switch_@item.Id"></label>
+                                                    </span>
+                                                </div>
+
+                                            }
+
+                                        }
+                                    </td>
+                                    <td><a class="btn-edit" data-id="@item.Id" href="javascript:return false;">Edit</a></td>
+                                </tr>
+
+                            }
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+        $(document).ready(function () {
+            if ($(window).width() < 580) {
+                $(".deal-types-table-card").show();
+                $(".deal-types-table").remove();
+            }
+            else {
+                $(".deal-types-table").show();
+                $(".deal-types-table-card").remove();
+            }
+
+            $("#user-search-btn").on("click", function () {
+                var execludedList = [];
+                var value = $("#user-search-input").val().toLowerCase();
+                if (value == "") {
+                    $(".deal-types-table-card").children().each(function () {
+                        $(this).show();
+                    })
+                    return false;
+                }
+                $(".card-table-tamplate").find(".deal-type-name").filter(function () {
+                    var textToFilter = $(this).text() /*+ " " + $(this).siblings().eq(1).text()*/ /*+ " " + $(this).siblings().eq(1).text()*/;
+                    if (textToFilter.toLowerCase().indexOf(value) == -1) {
+                        $(this).parent().parent().parent().hide();
+                    }
+                    else {
+                        $(this).parent().parent().parent().show();
+                    }
+                });
+            });
+
+            $("#user-search-input").on("search", function () {
+                var execludedList = [];
+                var value = $("#user-search-input").val().toLowerCase();
+                if (value == "") {
+                    $(".deal-types-table-card").children().each(function () {
+                        $(this).show();
+                    })
+                    return false;
+                }
+                $(".card-table-tamplate").find(".deal-type-name").filter(function () {
+                    var textToFilter = $(this).text() /*+ " " + $(this).siblings().eq(1).text()*/ /*+ " " + $(this).siblings().eq(1).text()*/;
+                    if (textToFilter.toLowerCase().indexOf(value) == -1) {
+                        $(this).parent().parent().parent().hide();
+                    }
+                    else {
+                        $(this).parent().parent().parent().show();
+                    }
+                });
+            });
+            $('#dtDealTypes').DataTable();
+        });
+
+    </script>
+}
+
+

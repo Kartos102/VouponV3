@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model Voupon.Rewards.WebApp.Services.Checkout.Pages.PaymentPage.OrderViewModel
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <p class="alert alert-warning" style="margin:100px auto;"><span style="font-size:18px;">Something is not right. Please try again later</span></p>
+    <p class="alert alert-warning" style="margin:100px auto;display:none"><span style="font-size:18px;">@Model.ErrorMessage</span></p>
+}
+else
+{
+    @if (Model.OrderStatus == 2)
+    {
+        <div style="width:400px;margin:100px auto;text-align:center;">
+            <p class="alert alert-success"><span style="font-size:18px;">Order have been created and VPoints have been deducted. </span></p>
+            <br /><a href="/order/history" class="btn btn-primary">View My Purchases</a> <a href="/" class="btn btn-primary">Back to Home Page</a>
+        </div>
+    }
+    else
+    {
+        <div class="checkout-complete" style="width:400px;margin:100px auto;">
+            <p class="alert alert-success">Redirecting to payment gateway... Please wait</p>
+            <a href="@Model.PaymentUrl" id="paymentUrl" style="visibility:hidden;">Payment</a>
+        </div>
+    }
+}
+
+
+
+
+@section scripts
+{
+    <script>
+        $(function () {
+            if ($("#paymentUrl").length > 0) {
+                location.href = '@Model.PaymentUrl';
+            }
+
+        });
+    </script>
+
+
+}

@@ -1,0 +1,28 @@
+﻿<html>
+
+<body>
+    <h1>Azure SignalR Serverless Sample</h1>
+    <div id="messages"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.0/signalr.min.js"></script>
+    <script>
+        let messages = document.querySelector('#messages');
+        const apiBaseUrl = window.location.origin;
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl('http://localhost:7071' + '/api'
+                ,
+                {
+                    headers: { 'x-ms-client-principal-id': 'osa@vodus.my' }
+                }
+            )
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+        connection.on('newMessage', (message) => {
+            document.getElementById("messages").innerHTML = message;
+        });
+
+        connection.start()
+            .catch(console.error);
+    </script>
+</body>
+
+</html>

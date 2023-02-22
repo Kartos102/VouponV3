@@ -1,0 +1,17 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div style="width:500px;margin:100px auto;text-align:center">
+    <p><strong>Logging in...Please wait</strong></p>
+</div>
+<script>
+    $(function () {
+        var queryUrl = window.location.href.replace("identity/google#", "identity/google?");
+        var token = getParameterByName("id_token", queryUrl);
+        console.log(token);
+        login('', '', "google", token);
+
+    });
+</script>

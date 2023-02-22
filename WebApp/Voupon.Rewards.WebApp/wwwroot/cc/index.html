@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Vodus | Onload Example</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.1.1/css/all.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript">function getParameterByName(name, url = window.location.href) {
+             name = name.replace(/[\[\]]/g, '\\$&');
+             var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                 results = regex.exec(url);
+             if (!results) return null;
+             if (!results[2]) return '';
+             return decodeURIComponent(results[2].replace(/\+/g, ' '));
+         }
+
+         function yourFunctionToCall() {
+             //	Vodus get question API
+             vodus.getQuestion(function (error, result) {
+                 $("#token").html(vodus.getToken());
+                 if (error) {
+                     console.log(result);
+                     return;
+                 }
+             });
+         }
+
+         var language = getParameterByName('lang');
+
+         var url = (window.location.href.indexOf('voupon-uat') ? "https://vodus-api-uat.azurewebsites.net/cc/scripts/vodus-uat-test.js" : "https://vodus-api.azurewebsites.net/cc/scripts/vodus-live.js");
+
+
+         (function (v, o, d, u, s, a, m) {
+             v['VodusObject'] = s; v[s] = v[s] || function () { (v[s].q = v[s].q || []).push(arguments) }, v[s].l = 1 * new Date();
+             v['vodus']['partner_code'] = "vodus-test";
+             v['vodus']['language'] = (language ? language : 'ms');
+             v['vodus']['interval'] = 0;
+             v['vodus']['ccType'] = "1";
+             v['vodus']['chainQuota'] = 999;
+             v['vodus']['ctc-interval'] = 1;
+             v['vodus']['ctc-timer'] = 0;
+             v['vodus']['cc-scroll-trigger'] = 0;
+             v['vodus']['banner-mode'] = 0;
+             v['vodus']['Interval-banner-mode'] = 0;
+             v['vodus']['minSessionCount'] = 0;
+             v['vodus']['demographic-interval'] = 0;
+             v['vodus']['userCountryCode'] = "MY";
+             v['vodus']['noDemo'] = 0;
+             a = o.createElement(d), m = o.getElementsByTagName(d)[0]; a.async = 1; a.src = u; m.parentNode.insertBefore(a, m)
+         })(window, document, 'script', url, 'vodus');
+         vodus("init", "yourFunctionToCall");</script>
+</head>
+<body>
+</body>
+</html>

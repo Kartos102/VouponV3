@@ -1,0 +1,1864 @@
+﻿@using System.Security.Claims
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var identity = User.Identity as ClaimsIdentity;
+
+}
+<style>
+    #txtOrderIdInShippingInfo {
+        width: 50%;
+    }
+
+    .shipping-info-txt-order-id-Update-div {
+        display: flex;
+        margin: 20px;
+    }
+
+        .shipping-info-txt-order-id-Update-div .btn-update-external-order-status-shipping-info {
+            margin: auto;
+            min-width: auto;
+        }
+</style>
+<div class="dashboard-main-wrapper pending-action">
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content no-padding">
+            <div class="row">
+                <div class="col-xl-7 col-lg-6 col-md-6 col-12 mt-0 mb-0 section-block">
+                    <h3 class="page-header">Aggregator Orders</h3>
+                    <p class="badge badge-warning mt-2 mb-2">Orders that requires your attention</p>
+                    <div class="m-auto" id="pageSise"><label>Show <select id="selectPageSise" name="pageSise" aria-controls="pageSise" class=""><option value="10">10</option><option value="25">25</option><option value="50">50</option><option selected="selected" value="100">100</option></select> entries</label></div>
+                </div>
+                <div class="col-xl-5 col-lg-6 col-md-6 col-12 row search-row ">
+                    <div class="input-group col-12 no-padding">
+                        <input class="form-control py-2 border-right-0 border" type="search" value="" placeholder="Search..." id="product-search-input">
+                        <span class="input-group-append">
+                            <button class="btn btn-outline-secondary border-left-0 border" type="button" id="product-search-btn">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-12 row">
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-6 row mt-2">
+                        <span class="col-form-label pr-2">Date Range: </span>
+                        <input type="date" id="salesAggregatorFrom" value="2017-06-01">
+                        <span class="px-2 align-items-center d-flex">to</span>
+                        <input type="date" id="salesAggregatorTo" value="2017-06-01">
+                        <button class="ml-2 btn-primary" id="product-get-btn">Search</button>
+                    </div>
+                    <span>
+                        Completed:
+                    </span>
+                    <div class="switch-button order-status-toggle">
+                        <input type="checkbox" name="orderStatus" id="orderStatus"><span>
+                            <label for="orderStatus"></label>
+                        </span>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-6 row align-items-center mt-2" style="font-size:14px;">
+                        <div class="mr-2 row align-items-center" id="productWebsite">
+                            <span class="mr-2 mb-0">Product website</span>
+                            <select id="selectWebsite" name="productWebsite" aria-controls="productWebsite" class="">
+                                <option value="0" selected="selected">All</option>
+                                <option value="1">Shopee</option>
+                                <option value="2">Lazada</option>
+                            </select>
+                        </div>
+                        <form action="/Admin/Sales/Download-excel/" Method="POST">
+                            <input type="hidden" name="searchValue" id="orderSearch" value="" />
+                            <input type="hidden" name="websiteTypeId" id="orderWebsiteTypeId" value="0" />
+                            <input type="hidden" name="from" id="orderFrom" value="2/5/2020" />
+                            <input type="hidden" name="to" id="orderTo" value="9/9/2021" />
+                            <button class="btn-primary" type="submit">Download Excel</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!--#region .............................................  PENDING SALES  ............................................. -->
+
+            <div class="row products-card-row col-lg-12 col-md-12">
+                <div class="row products-table-card col-lg-12 col-md-12 mt-2">
+                    <div class="no-transaction-outlet col-12 px-0">
+                        <div class="align-center mt-3" id="noSales">
+                            No transaction found
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="display:none">
+                <div class="row shop-temlate col-12">
+                    <h5 class="merchant-name row mb-0">
+                    </h5>
+                </div>
+            </div>
+
+            <div style="display:none">
+                <div class="row card-table-row card-table-template-outlet">
+                    <div class="mobile-card-row row col-12">
+                        <div class="row col-xl-3 col-lg-3 col-md-3 col-12 no-padding">
+                            <div class="row col-xl-5 col-lg-12 col-md-12 col-4 no-padding mb-2 mb-xl-0">
+                                <div class="row col-12 no-padding">
+                                    <div class="col-12 px-0 card-record-row purchased-date-outlet pl-1">
+                                        17/09/2020
+                                    </div>
+                                    <div class="col-12 px-0 card-title-row pl-1">
+                                        Order Date
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row col-xl-7 col-lg-12 col-md-12 col-8 no-padding">
+                                <div class="row col-12 no-padding">
+                                    <div class="col-12 card-record-row order-id ellipsis" style="display:none;">
+                                        1
+                                    </div>
+                                    <div class="col-12 card-record-row order-short-id ellipsis">
+                                        1
+                                    </div>
+                                    <div class="col-12 card-title-row ">
+                                        Order ID
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row col-xl-9 col-lg-9 col-md-9 col-12 no-padding">
+                            <div class="row col-3 col-md-3 col-lg-3 col-xl-3 no-padding">
+                                <div class="row col-xl-6 col-12 mb-2 mb-xl-0 no-padding">
+                                    <div class="col-12 px-0 card-record-row card-title-name-outlet product-title ellipsis-3">
+                                        Test
+                                    </div>
+                                    <div class="col-12 px-0 card-title-row ellipsis">
+                                        Product Name
+                                    </div>
+                                </div>
+                                <div class="row col-xl-6 col-12 no-padding">
+                                    <div class="col-12 card-record-row product-email ellipsis pr-0 pl-1">
+                                        5.00
+                                    </div>
+                                    <div class="col-12 card-title-row pl-1">
+                                        Email
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row col-3 col-md-3 col-lg-3 col-xl-3 no-padding">
+                                <div class="row col-xl-7 col-12 mb-2 mb-xl-0 no-padding" style="background-color:#eee;padding:4px;">
+                                    <div class="col-12 card-record-row paid pr-0">
+                                        RM 5.00
+                                    </div>
+                                    <div class="col-12 card-title-row">
+                                        Paid To Revenue Monster
+                                    </div>
+                                </div>
+                                <div class="row col-xl-7 col-12 mt-3 mb-2 mb-xl-0 no-padding">
+                                    <div class="col-12 card-record-row revenue pr-0">
+                                        RM 5.00
+                                    </div>
+                                    <div class="col-12 card-title-row">
+                                        Total Cost
+                                    </div>
+                                </div>
+                                <div class="row col-xl-5 col-12 no-padding">
+                                    <div class="col-12 card-record-row order-status">
+                                        5.00
+                                    </div>
+                                    <div class="col-12 card-title-row">
+                                        Status
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row col-3 col-md-3 col-lg-3 col-xl-3 no-padding">
+                                <div class="row col-xl-7 col-12 mb-2 mb-xl-0 no-padding">
+                                    <div class="col-12 card-record-row order-last-update-by pr-0">
+                                        kok.hong@vodus.my
+                                    </div>
+                                    <div class="col-12 card-title-row">
+                                        Promo discount
+                                    </div>
+                                </div>
+                                <div class="row col-xl-7 col-12 mt-3 mb-2 mb-xl-0 no-padding order-vpoint-discount-div">
+                                    <div class="col-12 card-record-row order-vpoint-discount">
+                                        5.00
+                                    </div>
+                                    <div class="col-12 card-title-row">
+                                        Vpoint discount
+                                    </div>
+                                </div>
+                                <div class="row col-xl-5 col-12 no-padding">
+                                    <div class="col-12 card-record-row order-last-update px-0">
+                                        17/09/2020
+                                    </div>
+                                    <div class="col-12 card-title-row px-0">
+                                        Last Update
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row col-3 card-record-row order-action action-outlet p-0 justify-content-around">
+                                <div class="action-btn-group">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--#endregion .............................................  PENDING SALES  END  ............................................. -->
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!--#region .............................................  OUTLET  ............................................. -->
+
+    <div class="modal fade modal-list" id="showDetailsModalExternalOrder" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalTitle">Order Item Details</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label for="message-text" class="col-form-label">Last Updated By</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label txtLastUpdatedBy" id="txtLastUpdatedBy"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label for="message-text" class="col-form-label">Last Updated At</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label txtLastUpdatedAt" id="txtLastUpdatedAt"></label>
+                        </div>
+                    </div>
+
+
+                    <div style="border-top: 1px solid #ddd; padding: 10px 0;margin-top: 10px;">
+                        <div class="form-group row">
+                            <div class="col-3">
+                                <label for="message-text" class="col-form-label">Email</label>
+                            </div>
+                            <div class="col-9">
+                                <label type="text" class="col-form-label" id="txtEmailOutlet"></label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+
+                                <label for="message-text" class="col-form-label">Product name</label>
+                            </div>
+                            <div class="col-9">
+                                <label type="text" class="col-form-label" id="txtProductNameOutlet"></label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+
+                                <label for="message-text" class="col-form-label">Variation</label>
+                            </div>
+                            <div class="col-9">
+                                <label type="text" class="col-form-label" id="txtProductVariationText"></label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+
+                                <label for="message-text" class="col-form-label">Purchased Date</label>
+                            </div>
+                            <div class="col-9">
+                                <label type="text" class="col-form-label" id="txtPurchasedDateOutlet"></label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+                                <label for="message-text" class="col-form-label">Quantity</label>
+                            </div>
+                            <div class="col-9">
+                                <label type="text" class="col-form-label txtQuantity" id="txtQuantity"></label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+
+                                <label for="message-text" class="col-form-label">VPoints</label>
+                            </div>
+                            <div class="col-9">
+                                <label type="text" class="col-form-label txtVPointsOutlet" id="txtVPointsOutlet"></label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+
+                                <label for="message-text" class="col-form-label">Price</label>
+                            </div>
+                            <div class="col-9">
+                                <label type="text" class="col-form-label" id="txtPriceOutlet"></label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+                                <label for="message-text" class="col-form-label">SubPrice</label>
+                            </div>
+                            <div class="col-9">
+                                <label type="text" class="col-form-label txtSubTotalPrice" id="txtSubTotalPrice"></label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+
+                                <label for="message-text" class="col-form-label">Shipping Cost</label>
+                            </div>
+                            <div class="col-9">
+                                <label type="text" class="col-form-label" id="txtProductShippingCost"></label>
+                            </div>
+                        </div>
+                        <div class="promo-code-div">
+                            <div class="form-group row">
+                                <div class="col-3">
+
+                                    <label for="message-text" class="col-form-label">Order Promo Code Discount</label>
+                                </div>
+                                <div class="col-9">
+                                    <label type="text" class="col-form-label" id="promoCodeDiscountForOrder"></label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-3">
+
+                                    <label for="message-text" class="col-form-label">Promo Code Name</label>
+                                </div>
+                                <div class="col-9">
+                                    <label type="text" class="col-form-label" id="promoCodeNameForOrder"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+                                <label for="message-text" class="col-form-label">Total Price</label>
+                            </div>
+                            <div class="col-9">
+                                <label type="text" class="col-form-label txtTotalPrice" id="txtTotalPrice"></label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+
+                                <label for="message-text" class="col-form-label">User's full name</label>
+                            </div>
+                            <div class="col-9">
+                                <label type="text" class="col-form-label" id="txtPFullNameOutlet"></label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+
+                                <label for="message-text" class="col-form-label">Phone number</label>
+                            </div>
+                            <div class="col-9">
+                                <label type="text" class="col-form-label" id="txtPhoneNumberOutlet"></label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+
+                                <label for="message-text" class="col-form-label">Address</label>
+                            </div>
+                            <div class="col-9">
+                                <label style="white-space: unset;" type="text" class="col-form-label" id="txtAddressOutlet"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="border-top: 1px solid #ddd; padding: 10px 0;margin-top: 10px;">
+                        <div class="form-group row">
+                            <div class="col-3">
+                                <label for="message-text" class="col-form-label">Admin Account ID</label>
+                            </div>
+                            <div class="col-9">
+                                <label type="text" class="col-form-label txtTotalPrice" id="txtAdminAccountID"></label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+                                <label for="message-text" class="col-form-label">Admin Email ID</label>
+                            </div>
+                            <div class="col-9">
+                                <label type="text" class="col-form-label txtTotalPrice" id="txtAdminEmailID"></label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+
+                                <label for="message-text" class="col-form-label">External Order ID</label>
+                            </div>
+                            <div class="col-9">
+                                <label type="text" class="col-form-label" id="txtExternalOrderID"></label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+
+                                <label for="message-text" class="col-form-label">Date Purchased</label>
+                            </div>
+                            <div class="col-9">
+                                <label type="text" class="col-form-label" id="txtDatePurchased"></label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+
+                                <label for="message-text" class="col-form-label">Shipping ID</label>
+                            </div>
+                            <div class="col-9">
+                                <label style="white-space: unset;" type="text" class="col-form-label" id="txtShippingId"></label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div style="border-top: 1px solid #ddd; padding: 10px 0;margin-top: 10px;">
+                        <div class="form-group row">
+                            <div class="col-3">
+
+                                <label for="message-text" class="col-form-label">VPoints</label>
+                            </div>
+                            <div class="col-9">
+                                <label type="text" class="col-form-label txtVPointsOutlet" id="txtVPointsOutlet"></label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+                                <label for="refundAmount" class="col-form-label">Refund Amount</label>
+                            </div>
+                            <div class="col-9">
+                                <input type="number" id="refundAmountExternalItem" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+                                <label for="message-text" class="col-form-label">Refund Type</label>
+                            </div>
+                            <div class="col-9">
+                                <input type="radio" id="refundInStoreType_1" name="refundInStoreType" value="1" data-id="1" /> <label for="refundInStoreType_1">Invalid points</label><br />
+                                <input type="radio" id="refundInStoreType_2" name="refundInStoreType" value="2" data-id="2" /> <label for="refundInStoreType_2">Insufficient stock</label><br />
+                                <input type="radio" id="refundInStoreType_3" name="refundInStoreType" value="3" data-id="3" /> <label for="refundInStoreType_3">Others</label><br />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+                                <label for="message-text" class="col-form-label">Refund Remark</label>
+                            </div>
+                            <div class="col-9">
+                                <textarea type="text" id="externalRefundRemark" cols="20" style="width:400px;"></textarea>
+                                <button type="button" class="btn btn-primary refundAction" data-type="order-external">Refund</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade modal-list" id="showDetailsModalOrder" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalTitle">Order Details</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label for="message-text" class="col-form-label">Email</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtEmailOrder"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Purchased Date</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtPurchasedDateOrder"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label for="message-text" class="col-form-label">Quantity</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label txtQuantity" id="txtQuantityOrder"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">VPoints</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label txtVPointsOrder" id="txtVPointsOrder"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Price</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtPriceOrder"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label for="message-text" class="col-form-label">SubPriceOrder</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label txtSubTotalPrice" id="txtSubTotalPriceOrder"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Shipping Cost</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtProductShippingCostOrder"></label>
+                        </div>
+                    </div>
+                    <div class="order-promo-code-div">
+                        <div class="form-group row">
+                            <div class="col-3">
+
+                                <label for="message-text" class="col-form-label">Prom Code Discount</label>
+                            </div>
+                            <div class="col-9">
+                                <label type="text" class="col-form-label" id="promoCodeDiscount"></label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+
+                                <label for="message-text" class="col-form-label">Promo Code Name</label>
+                            </div>
+                            <div class="col-9">
+                                <label type="text" class="col-form-label" id="promoCodeName"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label for="message-text" class="col-form-label">Total Price</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label txtTotalPrice" id="txtTotalPriceOrder"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">User's full name</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtUserFullNameOrder"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Phone number</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtUserPhoneNumberOrder"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Address</label>
+                        </div>
+                        <div class="col-9">
+                            <label style="white-space: unset;" type="text" class="col-form-label" id="txtAddressOrder"></label>
+                        </div>
+                    </div>
+
+                    <div style="border-top: 1px solid #ddd; padding: 10px 0;margin-top: 10px;">
+                        <div class="form-group row">
+                            <div class="col-3">
+
+                                <label for="message-text" class="col-form-label">VPoints</label>
+                            </div>
+                            <div class="col-9">
+                                <label type="text" class="col-form-label txtVPointsOutlet" id="txtVPointsOutlet"></label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+                                <label for="message-text" class="col-form-label">Refund Type</label>
+                            </div>
+                            <div class="col-9">
+                                <input type="radio" id="fullRefundInStoreType_1" name="fullRefundInStoreType" value="1" data-id="1" /> <label for="fullRefundInStoreType_1">Invalid points</label><br />
+                                <input type="radio" id="fullRefundInStoreType_2" name="fullRefundInStoreType" value="2" data-id="2" /> <label for="fullRefundInStoreType_2">Insufficient stock</label><br />
+                                <input type="radio" id="fullRefunddInStoreType_3" name="fullRefundInStoreType" value="3" data-id="3" /> <label for="fullRefundInStoreType_3">Others</label><br />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+                                <label for="message-text" class="col-form-label">Refund Remark</label>
+                            </div>
+                            <div class="col-9">
+                                <textarea type="text" id="fullRefundRemark" cols="20" style="width:400px;"></textarea>
+                                <button type="button" class="btn btn-primary fullRefundAction" data-type="order-external">Refund</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade modal-list" id="showShippingDetailsModal" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalTitle">Order Tracking</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="shipping-info-txt-order-id-Update-div">
+                    <label for="message-text" class="col-form-label">Order Id from <b class="shipping-info-external-type-site"></b>:</label>
+                    <input type="text" class="form-control" id="txtOrderIdInShippingInfo">
+                    <button type="button" class="btn btn-primary btn-update-external-order-status-shipping-info" id="btnUpdateExternalOrderStatus">Update</button>
+
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="col-12 tracking-row">
+                            <div class="order-shipping-placed">
+                                <img class="order-tick-img" src="~/Images/OrderHistory_Tick.png" aria-hidden="true" />
+                                <br />
+                                <br />
+
+                                <img src="~/Images/OrderHistory_OrderPlaced.png" />
+                                <br />
+                                <span>Order Placed</span>
+                                <br />
+                                <span class="order-placed-date shipping-date-span"></span>
+                            </div>
+                            <div class="small-circles-div">
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                            </div>
+                            <div class="order-shipping-paid">
+                                <img class="order-tick-img" src="~/Images/OrderHistory_Tick.png" aria-hidden="true" />
+                                <br />
+                                <br />
+                                <img src="~/Images/OrderHistory_OrderPaid.png" />
+                                <br />
+                                <span>Order Paid</span>
+                                <br />
+                                <span class="order-paid-amount"></span>
+                                <br />
+                                <span class="order-paid-date shipping-date-span"></span>
+                            </div>
+                            <div class="small-circles-div">
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                            </div>
+                            <div class="order-shipping-shipped-out">
+                                <img class="order-tick-img" src="~/Images/OrderHistory_Tick.png" aria-hidden="true" />
+                                <br />
+                                <br />
+                                <img src="~/Images/OrderHistory_ShippedOut.png" />
+                                <br />
+                                <span>Order Shipped Out</span>
+                                <br />
+                                <span class="order-shipped-date shipping-date-span"></span>
+                            </div>                            <div class="small-circles-div">
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                            </div>
+                            <div class="order-shipping-received">
+                                <img class="order-tick-img" src="~/Images/OrderHistory_Tick.png" aria-hidden="true" />
+                                <br />
+                                <br />
+                                <img src="~/Images/OrderHistory_OrderRecieved.png" />
+                                <br />
+                                <span>Order Received</span>
+                                <br />
+                                <span class="order-received-date shipping-date-span"></span>
+                            </div>
+
+
+
+
+
+                        </div>
+                    </div>
+
+                    <div class="form-group row shipping-delivery-address-section">
+                        <div class="col-5">
+                            <div class="user-delivery-address">
+                                <h3 class="mb-2"><b class="shipping-info-external-type-site"></b> Delivery Address</h3>
+                                <span><b class="shipping-user-name"></b></span>
+                                <br />
+                                <span class="shipping-user-phoneNumber"></span>
+                                <br />
+                                <span class="shipping-address"></span>
+                            </div>
+                            <div class="user-delivery-address-user mt-3">
+                                <h3 class="mb-2">User Delivery Address</h3>
+                                <span><b class="shipping-user-name"></b></span>
+                                <br />
+                                <span class="shipping-user-phoneNumber"></span>
+                                <br />
+                                <span class="shipping-address"></span>
+                            </div>
+                        </div>
+                        <div class="col-7">
+                            <span class="shipping-carrier"></span>
+                            <span class="shipping-tracking-number"></span>
+                            <br />
+                            <span class="delivery-details"></span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="updateOrderItemsStatusModal" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalTitle">Update</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label class="col-form-label">Select a Status:</label>
+                            <select class="form-control" id="selectExternalOrderItemStatus">
+                            </select>
+
+                            @*<label class="col-form-label">Select a courier:</label>
+                                <select class="form-control" id="selectCourierDelivery">
+                                    <option url="https://www.tracking.my/abx">Abx Express</option>
+                                    <option url="https://www.tracking.my/airpak">Airpak Express</option>
+                                    <option url="https://www.tracking.my/amber">Amber</option>
+                                    <option url="https://www.tracking.my/asiaxpress">Asiaxpress</option>
+                                    <option url="https://www.tracking.my/babyxpress">BabyXpress</option>
+                                    <option url="https://www.tracking.my/best">Best Express</option>
+                                    <option url="https://www.tracking.my/cili">Cili Express</option>
+                                    <option url="https://www.tracking.my/citylink">Citylink Express</option>
+                                    <option url="https://www.tracking.my/cj">CJ Century</option>
+                                    <option url="https://www.tracking.my/Collectco">Collectco</option>
+                                    <option url="https://www.tracking.my/comone">Comone Express</option>
+                                    <option url="https://www.tracking.my/dd">DD Express</option>
+                                    <option url="https://www.tracking.my/deliverlah">DeliverLah</option>
+                                    <option url="https://www.tracking.my/dex-i">Dex-i Express</option>
+                                    <option url="https://www.tracking.my/dhl-ecommerce">DHL Ecommerce</option>
+                                    <option url="https://www.tracking.my/dpe">Dpe Express</option>
+                                    <option url="https://www.tracking.my/dpex">Dpex Express</option>
+                                    <option url="https://www.tracking.my/easipass">EasiPass</option>
+                                    <option url="https://www.tracking.my/enfexpress">ENF Express</option>
+                                    <option url="https://www.tracking.my/fedex">FedEx Express</option>
+                                    <option url="https://www.tracking.my/flickpost">Flickpost</option>
+                                    <option url="https://www.tracking.my/fmx">FMX</option>
+                                    <option url="https://www.tracking.my/gdex">Gdex Express</option>
+                                    <option url="https://www.tracking.my/jt">J&T Express</option>
+                                    <option url="https://www.tracking.my/janio">Janio</option>
+                                    <option url="https://www.tracking.my/jet-ship">Jet Ship</option>
+                                    <option url="https://www.tracking.my/jocom">Jocom</option>
+                                    <option url="https://www.tracking.my/karhoo">Karhoo Courier</option>
+                                    <option url="https://www.tracking.my/kgmhub">KGM Hub</option>
+                                    <option url="https://www.tracking.my/ktmd">KTMD Malaysia</option>
+                                    <option url="https://www.tracking.my/leopards">Leopards Express</option>
+                                    <option url="https://www.tracking.my/lineclear">LineClear Express</option>
+                                    <option url="https://www.tracking.my/lwe">LWE</option>
+                                    <option url="https://www.tracking.my/mxpress">M Xpress</option>
+                                    <option url="https://www.tracking.my/mantap">Mantap Express</option>
+                                    <option url="https://www.tracking.my/matdespatch">Matdespatch</option>
+                                    <option url="https://www.tracking.my/mayexpress">May Express</option>
+                                    <option url="https://www.tracking.my/motorex">Motorex</option>
+                                    <option url="https://www.tracking.my/mypoz">MyPoz</option>
+                                    <option url="https://www.tracking.my/nationwide">Nationwide Express</option>
+                                    <option url="https://www.tracking.my/near-u">Near U</option>
+                                    <option url="https://www.tracking.my/parceltopost">Parcel To Post</option>
+                                    <option url="https://www.tracking.my/pgeon">Pgeon</option>
+                                    <option url="https://www.tracking.my/pickupp">Pickupp</option>
+                                    <option url="https://www.tracking.my/ping-u">Ping U</option>
+                                    <option url="https://www.tracking.my/poslaju">Poslaju Express</option>
+                                    <option url="https://www.tracking.my/posstore">Posstore</option>
+                                    <option url="https://www.tracking.my/postco">Postco</option>
+                                    <option url="https://www.tracking.my/quantium">Quantium Solutions</option>
+                                    <option url="https://www.tracking.my/qxpress">Qxpress</option>
+                                    <option url="https://www.tracking.my/roadbull">Roadbull</option>
+                                    <option url="https://www.tracking.my/seebuu">SeeBuu</option>
+                                    <option url="https://www.tracking.my/shopee">Shopee Express</option>
+                                    <option url="https://www.tracking.my/singpost">Singapore Post</option>
+                                    <option url="https://www.tracking.my/skynet">Skynet Express</option>
+                                    <option url="https://www.tracking.my/spc">SPC</option>
+                                    <option url="https://www.tracking.my/thelorry">TheLorry</option>
+                                    <option url="https://www.tracking.my/tnt">TNT Express</option>
+                                    <option url="https://www.tracking.my/toll">Toll</option>
+                                    <option url="https://www.tracking.my/ups">UPS</option>
+                                    <option url="https://www.tracking.my/urbanfox">UrbanFox</option>
+                                    <option url="https://www.tracking.my/wepost">WePost</option>
+                                    <option url="https://www.tracking.my/xendnow">XendNow</option>
+                                    <option url="https://www.tracking.my/yg">YG Express</option>
+                                    <option url="https://www.tracking.my/ym">YM Global</option>
+                                    <option url="https://www.tracking.my/yunda">Yunda</option>
+                                    <option url="https://www.tracking.my/zepto">ZeptoExpress</option>
+                                    <option url="https://www.tracking.my/zoom">Zoom</option>
+                                    <option url="https://www.tracking.my/zto">ZTO Express</option>
+                                    <option value="-1" url="https://www.tracking.my">Others</option>
+                                </select>
+                                <label for="message-text" class="col-form-label othercourierDelivery" style="display:none">Others Courier:</label>
+                                <input type="text" class="form-control othercourierDelivery" id="txtOthersCourierDelivery" style="display:none" />
+
+
+                                <label for="message-text" class="col-form-label">Tracking Number:</label>
+                                <input type="text" class="form-control" id="txtTrakingNo">*@
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary btn-update-external-order-status" id="btnUpdateExternalOrderStatus">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="updateOrderItemsStatusAndOrderIdModal" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalTitle">Update Status and OrderId</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label class="col-form-label">Select a Status:</label>
+                            <select class="form-control" id="selectExternalOrderShopStatus">
+                            </select>
+                            <div class="txt-order-id-Update-div" style="display:none">
+                                <label for="message-text" class="col-form-label">Order Id from <b class="external-type-site"></b>:</label>
+                                <input type="text" class="form-control" id="txtOrderId">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary btn-update-external-order-status" id="btnUpdateExternalOrderStatus">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--#endregion .............................................  OUTLET END  ............................................. -->
+
+
+
+
+    @section scripts{
+
+        <!--#region .............................................  Pending SALES   ............................................. -->
+
+        <script>
+        var selectedRow = null;
+        const adminMerchant = "@identity.Name.ToLower()";
+        var selectedOrderItemId = "";
+        var selectedOrderId = "";
+        var selectedOrderItemShortId = "";
+
+
+            $(document).ready(function () {
+                $("#navSales").addClass("show");
+                $("#navSalesControl").attr("aria-expanded", true);
+                $("#salesAggregatorFrom").val(moment().subtract(30, 'd').format("YYYY-MM-DD"));
+                //$("#salesAggregatorFrom").val(moment().subtract(1, 'y').format("YYYY-MM-DD"));// for testing
+                $("#salesAggregatorTo").val(moment().format("YYYY-MM-DD"));
+
+                updatehiddenValues();
+
+                $(".refundAction").click(function () {
+                    var refundButton = $(this);
+                    var type = $(this).attr('data-type');
+                    var remark = "";
+                    var refundType = "1";
+                    var refundAmount = "";
+
+
+                    if (type == "order-external") {
+                        remark = $("#externalRefundRemark").val();
+                        refundType = $("input[type='radio'][name='refundInStoreType']:checked").val();
+                        refundAmount = $("#refundAmountExternalItem").val();
+                    }
+
+                    if (refundType == undefined) {
+                        toastr.clear();
+                        toastr.error("Please select a refund type");
+                        return;
+                    }
+
+                    if (confirm('Are you sure you want to refund this order?')) {
+                        $(refundButton).text("Processing...");
+                        $(refundButton).attr("disabled", true);
+                        $(refundButton).addClass("disabled");
+                        $.ajax({
+                            type: "POST",
+                            dataType: 'json',
+                            data: {
+                                orderItemId: selectedOrderItemId,
+                                refundType: refundType,
+                                remark: remark
+                            },
+                            url: '/Admin/Sales/Refund',
+                            success: function (response) {
+                                if (response.successful) {
+                                    toastr.success(response.message);
+                                    if (type == "order-external") {
+                                        $("#externalRefundRemark").val("");
+                                        $("#showDetailsModalExternalOrder").modal('hide');
+                                    }
+                                    $(refundButton).attr("disabled", false);
+                                    $(refundButton).removeClass("disabled");
+                                    $(refundButton).text("Refund");
+                                    $(".order_item_id_" + selectedOrderItemShortId).hide();
+                                    location.reload();
+                                }
+                                else {
+                                    toastr.error(response.message);
+                                    $(refundButton).attr("disabled", false);
+                                    $(refundButton).removeClass("disabled");
+                                    $(refundButton).text("Refund");
+                                }
+                            },
+                            error: function () {
+                                toastr.error("Something went wrong...");
+                                $(refundButton).attr("disabled", false);
+                                $(refundButton).removeClass("disabled");
+                                $(refundButton).text("Refund");
+                            }
+                        });
+
+                        return true;
+                    } else {
+                        // Do nothing!
+                    }
+                });
+
+
+                $(".fullRefundAction").click(function () {
+                    var refundButton = $(this);
+                    var type = $(this).attr('data-type');
+                    var remark = "";
+                    var refundType = "1";
+                    var refundAmount = "";
+
+
+                    if (type == "order-external") {
+                        remark = $("#fullRefundRemark").val();
+                        refundType = $("input[type='radio'][name='fullRefundInStoreType']:checked").val();
+                    }
+
+                    if (refundType == undefined) {
+                        toastr.clear();
+                        toastr.error("Please select a refund type");
+                        return;
+                    }
+
+                    if (confirm('Are you sure you want to refund this order?')) {
+                        $(refundButton).text("Processing...");
+                        $(refundButton).attr("disabled", true);
+                        $(refundButton).addClass("disabled");
+                        $.ajax({
+                            type: "POST",
+                            dataType: 'json',
+                            data: {
+                                orderId: selectedOrderId,
+                                refundType: refundType,
+                                remark: remark,
+                                isExternal: true
+                            },
+                            url: '/Admin/Sales/FullRefund',
+                            success: function (response) {
+                                if (response.successful) {
+                                    toastr.success(response.message);
+                                    $("#fullRefundRemark").val("");
+                                    $("#showDetailsModalExternalOrder").modal('hide');
+                                    $(refundButton).attr("disabled", false);
+                                    $(refundButton).removeClass("disabled");
+                                    $(refundButton).text("Refund");
+                                    location.reload();
+                                }
+                                else {
+                                    toastr.error(response.message);
+                                    $(refundButton).attr("disabled", false);
+                                    $(refundButton).removeClass("disabled");
+                                    $(refundButton).text("Refund");
+                                }
+                            },
+                            error: function () {
+                                toastr.error("Something went wrong...");
+                                $(refundButton).attr("disabled", false);
+                                $(refundButton).removeClass("disabled");
+                                $(refundButton).text("Refund");
+                            }
+                        });
+
+                        return true;
+                    } else {
+                        // Do nothing!
+                    }
+                });
+
+                $("#product-search-btn").on("click", function () {
+                    $(".pagination").remove();
+                    GetPendingSalesRedemptionTokens();
+                });
+
+                $("#product-get-btn").on("click", function () {
+                    updatehiddenValues();
+                    $(".pagination").remove();
+                    GetPendingSalesRedemptionTokens();
+                });
+
+                $("#product-search-input").on("search", function () {
+                    $(".pagination").remove();
+                    GetPendingSalesRedemptionTokens();
+                });
+
+
+                GetPendingSalesRedemptionTokens(@Model);
+
+                GetStatusTypes();
+
+                $(".btn-send-outlet").click(function () {
+                    $.ajax({
+                        type: "POST",
+                        dataType: 'json',
+                        data: {
+                        },
+                        url: '/App/Sales/SendInStoreRedemptionNotification',
+                        success: function (response) {
+                            if (response.successful) {
+                                toastr.success(response.message);
+                            }
+                            else {
+                                toastr.error(response.message);
+                            }
+                        },
+                        error: function () {
+                            toastr.error("Fail to send");
+                        }
+                    });
+                    $(selectedRow).closest("tr").find(".token").html($("#txtToken").val());
+
+                    $('#updateTokenModal').modal("hide");
+                });
+
+                $("#selectCourierDelivery").change(function () {
+                    if ($(this).val() == "-1") {
+                        $(".othercourierDelivery").show();
+                    }
+                    else {
+                        $(".othercourierDelivery").hide();
+                    }
+                });
+
+                $(".btn-update-external-order-status").click(function () {
+
+                    //var trakingNo = $("#txtTrakingNo").val();
+                    var updateType = $('#updateOrderItemsStatusModal').attr("update-type");
+
+                    if (updateType == 0) {
+                        var id = $('#updateOrderItemsStatusModal').attr("data-id");
+                        var status = $('#selectExternalOrderItemStatus').val();
+
+
+                        $.ajax({
+                            type: "POST",
+                            dataType: 'json',
+                            data: {
+                                externalOrderId: id, statusId: status
+                            },
+                            url: '/Admin/Sales/Update-external-order-status',
+                            success: function (response) {
+                                if (response.successful) {
+                                    toastr.success(response.message);
+                                    //$(selectedRow).closest("tr").find(".courier-delivey").html(courier);
+                                    //$(selectedRow).closest("tr").find(".token").html($("#txtTokenDelivery").val());
+                                    //$(selectedRow).closest("tr").find(".redemptionAt").html(moment().format("DD/MM/YYYY"));
+                                    location.reload();
+                                }
+                                else {
+                                    toastr.error(response.message);
+                                }
+                            },
+                            error: function () {
+                                toastr.error("Fail to send");
+                            }
+                        });
+                    }
+                    else if (updateType == 1) {
+                        var Orderid = $('#txtOrderId').val();
+                        var id = $('#updateOrderItemsStatusAndOrderIdModal').attr("data-id");
+                        var status = $('#selectExternalOrderShopStatus').val();
+                        var updateType = $('#updateOrderItemsStatusAndOrderIdModal').attr("update-type");
+
+                        $.ajax({
+                            type: "POST",
+                            dataType: 'json',
+                            data: {
+                                externalOrderShopId: id, statusId: status, OrderExternalId: Orderid
+                            },
+                            url: '/Admin/Sales/Update-external-order-status-by-shop-id',
+                            success: function (response) {
+                                if (response.successful) {
+                                    toastr.success(response.message);
+                                    location.reload();
+                                }
+                                else {
+                                    toastr.error(response.message);
+                                }
+                            },
+                            error: function () {
+                                toastr.error("Fail to send");
+                            }
+                        });
+                    }
+                    else if (updateType == 2) {
+                        var id = $('#updateOrderItemsStatusModal').attr("data-id");
+                        var status = $('#selectExternalOrderItemStatus').val();
+
+                        $.ajax({
+                            type: "POST",
+                            dataType: 'json',
+                            data: {
+                                externalOrderId: id, statusId: status
+                            },
+                            url: '/Admin/Sales/Update-external-order-status-by-order-id',
+                            success: function (response) {
+                                if (response.successful) {
+                                    toastr.success(response.message);
+                                    location.reload();
+                                }
+                                else {
+                                    toastr.error(response.message);
+                                }
+                            },
+                            error: function () {
+                                toastr.error("Fail to send");
+                            }
+                        });
+                    }
+
+                    $('#updateOrderItemsStatusModal').modal("hide");
+                });
+
+
+                $(".btn-update-external-order-status-shipping-info").click(function () {
+
+                    var Orderid = $('#txtOrderIdInShippingInfo').val();
+                    var id = $('#showShippingDetailsModal').attr("data-id");
+                    $.ajax({
+                        type: "POST",
+                        dataType: 'json',
+                        data: {
+                            externalOrderShopId: id, OrderExternalId: Orderid
+                        },
+                        url: '/Admin/Sales/Update-external-order-id-by-shop-id',
+                        success: function (response) {
+                            if (response.successful) {
+                                toastr.success(response.message);
+                                location.reload();
+                            }
+                            else {
+                                toastr.error(response.message);
+                            }
+                        },
+                        error: function () {
+                            toastr.error("Fail to send");
+                        }
+                    });
+
+                    $('#updateOrderItemsStatusModal').modal("hide");
+                });
+
+                $("#selectWebsite").change(function () {
+                    if ($("#selectWebsite").val() == 0) {
+                        $(".Shop-item").show();
+                    }
+                    else {
+                        $(".Shop-item").each(function () {
+                            if ($(this).attr("type-id") == $("#selectWebsite").val()) {
+                                $(this).show();
+                            }
+                            else {
+                                $(this).hide();
+                            }
+                        });
+                    }
+                });
+
+                $("#selectPageSise").change(function () {
+                    $(".pagination").remove();
+                    GetPendingSalesRedemptionTokens();
+                });
+            });
+
+            function GetPendingSalesRedemptionTokens() {
+                var length = $("#pageSise").find(":selected").attr("value");
+                var websiteId = $("#productWebsite").find(":selected").attr("value");
+
+                var from = moment($("#salesAggregatorFrom").val()).format("YYYY-MM-DD");
+                var to = moment($("#salesAggregatorTo").val()).format("YYYY-MM-DD");
+                var start = "0"
+                if ($(".nav-order-page.active").length > 0)
+                    start = parseInt($(".nav-order-page.active").attr("order")) * parseInt(length);
+                var searchValue = $("#product-search-input").val().toLowerCase();
+                $.ajax({
+                    type: "GET",
+                    async: false,
+                    dataType: 'json',
+                    data: {
+                        start: start, length: length, searchValue: searchValue, websiteTypeId: websiteId, from: from, to: to, isCompleted: $("#orderStatus").is(':checked') },
+                    url: '/Admin/Sales/Aggregator-Items/',
+                    success: function (response) {
+                        if (response.successful) {
+                            if (response.data != null) {
+                                if (response.data.data != null) {
+                                    var count = 0;
+                                    var orderCount = 1;
+                                    $(".products-table-card").html("");
+
+                                    $(response.data.data).each(function (index, order) {
+                                        var orderRow = $(".shop-temlate").clone().removeClass("shop-temlate");
+                                        orderRow.find(".merchant-name").hide();
+                                        $(".products-table-card").append(orderRow);
+
+                                        //Order Template
+                                        var template = $(".card-table-template-outlet").clone();
+                                        template.attr("class", "order_item_id_" + order.orderId).addClass("w-100");
+                                        template.find(".product-title").parent().remove();
+                                        template.find(".order-id").html(order.orderId);
+                                        template.find(".order-short-id").html("#" + order.orderShortId);
+                                        template.find(".product-ItemId").parent().remove();
+                                        template.find(".product-email").html(order.email);
+                                        template.find(".product-status").html(order.status);
+                                        
+                                        template.find(".order-last-update").html(moment(order.lastUpdatedAt).format("DD/MM/YYYY") == "Invalid date" ? "-" : moment(order.lastUpdatedAt).format("DD/MM/YYYY"));
+
+                                        if (order.status == 1) {
+                                            template.find(".order-status").addClass("orange").html("Pending");
+                                        }
+                                        else if (order.status == 2) {
+                                            template.find(".order-status").addClass("grey").html("Ordering");
+                                        }
+                                        else if (order.status == 3) {
+                                            template.find(".order-status").addClass("blue").html("Ordered");
+                                        }
+                                        else if (order.status == 4) {
+                                            template.find(".order-status").addClass("red").html("Refund in Progress");
+                                        }
+                                        else if (order.status == 5) {
+                                            template.find(".order-status").addClass("red").html("Refunded");
+                                        }
+                                        else if (order.status == 6) {
+                                            template.find(".order-status").addClass("green").html("Completed");
+                                        }
+                                        else if (order.status == 7) {
+                                            template.find(".order-status").addClass("red").html("Pending Payment");
+                                        }
+                                        template.find(".revenue").html("RM " + (order.revenue + parseFloat(order.vpointsDiscount)).toFixed(2));
+
+                                        if (order.promoCodeDiscount != null) {
+                                            template.find(".order-last-update-by").html("RM " + parseFloat(order.promoCodeDiscount));
+                                        }
+                                        else {
+                                            template.find(".order-last-update-by").html("-");
+                                        }
+
+                                        if (order.vpointsDiscount != null && order.vpointsDiscount != 0) {
+                                            template.find(".order-vpoint-discount").html("RM " + parseFloat(order.vpointsDiscount));
+                                        }
+                                        else {
+                                            template.find(".order-vpoint-discount").html("-");
+                                        }
+
+                                        template.find(".paid").html("RM " + order.paid.toFixed(2));
+
+                                        template.find(".purchased-date-outlet").html(moment(order.createdAt).format("DD/MM/YYYY") == "Invalid date" ? "-" : moment(order.createdAt).format("DD/MM/YYYY"));
+
+                                        var trackingNo = order.trackingNo != null ? order.trackingNo : "";
+                                        if (order.status == 1 || order.status == 2) {
+                                            template.find(".action-btn-group").html("<span class='col-xl-6 btn-update-order-by-order-id' status-id='" + order.status
+                                                + "' data-id='" + order.orderId + "' tracking-no='" + trackingNo + "' >Update All</span>")
+                                        }
+                                        template.find(".action-btn-group").append("<span class='col-xl-6 btn-details-order' data-id='" + order.orderId + "' >Details</span>");
+
+                                        template.find(".order-action").append("<a class='align-center' data-toggle='collapse' data-target='#Order_" + orderCount + "'><i class='fa fa-chevron-down' aria-hidden='true'></i></a>")
+
+
+                                        $(".products-table-card").append(template);
+
+
+                                        var divElement = $('<div class="collapse" id="Order_' +orderCount+'">');
+                                        orderCount++;
+                                        $(order.orderShopExternalViewModel).each(function (index, orderShop) {
+                                            var shop = $(".shop-temlate").clone().removeClass("shop-temlate");
+                                            shop.addClass("Shop-item").attr("type-id", orderShop.externalTypeId);
+
+                                            if (orderShop.shippingCost != null) {
+                                                shop.find(".merchant-name").append("<div class='row col-xl-5 col-4 no-padding'><div class='shop-shipping-cost'> Shipping: RM" + orderShop.shippingCost + "</div></div>");
+                                            }
+                                            else {
+                                                shop.find(".merchant-name").append("<div class='row col-xl-5 col-4 no-padding'><div class='shop-shipping-cost'> - </div><div class='col-12 card-title-row'>Shipping Cost</div></div>");
+
+                                            }
+                                            if (orderShop.externalOrderId != null && orderShop.status != 1) {
+                                                shop.find(".merchant-name").html(shop.find(".merchant-name").html() + "<div class='col-12 col-xl-auto d-flex p-0'><a class='btn-update-shipping-info btn-primary btn-aggr-update-shop' data-id='" + orderShop.externalOrderId + "' type-id='" + orderShop.externalTypeId + "' status-id='" + orderShop.status
+                                                    + "' >Update shipping info</a></a > <a class='btn-check-shipping-info btn-primary btn-aggr-update-shop' type-id='" + orderShop.externalTypeId + "' external-order-id='" + orderShop.externalOrderId + "' data-id='"
+                                                    + orderShop.id + "'>View shipping info</span></div>");
+                                            }
+                                            else {
+                                                shop.find(".merchant-name").html(shop.find(".merchant-name").html() + "<a class='btn-update-order-by-shop-id btn-primary btn-aggr-update-shop' data-id='" + orderShop.id
+                                                    + "' status-id='" + orderShop.status + "' type-id='" + orderShop.externalTypeId + "' >Update</a>");
+                                            }
+                                           
+                                            shop.find(".merchant-name").prepend("<a class='col-xl-auto col-4' href='" + orderShop.externalShopUrl + "' >" + orderShop.externalShopName
+                                                + "</a>")
+                                           
+                                            var totalShopRevenue = 0;
+                                            $(orderShop.orderItemViewModels).each(function (index, item) {
+                                                totalShopRevenue = totalShopRevenue + item.revenue;
+                                                //Order Item Template
+                                                var template = $(".card-table-template-outlet").clone();
+                                                template.attr("class", "order_item_id_" + item.id).addClass("w-100");
+                                                template.find(".product-title").html("<a href='" + item.externalUrl +  "' target='_blank'>" + item.productTitle + '</span>');
+                                                template.find(".product-ItemId").html(item.id);
+                                                template.find(".product-email").html(orderShop.email);
+                                                template.find(".product-status").html(item.status);
+                                                template.find(".order-last-update-by").parent().find(".card-title-row").html("Variant");
+                                                template.find(".order-last-update-by").html(item.variant);
+                                                template.find(".order-vpoint-discount-div").hide();
+                                                template.find(".order-last-update").html(item.quantity);
+                                                template.find(".order-last-update").parent().find(".card-title-row").html("Quantity");
+                                                if (item.status == 1) {
+                                                    template.find(".order-status").addClass("orange").html("Pending");
+                                                }
+                                                else if (item.status == 2) {
+                                                    template.find(".order-status").addClass("grey").html("Ordering");
+                                                }
+                                                else if (item.status == 3) {
+                                                    template.find(".order-status").addClass("blue").html("Ordered");
+                                                }
+                                                else if (item.status == 4) {
+                                                    template.find(".order-status").addClass("red").html("Refund in progress");
+                                                }
+                                                else if (item.status == 5) {
+                                                    template.find(".order-status").addClass("red").html("Refunded");
+                                                }
+                                                else if (item.status == 6) {
+                                                    template.find(".order-status").addClass("green").html("Completed");
+                                                }
+                                                template.find(".revenue").parent().find(".card-title-row").html("Item Revenue exc. Promo and Shipping");
+                                                template.find(".revenue").html("RM " + item.revenue.toFixed(2));
+
+                                                template.find(".paid").parent().hide();
+
+                                                template.find(".purchased-date-outlet").siblings(0).html("Recipient Name");
+                                                template.find(".purchased-date-outlet").html(orderShop.shippingName);
+
+                                                template.find(".order-id").siblings(0).html("Shipping Address");
+                                                template.find(".order-id").html(orderShop.shippingAddress);
+
+                                                var trackingNo = orderShop.trackingNo != null ? orderShop.trackingNo : "";
+                                                if (item.status != 1 && item.status != 2) {
+
+                                                    template.find(".order-action").html("<span class='col-xl-6 btn-edit-delivery' status-id='" + item.status + "' data-id='" + item.id + "' tracking-no='" + trackingNo + "' >Update</span><span class='col-xl-6 btn-details-external-order-item' data-id='" + item.id + "' >Details</span>");
+                                                }
+                                                else {
+                                                    template.find(".order-action").html("<span class='col-xl-6 btn-details-external-order-item' data-id='" + item.id + "' >Details</span>");
+                                                }
+
+                                                count = count + 1;
+
+
+                                                shop.append(template);
+
+
+                                            });
+                                            shop.find(".btn-check-shipping-info").attr("data-paid", totalShopRevenue.toFixed(2));
+                                            divElement.append(shop);
+
+
+                                        });
+                                        $(".products-table-card").append(divElement);
+                                    });
+                                    if ($(".pagination").length == 0) {
+                                        var pagingHtml = '<div class="pagination"><a class="prev-order-page" href="#">&laquo;</a> <a class="nav-order-page active" order="0" href="#" class="active">1</a>';
+                                        var pagingNumber = 1;
+                                        var recordsPerPage = parseInt($("#pageSise").find(":selected").attr("value"));
+                                        for (index = 0; index < response.data.recordsTotal; index++) {
+                                            if (index % recordsPerPage == 0 && index != 0)
+                                                pagingHtml += ' <a class="nav-order-page" order="' + pagingNumber++ + '" href="#">' + parseInt(index / recordsPerPage + 1) + '</a>';
+                                        }
+                                        pagingHtml += '<a class="next-order-page" href="#">&raquo;</a></div>';
+                                        $(".products-card-row").append(pagingHtml);
+                                        createPagingActions();
+                                    }
+
+                                    $(".pagination-details").remove();
+                                    var from = parseInt($(".nav-order-page.active").attr("order")) * parseInt($("#pageSise").find(":selected").attr("value")) + 1;
+                                    var to = from + response.data.recordsFiltered - 1;
+                                    var pageDetails = '<div class="pagination-details">Showing ' + from + ' to ' + to + ' of ' + response.data.recordsTotal + ' entries</div>';
+                                    $(".products-card-row").append(pageDetails);
+
+                                    if (count == 0)
+                                        $(".no-transaction-outlet").show();
+                                    else
+                                        $(".no-transaction-outlet").hide();
+
+                                }
+                                else {
+                                    $(".no-transaction-outlet").show();
+                                }
+                            }
+                        } else
+                            toastr.error(response.message);
+                    },
+                    error: function (error) {
+                        toastr.error(error);
+                    }
+                });
+                bindActions();
+            }
+            function createPagingActions() {
+                $(".next-order-page").click(function () {
+                    if ($(".nav-order-page.active").next().hasClass("nav-order-page"))
+                        $(".nav-order-page.active").removeClass("active").next().click().addClass("active");
+                });
+                $(".prev-order-page").click(function () {
+                    if ($(".nav-order-page.active").prev().hasClass("nav-order-page"))
+                        $(".nav-order-page.active").removeClass("active").prev().click().addClass("active");
+                });
+
+                $(".nav-order-page").click(function () {
+                    if (!$(this).hasClass("active")) {
+                        $(".nav-order-page.active").removeClass("active");
+                        $(this).addClass("active");
+                        GetPendingSalesRedemptionTokens();
+                    }
+                });
+
+            }
+
+            function bindActions() {
+
+                $(".btn-edit-giftee-digital").click(function () {
+                    selectedRow = this;
+                    $('#createGifteeTokenModalDigital').attr("data-id", $(this).attr("data-id"));
+                    $('#createGifteeTokenModalDigital').attr("product-id", $(this).attr("product-id"));
+                    $('#createGifteeTokenModalDigital').modal("show");
+                });
+
+                $(".btn-edit-external-order").click(function () {
+                    $("#txtTokenDigital").val("");
+                    selectedRow = this;
+                    $('#updateTokenModalDigital').attr("data-id", $(this).attr("data-id"));
+                    $('#updateTokenModalDigital').modal("show");
+                });
+
+                $(".btn-update-order-by-shop-id").click(function () {
+                    $("#txtOrderId").val("");
+                    $(".txt-order-id-Update-div").hide();
+                    selectedRow = this;
+                    $('#updateOrderItemsStatusAndOrderIdModal').attr("data-id", $(this).attr("data-id"));
+                    $('#updateOrderItemsStatusModal').attr("update-type", 1);
+                    var externalWebsiteName = parseInt($(this).attr("type-id")) == 1 ? "Shopee" : "lazada";
+                    $(".external-type-site").html(externalWebsiteName);
+
+                    $("#selectExternalOrderShopStatus").val(parseInt($(this).attr("status-id")));
+
+                    $('#updateOrderItemsStatusAndOrderIdModal').modal("show");
+                });
+
+                $("#selectExternalOrderShopStatus").change(function () {
+                    if ($("#selectExternalOrderShopStatus").val() == 3) {
+                        $(".txt-order-id-Update-div").show();
+                    }
+                });
+
+                $(".btn-check-shipping-info").click(function () {
+                    var shopId = $(this).attr("data-id");
+                    var paiedAmount = $(this).attr("data-paid");
+                    var externalWebsiteName = parseInt($(this).attr("type-id")) == 1 ? "Shopee" : "lazada";
+                    var externalOrderId = $(this).attr("external-order-id") != undefined ? parseInt($(this).attr("external-order-id")) : "";
+                    $('#showShippingDetailsModal').attr("data-id", shopId);
+
+                    $(".shipping-info-external-type-site").html(externalWebsiteName);
+                    $("#txtOrderIdInShippingInfo").val(externalOrderId);
+
+                    $.ajax({
+                        type: "GET",
+                        dataType: 'json',
+                        url: '/Admin/Sales/Get-Shippind-Details-By-Order-ShopId/',
+                        data: { orderShopId: shopId },
+                        success: function (response) {
+                            if (response.successful) {
+                                $(".shipping-date-span").html("");
+                                $('#showShippingDetailsModal').modal("show");
+                                $(response.data).each(function (index, item) {
+                                    var deliveryInfo = "";
+                                    $(item.trackingList).each(function (i, trackingRecord) {
+
+                                        if (i== 0) {
+                                            deliveryInfo += '<i class="fa fa-circle last" aria-hidden="true"></i>';
+                                        }
+                                        else {
+                                            deliveryInfo += '<i class="fa fa-circle" aria-hidden="true"></i>';
+
+                                        }
+                                        deliveryInfo += "  "+  moment(trackingRecord.createdAt).format("DD-MM-YYYY HH:mm") + "  <span class='delivery-info-span'>" + trackingRecord.description + "</span><br/>";
+
+                                    });
+                                    $('#showShippingDetailsModal').find(".delivery-details").html(deliveryInfo);
+                                    //User shipping address
+                                    $('#showShippingDetailsModal').find(".user-delivery-address-user").find(".shipping-address").html(item.userInfo.address);
+                                    $('#showShippingDetailsModal').find(".user-delivery-address-user").find(".shipping-user-name").html(item.userInfo.name);
+                                    $('#showShippingDetailsModal').find(".user-delivery-address-user").find(".shipping-user-phoneNumber").html(item.userInfo.phoneNumber);
+
+
+                                    //Admin inserted Shipping address
+                                    if (item.shippingAddressModel != null && item.shippingAddressModel.shippingAddress != null) {
+                                        $('#showShippingDetailsModal').find(".user-delivery-address").show();
+                                        $('#showShippingDetailsModal').find(".user-delivery-address").find(".shipping-address").html(item.shippingAddressModel.shippingAddress);
+                                        $('#showShippingDetailsModal').find(".user-delivery-address").find(".shipping-user-name").html(item.shippingAddressModel.shippingName);
+                                        $('#showShippingDetailsModal').find(".user-delivery-address").find(".shipping-user-phoneNumber").html(item.shippingAddressModel.shippingPhone);
+                                    }
+                                    else {
+                                        $('#showShippingDetailsModal').find(".user-delivery-address").hide();
+                                    }
+
+                                    $('#showShippingDetailsModal').find(".shipping-carrier").html(item.courier);
+                                    $('#showShippingDetailsModal').find(".order-paid-amount").html("(RM " + paiedAmount+")");
+                                    $('#showShippingDetailsModal').find(".order-paid-date").html(moment(item.createdAt).format("DD-MM-YYYY HH:mm"));
+                                    $('#showShippingDetailsModal').find(".order-placed-date").html(moment(item.createdAt).format("DD-MM-YYYY HH:mm"));
+
+                                    if (item.deliveryStatuses.orderShipppedOutAt != null || item.deliveryStatuses.orderShipppedOutAt != undefined) {
+                                        $('#showShippingDetailsModal').find(".order-shipped-date").html(moment(item.deliveryStatuses.orderShipppedOutAt).format("DD-MM-YYYY HH:mm"));
+                                        $(".order-shipping-received").find(".fa-check-circle").first().replaceWith('<img class="order-tick-img" src="/Images/OrderHistory_Tick.png" aria-hidden="true" />');
+                                        $(".order-shipping-shipped-out").find(".fa-check-circle").first().replaceWith('<img class="order-tick-img" src="/Images/OrderHistory_Tick.png" aria-hidden="true" />');
+                                    }
+                                    else {
+                                        $(".order-shipping-received").find(".order-tick-img").first().replaceWith('<i class="fas fa-check-circle"></i>');
+                                        $(".order-shipping-shipped-out").find(".order-tick-img").first().replaceWith('<i class="fas fa-check-circle"></i>');
+                                    }
+
+                                    if (item.deliveryStatuses.orderReceivedAt != null || item.deliveryStatuses.orderReceivedAt != undefined) {
+                                        $('#showShippingDetailsModal').find(".order-received-date").html(moment(item.deliveryStatuses.orderReceivedAt).format("DD-MM-YYYY HH:mm"));
+                                        $(".order-shipping-received").find(".fa-check-circle").first().replaceWith('<img class="order-tick-img" src="/Images/OrderHistory_Tick.png" aria-hidden="true" />');
+                                        $(".order-shipping-shipped-out").find(".fa-check-circle").first().replaceWith('<img class="order-tick-img" src="/Images/OrderHistory_Tick.png" aria-hidden="true" />');
+                                    }
+                                    else {
+                                        $(".order-shipping-received").find(".order-tick-img").first().replaceWith('<i class="fas fa-check-circle"></i>');
+
+                                    }
+
+                                    if (item.trackingNumber != "" && item.trackingNumber != null) {
+                                        $('#showShippingDetailsModal').find(".shipping-tracking-number").html("Tracking No: " + item.trackingNumber);
+                                    }
+
+                                });
+                                // To Add Display the Shipping Info
+                            }
+                        },
+                        error: function (error) {
+                            toastr.error(error);
+                        }
+                    });
+
+                });
+
+                $(".btn-update-shipping-info").click(function () {
+                    window.open("https://shopee.com.my/user/purchase/order/" + $(this).attr("data-id"));
+                });
+
+                $(".btn-update-order-by-order-id").click(function () {
+                    $('#updateOrderItemsStatusModal').attr("data-id", $(this).attr("data-id"));
+                    $('#updateOrderItemsStatusModal').attr("update-type", 2);
+                    $("#selectExternalOrderItemStatus").val(parseInt($(this).attr("status-id")));
+                    $("#selectExternalOrderItemStatus > option[value='3']").hide();
+                    $("#selectExternalOrderItemStatus > option[value='4']").hide();
+                    $("#selectExternalOrderItemStatus > option[value='5']").hide();
+                    $("#selectExternalOrderItemStatus > option[value='6']").hide();
+                    $('#updateOrderItemsStatusModal').modal("show");
+                });
+
+                $(".btn-edit-delivery").click(function () {
+                    $("#txtTokenDelivery").val("");
+                    selectedRow = this;
+                    $('#updateOrderItemsStatusModal').attr("data-id", $(this).attr("data-id"));
+                    $('#updateOrderItemsStatusModal').attr("update-type", 0);
+                    $("#selectExternalOrderItemStatus").val(parseInt($(this).attr("status-id")));
+                    if (parseInt($(this).attr("status-id")) > 2) {
+                        $("#selectExternalOrderItemStatus > option").show();
+                        $("#selectExternalOrderItemStatus > option[value='1']").hide();
+                        $("#selectExternalOrderItemStatus > option[value='2']").hide();
+                    } else {
+                        $("#selectExternalOrderItemStatus > option").show();
+                    }
+                    var trackingNo = parseInt($(this).attr("tracking-no")) != NaN ? "" : parseInt($(this).attr("tracking-no"));
+                    $("#txtTrakingNo").val(trackingNo);
+
+                    $('#updateOrderItemsStatusModal').modal("show");
+                });
+
+                $(".btn-details-external-order-item").click(function () {
+                    var ShortOrderItmeId = $(this).attr("data-id");
+
+                    $.ajax({
+                        type: "GET",
+                        dataType: 'json',
+                        data: {
+                            externalOrderId: ShortOrderItmeId
+                        },
+                        url: '/Admin/Sales/GetOrderDetailsByShortOrderId',
+                        success: function (response) {
+                            if (response.successful) {
+                                //toastr.success(response.message);
+                                $(response.data).each(function (index, item) {
+                                    selectedOrderItemId = item.externalOrderItemsViewModel.id;
+                                    selectedOrderItemShortId = item.externalOrderItemsViewModel.shortId;
+                                    if (item.externalOrderItemsViewModel.isVariationProduct) {
+                                        $("#txtProductVariationText").html(item.externalOrderItemsViewModel.variationText);
+                                        $("#txtProductVariationText").parent().parent().show();
+                                    }
+                                    else {
+                                        $("#txtProductVariationText").parent().parent().hide();
+                                    }
+
+                                    if (item.order.promoCodeMaxDiscountValue != null) {
+                                        $(".promo-code-div").show();
+                                        $("#promoCodeDiscountForOrder").html("RM " + parseFloat(item.order.promoCodeMaxDiscountValue));
+                                        $("#promoCodeNameForOrder").html(item.order.promoCodeValue);
+                                    }
+                                    else {
+                                        $(".promo-code-div").hide();
+
+                                    }
+
+
+
+
+                                    $("#txtEmailOutlet").html(item.order.email);
+                                    $("#txtLastUpdatedAt").html(moment(item.externalOrderItemsViewModel).format("DD/MM/YYYY") == "Invalid date" ? "-" : moment(item.externalOrderItemsViewModel).format("DD/MM/YYYY"));
+                                    $("#txtLastUpdatedBy").html(item.externalOrderItemsViewModel.lastUpdatedByUser);
+                                    $("#txtProductNameOutlet").html(item.externalOrderItemsViewModel.productTitle);
+                                    $("#txtPurchasedDateOutlet").html(moment(item.order.createdAt).format("DD-MM-YYYY HH:mm"));
+                                    $(".txtVPointsOutlet").html(item.externalOrderItemsViewModel.points);
+                                    $("#txtTotalPrice").html("RM " + (parseFloat(item.externalOrderItemsViewModel.totalPrice) + parseFloat(item.externalOrderItemsViewModel.shippingCost)).toFixed(2));
+                                    $("#txtQuantity").html(item.externalOrderItemsViewModel.quantity);
+                                    $("#txtSubTotalPrice").html("RM " + item.externalOrderItemsViewModel.totalPrice);
+                                    $("#txtPriceOutlet").html("RM " + item.externalOrderItemsViewModel.price);
+                                    $("#txtProductShippingCost").html("RM " + item.externalOrderItemsViewModel.shippingCost);
+                                    $("#refundMoneyValue").val(item.price);
+                                    $("#txtPFullNameOutlet").html(item.order.shippingPersonFirstName + " " + item.order.shippingPersonLastName);
+                                    $("#txtPhoneNumberOutlet").html(item.order.shippingMobileCountryCode + item.order.shippingMobileNumber);
+                                    if (item.order.shippingAddressLine2 != null) {
+                                        $("#txtAddressOutlet").html(item.order.shippingAddressLine1 + ", " + item.order.shippingAddressLine2 + ", " + item.order.shippingPostcode
+                                            + ", " + item.order.shippingCity + ", " + item.order.shippingState + ", " + item.order.shippingCountry);
+                                    }
+                                    else {
+                                        $("#txtAddressOutlet").html(item.order.shippingAddressLine1 + ", " + item.order.shippingPostcode
+                                            + ", " + item.order.shippingCity + ", " + item.order.shippingState + ", " + item.order.shippingCountry);
+                                    }
+                                    //shipping info
+                                    if (item.shipingInfo.datePurchased != null)
+                                        $("#txtDatePurchased").html(moment(item.shipingInfo.datePurchased).format("DD-MM-YYYY HH:mm"));
+                                    $("#txtExternalOrderID").html(item.shipingInfo.externalOrderId);
+                                    $("#txtShippingId").html(item.shipingInfo.externalShippingId);
+                                    if (item.shipingInfo.shippingAdminInfo != null) {
+                                        $("#txtAdminAccountID").html(item.shipingInfo.shippingAdminInfo.userId);
+                                        $("#txtAdminEmailID").html(item.shipingInfo.shippingAdminInfo.email);
+                                    }
+
+                                });
+
+                            }
+                            else {
+                                toastr.error(response.message);
+                            }
+                        },
+                        error: function () {
+                            toastr.error("Fail to send 123");
+                        }
+                    });
+
+                    $('#showDetailsModalExternalOrder').attr("data-id", $(this).attr("data-id"));
+                    $('#showDetailsModalExternalOrder').modal("show");
+                });
+
+                $(".btn-details-order").click(function () {
+                    var orderId = $(this).attr("data-id");
+
+                    $.ajax({
+                        type: "GET",
+                        dataType: 'json',
+                        data: {
+                            orderId: orderId
+                        },
+                        url: '/Admin/Sales/GetOrderDetailsByOrderId',
+                        success: function (response) {
+                            if (response.successful) {
+                                $(response.data.order).each(function (index, item) {
+
+                                    $("#txtEmailOrder").html(item.email);
+                                    $("#txtPurchasedDateOrder").html(moment(item.createdAt).format("DD-MM-YYYY HH:mm"));
+                                    $("#txtVPointsOrder").html(item.totalPoints);
+                                    if (item.promoCodeMaxDiscountValue != null) {
+                                        $(".order-promo-code-div").show();
+                                        $("#promoCodeDiscount").html("RM " + parseFloat(item.promoCodeMaxDiscountValue));
+                                        $("#promoCodeName").html(item.promoCodeValue);
+                                    }
+                                    else {
+                                        $(".order-promo-code-div").hide();
+
+                                    }
+                                    $("#txtTotalPriceOrder").html("RM " + (parseFloat(item.totalPrice) + parseFloat(item.totalShippingCost)).toFixed(2));
+
+                                    $("#txtQuantityOrder").html(item.totalItems);
+                                    $("#txtSubTotalPriceOrder").html("RM " + item.totalPrice);
+                                    $("#txtPriceOrder").html("RM " + item.totalPrice);
+                                    $("#txtProductShippingCostOrder").html("RM " + item.totalShippingCost);
+                                    $("#txtUserFullNameOrder").html(item.shippingPersonFirstName + " " + item.shippingPersonLastName);
+                                    $("#txtUserPhoneNumberOrder").html(item.shippingMobileCountryCode + item.shippingMobileNumber);
+                                    if (item.shippingAddressLine2 != null) {
+                                        $("#txtAddressOrder").html(item.shippingAddressLine1 + ", " + item.shippingAddressLine2 + ", " + item.shippingPostcode
+                                            + ", " + item.shippingCity + ", " + item.shippingState + ", " + item.shippingCountry);
+                                    }
+                                    else {
+                                        $("#txtAddressOrder").html(item.shippingAddressLine1 + ", " + item.shippingPostcode
+                                            + ", " + item.shippingCity + ", " + item.shippingState + ", " + item.shippingCountry);
+                                    }
+                                   
+
+                                });
+
+                            }
+                            else {
+                                toastr.error(response.message);
+                            }
+                        },
+                        error: function () {
+                            toastr.error("Fail to send 123");
+                        }
+                    });
+
+                    $('#showDetailsModalOrder').attr("data-id", $(this).attr("data-id"));
+                    selectedOrderId = $(this).attr("data-id");
+                    $('#showDetailsModalOrder').modal("show");
+                });
+
+            }
+
+            function DownloadExcel() {
+                var length = $("#pageSise").find(":selected").attr("value");
+                var websiteId = $("#productWebsite").find(":selected").attr("value");
+
+                var from = moment($("#salesAggregatorFrom").val()).format("YYYY-MM-DD");
+                var to = moment($("#salesAggregatorTo").val()).format("YYYY-MM-DD");
+                var start = "0"
+                if ($(".nav-order-page.active").length > 0)
+                    start = parseInt($(".nav-order-page.active").attr("order")) * parseInt(length);
+                var searchValue = $("#product-search-input").val().toLowerCase();
+                $.ajax({
+                    type: "POST",
+                    async: false,
+                    dataType: 'binary',
+                    url: '/Admin/Sales/Download-excel/',
+                    data: { start: start, length: length, searchValue: searchValue, websiteTypeId: websiteId, from: from, to: to },
+                    success: function (byteArray) {
+                        alert(byteArray);
+                    },
+                    error: function (error) {
+                        toastr.error(error);
+                    }
+                });
+
+            }
+            function GetStatusTypes() {
+                $.ajax({
+                    type: "GET",
+                    async: false,
+                    dataType: 'json',
+                    url: '/Admin/Sales/get-external-order-status-list/',
+                    success: function (response) {
+                        if (response.successful) {
+                            if (response.data != null) {
+                                $(response.data).each(function (index, item) {
+                                    $("#selectExternalOrderItemStatus").append(new Option(item.name, item.id));
+                                    $("#selectExternalOrderShopStatus").append(new Option(item.name, item.id));
+                                });
+                            }
+                        } else
+                            toastr.error(response.message);
+                    },
+                    error: function (error) {
+                        toastr.error(error);
+                    }
+                });
+
+            }
+
+            function updatehiddenValues() {
+                $("#orderSearch").val($("#product-search-input").val().toLowerCase());
+                $("#orderWebsiteTypeId").val($("#productWebsite").find(":selected").attr("value"));
+                $("#orderFrom").val(moment($("#salesAggregatorFrom").val()).format("YYYY-MM-DD"));
+                $("#orderTo").val(moment($("#salesAggregatorTo").val()).format("YYYY-MM-DD"));
+            }
+        </script>
+
+        <!--#endregion .............................................  Pending SALES END  ............................................. -->
+
+
+    }

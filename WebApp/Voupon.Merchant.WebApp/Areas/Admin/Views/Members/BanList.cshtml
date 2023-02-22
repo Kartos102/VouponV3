@@ -1,0 +1,482 @@
+@model List<Voupon.Database.Postgres.VodusEntities.BannedUsers>;
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="dashboard-main-wrapper">
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content ">
+            <div class="row">
+                <div class="page-header-container col-lg-12 d-flex justify-content-between align-items-center mb-2">
+                    <h1>Banned Users</h1>
+                    <button type="button" class="btn btn-primary pull-right" id="btnAddUserModal" style="float:right;margin-left:10px;"><span class="fa fa-plus"></span>Add User</button>
+                </div>
+            </div>
+
+            <div class="row admin-users-table-card col-lg-12 col-md-12" style="display:none">
+                <div class="col-12 row search-row">
+                    <div class="input-group col-md-10 col-xl-10 col-lg-10 col-sm-12 col-12">
+                        <input class="form-control py-2 border-right-0 border" type="search" value="" placeholder="search..." id="user-search-input">
+                        <span class="input-group-append">
+                            <button class="btn btn-outline-secondary border-left-0 border" type="button" id="user-search-btn">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+                @{
+                    int index = 1;
+                    foreach (var item in Model.OrderBy(x => x.BanDate))
+                    {
+                        if (index > 1)
+                        {
+                                                                                        <hr />
+                        }
+                                                                <div class="row card-table-row card-table-tamplate">
+                                                                    <div class="mobile-card-row row col-12 col-md-8 col-sm-12">
+                                                                        <div class="row col-12">
+                                                                            <div class="col-6 card-title-row">
+                                                                                No:
+                                                                            </div>
+                                                                            <div class="col-6 card-record-row user-order">
+                                        @index
+                                                                            </div>
+                                                                        </div>
+
+
+
+                                                                        <div class="row col-12">
+                                                                            <div class="col-6 card-title-row">
+                                                                                Banned At:
+                                                                            </div>
+                                                                            <div class="col-6 card-record-row user-createdAt">
+                                        @item.BanDate.Value.ToString("dd/MM/yyyy")
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row col-12">
+                                                                            <div class="col-6 card-title-row">
+                                                                                Action:
+                                                                            </div>
+                                                                            <div class="col-6 card-record-row user-action">
+                                                                                <a class="btn-edit" user-id="@item.Id" href="javascript:return false;">Edit</a>
+                                        @*<br />*@
+                                        @*<a class="btn-change-password" user-id="@item.Id" href="javascript:return false;">Change Password</a>*@
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+                        index++;
+                    }
+                }
+            </div>
+
+            <div class="table-responsive-lg admin-users-table" style="display:none">
+                <table id="dtUsers" class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col" style="text-align: center;">No</th>
+                            <th scope="col" style="text-align: center;">Email</th>
+                            <th scope="col" style="text-align: center;">Name</th>
+                            <th scope="col" style="text-align: center;">Address</th>
+                            <th scope="col" style="text-align: center;">VPoints Gained</th>
+                            <th scope="col" style="text-align: center;">Banned At</th>
+                            <th scope="col" style="text-align: center;">Reason</th>
+                            <th scope="col" style="text-align: center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int i = 1;
+                            foreach (var item in Model)
+                            {
+                                                                        <tr>
+                                                                            <th scope="row">@i</th>
+                                                                            <td>@item.Email</td>
+                                                                            <td>@item.Name</td>
+                                                                            <td>@item.Address</td>
+                                                                            <td>@item.VPointsGained</td>
+                                                                            <td>@item.BanDate.Value.ToString("dd/MM/yyyy")</td>
+                                                                            <td>@item.Reason</td>
+                                                                            <td><a class="btn-edit" user-id="@item.Id" href="javascript:return false;">Edit</a></td>
+                                                                        </tr>
+                                i++;
+                            }
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="modal fade" id="EditUser" user-id="0" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Banned User</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group row">
+                                <input hidden type="text" class="form-control" id="editUserId" disabled readonly>
+                                <div class="col-12">
+                                    <label for="UserId" class="col-form-label">Email</label>
+                                    <input type="email" disabled class="form-control" id="editEmail">
+                                </div>
+                                <div class="col-12">
+                                    <label for="Reason" class="col-form-label">Reason</label>
+                                    <input type="text" class="form-control" id="editReason">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal" id="btnUnBanUser">UnBan User</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="btnUpdateUser">Update</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="AddUser" user-id="0" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Add Banned User</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group row">
+                                <div class="col-12">
+                                    <label for="UserId" class="col-form-label">Email</label>
+                                    <input type="email" class="form-control" id="addEmail">
+                                </div>
+                                <div class="col-12">
+                                    <label for="Reason" class="col-form-label">Reason</label>
+                                    <input type="text" class="form-control" id="addReason">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="btnAddUser">Ban User</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+                        <script>
+                            var table = null;
+                            $(document).ready(function () {
+                                if ($(window).width() < 1030) {
+                                    $(".admin-users-table-card").show();
+                                    $(".admin-users-table").remove();
+                                }
+                                else {
+                                    $(".admin-users-table").show();
+                                    $(".admin-users-table-card").remove();
+                                }
+                                $("#user-search-btn").on("click", function () {
+                                    var execludedList = [];
+                                    var value = $("#user-search-input").val().toLowerCase();
+                                    if (value == "") {
+                                        $(".admin-users-table-card").children().each(function () {
+                                            $(this).show();
+                                        })
+                                        return false;
+                                    }
+                                    $(".card-table-tamplate").find(".user-email").filter(function () {
+                                        var textToFilter = $(this).text() /*+ " " + $(this).siblings().eq(1).text()*/ /*+ " " + $(this).siblings().eq(1).text()*/;
+                                        if (textToFilter.toLowerCase().indexOf(value) == -1) {
+                                            $(this).parent().parent().parent().hide();
+                                        }
+                                        else {
+                                            $(this).parent().parent().parent().show();
+                                        }
+                                    });
+                                });
+
+                                $("#user-search-input").on("search", function () {
+                                    var execludedList = [];
+                                    var value = $("#user-search-input").val().toLowerCase();
+                                    if (value == "") {
+                                        $(".admin-users-table-card").children().each(function () {
+                                            $(this).show();
+                                        })
+                                        return false;
+                                    }
+                                    $(".card-table-tamplate").find(".user-email").filter(function () {
+                                        var textToFilter = $(this).text() /*+ " " + $(this).siblings().eq(1).text()*/ /*+ " " + $(this).siblings().eq(1).text()*/;
+                                        if (textToFilter.toLowerCase().indexOf(value) == -1) {
+                                            $(this).parent().parent().parent().hide();
+                                        }
+                                        else {
+                                            $(this).parent().parent().parent().show();
+                                        }
+                                    });
+                                });
+
+                                var eventFired = function (type) 
+                                {
+                                    
+                                     $(".btn-edit").unbind().click(function () 
+                                     {
+                                        var bannedId = $(this).attr("user-id");
+                                        $("#editUserId").val(bannedId);
+                                        $("#EditUser").attr("user-id", bannedId);
+                                        var user = GetBannedUser(bannedId);
+                                        console.log(user);
+                                        if (user != null) 
+                                        {
+                                            $("#editEmail").val(user.email);
+                                            $("#editReason").val(user.reason);
+                                            $("#EditUser").modal("show");
+                                        }
+                                    });
+                                }
+
+                                $('#dtUsers').on('order.dt', function () { eventFired('Order'); })
+                                    .on('search.dt', function () { eventFired('Search'); })
+                                    .on('page.dt', function () { eventFired('Page'); }).DataTable({ "iDisplayLength": 25 });
+
+
+                                $(".btn-edit").click(function () {
+
+                                    var bannedId = $(this).attr("user-id");
+                                    $("#editUserId").val(bannedId);
+                                    $("#EditUser").attr("user-id", bannedId);
+                                    var user = GetBannedUser(bannedId);
+                                    console.log(user);
+                                    if (user != null) {
+                                        $("#editEmail").val(user.email);
+                                        $("#editReason").val(user.reason);
+                                        $("#EditUser").modal("show");
+                                    }
+                                });
+
+
+
+                                $("#btnUpdateUser").click(function () {
+                                    UpdateUser($("#editUserId").val());
+
+                                });
+
+                                $("#btnUnBanUser").click(function () {
+                                    UnBanUser($("#editUserId").val());
+                                });
+
+                                $("#btnAddUserModal").click(function () {
+                                    $("#addEmail").val("");
+                                    $("#AddUser").modal("show");
+                                });
+                                $("#btnAddUser").click(function () {
+                                    AddUser($("#addEmail").val(), $("#addReason").val());
+                                }
+                                );
+
+                            });
+
+                            function GetRoleList() {
+                                $.ajax({
+                                    type: "GET",
+                                    async: false,
+                                    dataType: 'json',
+                                    url: '/Admin/Members/GetRoleList',
+                                    success: function (response) {
+                                        var options = "<option value=''>Choose Role</option>";
+                                        $("#editRole").html();
+                                        if (response.successful) {
+                                            if (response.data != null) {
+                                                $(response.data).each(function (index, item) {
+                                                    options += "<option value=" + item.id + ">" + item.name + "</option>";
+                                                });
+                                                $("#editRole").html(options);
+                                            }
+                                        } else
+                                            toastr.error(response.message);
+                                    },
+                                    error: function (error) {
+                                        toastr.error(error);
+                                    }
+                                });
+                            }
+
+                            function GetMerchantList() {
+                                $.ajax({
+                                    type: "GET",
+                                    async: false,
+                                    dataType: 'json',
+                                    url: '/Admin/Users/GetMerchantList',
+                                    success: function (response) {
+                                        var options = "<option value=''>Choose Merchant</option>";
+                                        $("#editMerchantId").html();
+                                        if (response.successful) {
+                                            if (response.data != null) {
+                                                $(response.data).each(function (index, item) {
+                                                    options += "<option value=" + item.id + ">" + item.code + "</option>";
+                                                });
+                                                $("#editMerchantId").html(options);
+                                            }
+                                        } else
+                                            toastr.error(response.message);
+                                    },
+                                    error: function (error) {
+                                        toastr.error(error);
+                                    }
+                                });
+                            }
+
+                            function GetUser(userId) {
+                                var user = null;
+                                $.ajax({
+                                    type: "GET",
+                                    async: false,
+                                    dataType: 'json',
+                                    url: '/Admin/Members/GetUser/' + userId,
+                                    success: function (response) {
+                                        if (response.successful) {
+                                            if (response.data != null) {
+
+                                                user = response.data;
+                                            }
+                                            else {
+                                                toastr.error("Invalid UserId");
+                                            }
+                                        } else
+                                            toastr.error(response.message);
+                                    },
+                                    error: function (error) {
+                                        toastr.error(error);
+                                    }
+                                });
+                                return user;
+                            }
+
+                            function GetBannedUser(bannedId) {
+                                //alert("banned id "+bannedId)
+                                var user = null;
+                                $.ajax({
+                                    type: "GET",
+                                    async: false,
+                                    dataType: 'json',
+                                    url: '/Admin/Members/GetBannedUser/' + bannedId,
+                                    success: function (response) {
+                                        if (response.successful) {
+                                            if (response.data != null) {
+
+                                                user = response.data;
+                                            }
+                                            else {
+                                                toastr.error("Invalid UserId");
+                                            }
+                                        } else
+                                            toastr.error(response.message);
+                                    },
+                                    error: function (error) {
+                                        toastr.error(error);
+                                    }
+                                });
+                                return user;
+                            }
+
+                            function UpdateUser(userId) {
+                                var reason = $("#editReason").val();
+
+                                if (reason == "") {
+                                    toastr.error("Please enter reason");
+                                    $("#editReason").focus();
+                                    return;
+                                }
+
+                                $.ajax({
+                                    type: "POST",
+                                    dataType: 'json',
+                                    data: {
+                                        BannedId: userId, Reason: reason
+                                    },
+                                    url: '/Admin/Members/UpdateBannedUser',
+                                    success: function (response) {
+                                        if (response.successful) {
+                                            toastr.success(response.message);
+                                            $("#EditUser").modal("hide");
+                                            location.reload();
+                                        }
+                                        else
+                                            toastr.error(response.message);
+                                    },
+                                    error: function (error) {
+                                        toastr.error(error);
+                                    }
+                                });
+                            }
+
+                            function UnBanUser(userId) {
+                                    var reason = $("#editReason").val();
+
+                                    $.ajax({
+                                        type: "POST",
+                                        dataType: 'json',
+                                        data: {
+                                            BannedId: userId, Reason: reason
+                                        },
+                                            url: '/Admin/Members/UnBanUser',
+                                        success: function (response) {
+                                            if (response.successful) {
+                                                toastr.success(response.message);
+                                                $("#EditUser").modal("hide");
+                                                location.reload();
+                                            }
+                                            else
+                                                toastr.error(response.message);
+                                        },
+                                        error: function (error) {
+                                            toastr.error(error);
+                                        }
+                                    });
+                                }
+                            function AddUser(email, reason)
+                            {
+                                if (email == "") {
+                                    toastr.error("Please enter email");
+                                    $("#addEmail").focus();
+                                    return;
+                                }
+                                if (reason == "") {
+                                    toastr.error("Please enter reason");
+                                    $("#addReason").focus();
+                                    return;
+                                }
+                                $.ajax({
+                                    type: "POST",
+                                    dataType: 'json',
+                                    data: {
+                                        Email: email, Reason: reason
+                                    },
+                                    url: '/Admin/Members/AddBannedUser',
+                                    success: function (response) {
+                                        if (response.successful) {
+                                            toastr.success(response.message);
+                                            $("#AddUser").modal("hide");
+                                            location.reload();
+                                        }
+                                        else
+                                            toastr.error(response.message);
+                                    },
+                                    error: function (error) {
+                                        toastr.error(error);
+                                    }
+                                });
+                            }
+                        </script>
+
+}
+
+

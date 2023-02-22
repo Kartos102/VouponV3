@@ -1,0 +1,26 @@
+﻿@{
+    Layout = null;
+}
+
+<p>Vodus rewards</p>
+
+
+<script>
+    deleteCookie('Vodus.Token', '', -10);
+    function deleteCookie(name, value, days) {
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            var expires = "; expires=" + date.toGMTString();
+        }
+        else {
+            var expires = "";
+        }
+        var domain = "" + document.domain;
+        document.cookie = name + "=" + value + expires + ";domain=" + domain + ";path=/;SameSite=None;Secure";
+
+        var domain = "" + document.domain;
+        document.cookie = name + "=" + value + expires + ";domain=" + "." + domain + ";path=/;SameSite=None;Secure";
+    }
+
+</script>

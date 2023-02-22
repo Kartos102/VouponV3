@@ -1,0 +1,72 @@
+﻿@model Voupon.Merchant.WebApp.Services.Resources.Page.BlogListViewModel
+@{
+    ViewBag.Title = "Resources - Vodus Merchant";
+}
+@section Head
+{
+    <link rel="stylesheet" href="/css/resources.css" asp-append-version="true" />
+}
+
+<div class="top-bar-text">
+    <p><b class="mr-2">LEARNING CENTRE:</b><i>Everything you need to know to be a successful Online Seller</i></p>
+</div>
+
+<div class="article-container">
+    <div class="topics">
+        <div class="topic-card selected" data-tag="all">
+            All Topic
+        </div>
+        @if (Model.Tags != null && Model.Tags.Any())
+        {
+            foreach (var tag in Model.Tags)
+            {
+                <div class="topic-card" data-tag="@tag">
+                    @tag
+                </div>
+            }
+        }
+    </div>
+
+    <div class="article-cards-container">
+        @if (Model.Blogs != null && Model.Blogs.Any())
+        {
+            foreach (var blog in Model.Blogs)
+            {
+                <div class="article-card">
+                    <div class="img-div" style="background-image: url(@blog.FeaturedImage);">
+                        <span class="topic-tag @(blog.Tags != null && blog.Tags.Any() ? blog.Tags.First().ToLower().Replace(" ","-") : "")">@(blog.Tags != null && blog.Tags.Any() ? string.Join(",", blog.Tags) : "")</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">
+                            <h3>@blog.Title</h3>
+                        </div>
+                        <div class="card-paragraph">
+                            @Html.Raw(blog.Excerpt)
+                            <a class="read-more" href="/resources/@blog.Id/@blog.Slug">
+                                Read more
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+
+    </div>
+
+</div>
+
+<script>
+    $(".topic-card").click(function () {
+        $(".topic-card").removeClass("selected");
+        $(this).addClass("selected");
+
+        var tag = $(this).attr('data-tag').toLowerCase();
+
+        if (tag == 'all') {
+            $('.article-card').show();
+        } else {
+            $('.article-card').hide();
+            $('.topic-tag.' + tag).closest('.article-card').show();
+        }
+    })
+</script>

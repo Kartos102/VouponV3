@@ -1,0 +1,560 @@
+﻿@model IEnumerable<Voupon.Rewards.WebApp.Services.Cart.Models.OrderHistoryModel>
+@using Newtonsoft.Json;
+@{
+    ViewData["Title"] = "My Purchases";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #cartTable .row.cart-item-row {
+        margin: 10px 0;
+        box-shadow: 0 1px 5px 0 rgb(0 0 0 / 50%);
+        padding: 10px 15px;
+        border-radius: 5px;
+        background-color: #fff;
+    }
+
+    @@media (min-width: 1024px) {
+        footer {
+            display: none;
+        }
+    }
+
+
+    .custom-badge {
+        background-color: #f3f2f3;
+        color: #A7A8AB;
+        padding: 4px 8px;
+        font-size: 14px;
+        text-align: left;
+    }
+
+    .rounded-pill-status {
+        border-radius: 10rem !important
+    }
+
+    .bg-success-status {
+        background-color: #06B7C7 !important
+    }
+
+    .bg-info-status {
+        background-color: blue;
+    }
+
+    .bg-warning-status {
+        background-color: #FEC001;
+        color: black !important;
+    }
+
+    .bg-complete-status {
+        background-color: #51C878;
+    }
+
+    #showMore {
+        background-color: transparent;
+        color: #7802E9;
+    }
+
+        #showMore:hover {
+            color: white;
+            background-color: #7802E9;
+        }
+
+
+
+    .order-status {
+        font-style: italic;
+        color: #fff;
+        background-color: #51C878;
+        padding: 5px 10px;
+        border-radius: 20px;
+    }
+
+    .custom-padding {
+        padding-left: 25px !important;
+        padding-right: 25px !important;
+    }
+</style>
+<div class="user-page">
+    <div class="user-page-left-spacing">
+    </div>
+    <div class="user-page-right row order-history" id="cartAvailable">
+        <div class="col-12 row mx-lg-4" style="max-width:1150px">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-12 align-items-center d-flex mb-2">
+                <h1 class="page-title mb-0">
+                    <strong>
+                        My Purchases
+                    </strong>
+                </h1>
+            </div>
+            <div class="col-lg-4 col-md-2 col-sm-1 d-xs mb-2">
+            </div>
+            <div class="input-group col-md-4 col-xl-4 col-lg-4 col-sm-5 col-12 mb-2 px-lg-0">
+                <input class="form-control py-2 border-right-0 border" type="search" value="" placeholder="Search"
+                       id="orderHistorySearch">
+                <span class="input-group-append">
+                    <button class="btn btn-outline-secondary border-left-0 border" type="button"
+                            id="orderHistorySearchbtn">
+                        <i class="fas fa-magnifying-glass"></i>
+                    </button>
+                </span>
+            </div>
+            <div class="col-lg-1">
+            </div>
+        </div>
+        <div class="col-12 px-0 px-lg-2" style="min-height: calc(100% - 56px);">
+            <div class="ibox product-detail mt-0">
+                <div class="ibox-content pt-0">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="row">
+                                @if (TempData["CheckoutOrderCompleted"] != null)
+                                {
+                                    <div class="col-12 checkout-complete">
+                                        <p class="alert alert-success">@TempData["CheckoutOrderCompleted"]</p>
+                                    </div>
+                                }
+
+                                <div class="col-lg-12 col-md-12">
+                                    <div class="table mt-3" id="cartTable">
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="shoppingCartItems" class="d-flex justify-content-center">
+                                <button id="showMore" class=" btn btn-outline-primary hide">Show More</button>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script src="~/lib/momentjs/moment-with-locales.min.js"></script>
+<script>
+    let pageSize = 40;
+    let start = 0;
+
+    getOrdersHistory();
+
+
+
+    if ($(window).width() > 1023) {
+        $("#profile-menu").addClass("widescreen-profile-menu");
+        $("#page-wrapper").css("min-height", $(".widescreen-profile-menu").css("height"));
+    }
+
+    function getOrdersHistory() {
+
+
+        toastr.warning("Loading...", null, {
+            "positionClass": "toast-top-right",
+            "timeOut": 0,
+            "extendedTimeOut": 0,
+            "closeButton": false,
+            "tapToDismiss": false
+        });
+
+
+
+        //var length = 40;
+        var length = pageSize;
+
+        if ($(".nav-order-page.active").length > 0)
+            start = parseInt($(".nav-order-page.active").attr("order")) * parseInt(length);
+        var searchValue = $("#orderHistorySearch").val().toLowerCase();
+
+        $.ajax({
+            url: "/Order/GetOrderHistoryChunk",
+            data: { pageNumber: 1 },
+            data: { start: start, length: length, searchValue: searchValue },
+            method: "GET",
+            dataType: "json",
+            success: function (response) {
+                if (response.successful) {
+                    if (response.data != null) {
+
+
+
+                        //Re arrange the object
+                        start = start + 40
+
+
+
+                        const groupedData = response.data.data.reduce((acc, item) => {
+                            const shortId = item.shortId;
+                            if (!acc[shortId]) {
+                                acc[shortId] = [];
+                            }
+                            acc[shortId].push(item);
+                            return acc;
+                        }, {});
+
+                        Object.keys(groupedData).forEach(shortId => {
+                            groupedData[shortId] = groupedData[shortId].reduce((acc, item) => {
+                                let key = item.merchantId;
+                                if (item.merchantId === 0) {
+                                    key = item.merchantExternalId;
+                                }
+                                if (!acc[key]) {
+                                    acc[key] = [];
+                                }
+                                acc[key].push(item);
+                                return acc;
+                            }, {});
+                        });
+                         console.log(JSON.stringify(groupedData));
+
+                        var firstOrdersHistory = [];
+
+
+                        const $cart = $('#cartTable');
+
+
+
+                        Object.keys(groupedData).forEach(shortId => {
+
+                            const shortIdSelector = `#short-id-${shortId}`;
+                            const $existingShortIdCard = $(shortIdSelector);
+                            // remove the existing card with the same shortId if it exists
+                            if ($existingShortIdCard.length) {
+                                //$existingShortIdCard.remove();
+                            }
+
+
+                            const $shortIdCard = $(`
+
+                                            <div class="col-12" id='short-id-${shortId}'>
+
+                                                 </div>
+
+                                            `);
+
+                            const $shortIdCardBody = $shortIdCard.find('#short-id-' + shortId);
+
+
+                            Object.keys(groupedData[shortId]).forEach(merchantId => {
+                                const merchant = groupedData[shortId][merchantId][0].merchantDisplayName || 'N/A';
+
+
+                                const $merchantCard = $(`
+
+
+                                                <div class="mt-2 label-container d-flex justify-content-between align-items-center">
+
+
+                                                  <a class=text-left font-weight-bold' style="font-weight: bold;" id-"shopId-Merchant-${shortId}" href=''>${merchant}</a>
+
+                                                        
+
+                                                          <span class="text-right" id="order-date-desc-${shortId}"></span>
+
+                                                </div>
+                                                `);
+
+
+                                $shortIdCard.append($merchantCard);
+
+
+                                let orderIdSet = new Set();
+                                let productIdSet = new Set();
+                                let productPriceSet = new Set();
+
+                                groupedData[shortId][merchantId].forEach(item => {
+
+
+
+
+                                    if (orderIdSet.has(item.orderId) && productIdSet.has(item.productId) && productPriceSet.has(item.product.variationId)) {
+                                        // skip appending this item, as it has already been added with the same orderId and productId
+                                        return;
+                                    }
+
+
+                                    else {
+
+                                        let statusClass = '';
+                                        let statusText = '';
+
+                                        if (item.isRedeemed == true && item.expirationTypeId == 4) {
+                                            statusClass = 'bg-complete-status';
+                                            statusText = 'Issued';
+                                        }
+
+                                        else {
+
+                                            switch (item.status) {
+                                                case 1:
+                                                    statusClass = 'bg-warning-status';
+                                                    statusText = 'Pending';
+                                                    break;
+
+                                                case 2:
+                                                    statusClass = 'bg-success-status';
+                                                    statusText = 'Delivery is underway';
+                                                    break;
+                                                case 8:
+                                                    statusClass = 'bg-warning-status';
+                                                    statusText = 'Pending Refund';
+                                                    break;
+                                                case 4:
+                                                    statusClass = 'bg-warning-status';
+                                                    statusText = 'Refund in progress';
+                                                    break;
+                                                case 5:
+                                                    statusClass = 'bg-warning-status';
+                                                    statusText = 'Refunded';
+                                                    break;
+                                                case 9:
+                                                    statusClass = 'bg-warning-status';
+                                                    statusText = 'Rejected';
+                                                    break;
+                                                default:
+                                                    statusClass = 'bg-warning-status';
+                                                    statusText = 'Order Received';
+                                            }
+
+                                        }
+
+
+                                        const productId = item.productId;
+                                        const productExternalId = item.productExternalId;
+                                        const merchantExternalId = item.merchantExternalId;
+                                        const href = item.merchantId === 0 ? `/product/0?i=${productExternalId}&s=${merchantExternalId}&t=1` :
+                                            `/product/${productId}`;
+
+                                        const hrefDetails = item.merchantId === 0 ?
+                                            "/order/ShippingDetails/" + item.product.externalShopId + "?type=2&shortId=" + item.shortId + "&qu=" + item.product.orderQuantity + "&sta=" + statusText :
+                                            "/order/ShippingDetails/" + item.id + "?type=1&shortId=" + item.shortId + "&qu=" + item.product.orderQuantity + "&sta=" + statusText
+
+                                        //Shop Href
+
+
+                                        const hrefShop = item.merchantId === 0 ? `/shop/0?s=${merchantExternalId}&t=1` :
+                                            `/shop/${merchantId}`;
+
+                                        const $productCard = $(`
+
+                                                        <input type="hidden" id='createdAt-${shortId}' value='${item.createdAt}'>
+                                                             <input type="hidden" id='shopIdHref-${shortId}' value='${hrefShop}'>
+                                                        <input type="hidden" id='merchant-ref-val-${shortId}' value='${item.merchantId}'>
+                                                        <input type="hidden" id='merchantExternalId-ref-val-${shortId}' value='${item.merchantExternalId}'>
+                                                        <input type="hidden" id='productExternalId-ref-val-${shortId}' value='${item.productExternalId}'>
+
+
+
+                                                <div class="ml-2 order-item-container row cart-item-row w-100 p-0" id="4fdde313-0abd-463e-80c9-529368cc5df2">
+                                                    <div class="cart-product-img cart-column col-4 p-0">
+                                                            <img src="${item.product.productCartPreviewSmallImage ? item.product.productCartPreviewSmallImage : item.productImageFolderUrl}"
+                                                            class="img-responsive">
+                                                    </div>
+                                                        <div class="cart-column col-8 row p-0">
+                                                            <a target="_blank" href="${href}" class="cartItemTitle">
+                                                                <h2 class="cart-item-title ellipsis-2">${item.productTitle}</h2>
+                                                        </a>
+                                                        <div class="row col-12 p-0">
+                                                            <div class="col-12 d-flex justify-content-between p-0">
+                                                                <div>
+                                                                        <span class="cartItemOriPrice"  id='subtotalPrice'></span>
+                                                                            <span class="cartItemPrice" style='color: #9A37F7;'  id='price'></span>
+                                                                </div>
+
+                                                                            <div class='w-50' style='display: ${item.product.additionalDiscount ? ' block' : 'none'};'>
+
+
+                                                                            <span class="custom-badge" style="display:  block;">${item.product.additionalDiscount ? item.product.additionalDiscount.name : ''}</span>
+
+                                                                    </div>
+
+                                                                <div class="cart-quantity-div align-center p-0 ml-2">
+                                                                        <span>x</span><span class="cart-quantity">${item.product.orderQuantity}</span>
+                                                                </div>
+                                                            </div>
+                                                                 <div class="col-12 cart-variations-column" style="display: ${item.variationId ? ' block' : 'none'};">
+
+                                                                <span class="cart-Item-Variation-Text">Variations:</span>
+                                                                <span class="cart-item-Variation">${item.variationText}</span>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="label-container d-flex justify-content-between align-items-center">
+                                                                    <label class="text-white text-center rounded-pill-status px-2 py-0.5 d-inline-block font-italic custom-padding ${statusClass}">${statusText}</label>
+                                                    <div class="col-4 d-flex justify-content-end">
+                                                            <a target="_blank" href="${hrefDetails}" class="text-muted">View details</a>
+                                                    </div>
+
+                                                </div>
+                                           `);
+
+
+                                        orderIdSet.add(item.orderId);
+                                        productIdSet.add(item.productId);
+                                        productPriceSet.add(item.product.variationId);
+
+
+
+                                        $shortIdCard.append($productCard);
+
+                                        
+                                        let merchantOriginalPrice = item.product.price.toFixed(2)
+                                        let currentSoldPrice = item.price.toFixed(2);
+                                        
+                                        let letFinalDicountPrice = item.product.discountedPrice.toFixed(2)
+
+                                        let cartItemOriPrice;
+                                        let cartItemPrice;
+
+
+                                        //merchant havent given a discount
+                                        if (currentSoldPrice == merchantOriginalPrice) {
+
+
+                                            if (merchantOriginalPrice == letFinalDicountPrice) {
+                                                 
+                                                cartItemOriPrice =  merchantOriginalPrice
+                                                cartItemPrice = currentSoldPrice
+                                            }
+
+                                            //User claims a discuount through points
+                                            else {
+
+                                                cartItemOriPrice = currentSoldPrice
+                                                cartItemPrice = letFinalDicountPrice
+
+                                            }
+                                        }
+
+                                        //Merchant has given a discuount to the product
+
+                                        else {
+
+                                            //No points involved for additional discounts
+                                            if (currentSoldPrice == letFinalDicountPrice) {
+
+                                                cartItemOriPrice = merchantOriginalPrice
+                                                cartItemPrice = currentSoldPrice
+                                            }
+
+                                            //User claims a discuount through points
+                                            else {
+
+                                               
+                                                cartItemOriPrice = letFinalDicountPrice
+                                                cartItemPrice = currentSoldPrice
+
+                                            }
+                                        }
+
+
+
+
+
+                                        const $cartItemOriPrice = $productCard.find('.cartItemOriPrice');
+                                        const $cartItemPrice = $productCard.find('.cartItemPrice');
+
+                                        if(cartItemOriPrice != cartItemPrice) {
+
+                                            $cartItemOriPrice.text(`RM ${cartItemOriPrice}`);
+                                            $cartItemPrice.text(`RM ${cartItemPrice}`);
+                                            $cartItemOriPrice.removeClass("hide");
+
+                                        }
+
+                                        else {
+
+                                            $cartItemOriPrice.addClass("hide");
+                                            $cartItemPrice.text(`RM ${cartItemPrice}`);
+                                        }
+
+
+                           
+
+
+
+                                    }
+
+
+
+                                });
+
+
+                            });
+                            $cart.append($shortIdCard);
+
+                            var dateString = $("#createdAt-" + shortId).val();
+                            var date = moment(dateString, "YYYY-MM-DD HH:mm");
+                    
+                            $("#order-date-desc-" + shortId).html("Order Date : <span class='font-weight-bold' id='order-date-" + shortId + "'></span>")
+                            $("#order-date-" + shortId).html(date.format("DD/MM/YYYY"))
+
+                           
+
+                            $("#shopId-Merchant-" + shortId).prop("href", $("#shopIdHref-" + shortId).val());
+
+                        });
+
+
+                        if (response.data.recordsTotal < start) {
+                            $("#showMore").addClass('hide')
+                        }
+
+                        else {
+                            $("#showMore").removeClass('hide')
+
+                        }
+
+
+                        toastr.clear();
+
+
+
+                    }
+
+                    else {
+
+                        if (response.data.data == null) {
+
+                            $("#showMore").addClass('hide')
+
+                        }
+
+                        if (start >= 0) {
+                            start = start - 40
+                        }
+                    }
+                }
+            },
+            error: function (error) {
+                toastr.error(error);
+            }
+        });
+
+    }
+
+
+    $("#showMore").click(function () {
+
+        getOrdersHistory()
+    });
+
+
+    $("#orderHistorySearchbtn").click(function () {
+        $("#showMore").addClass('hide')
+        $('#cartTable').empty()
+        start = 0;
+        length = 120;
+        getOrdersHistory()
+    });
+
+
+
+</script>

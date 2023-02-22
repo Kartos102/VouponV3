@@ -1,0 +1,242 @@
+﻿
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Locations";
+}
+
+<h1>Locations Manager</h1>
+<div class="card-group">
+    <div class="card">
+        <h5 class="card-header">Countries</h5>
+        <div class="card-body">
+            <p class="card-text">
+                <button type="button" class="btn btn-danger" style="float:right;" data-toggle="modal" data-target="#AddCountry">Add</button>
+            </p>
+            <br /> <br />
+            <p class="card-text">
+                <select multiple class="form-control" id="countryList" style="height:500px">
+                </select>
+            </p>
+        </div>
+    </div>
+    <div class="card">
+        <h5 class="card-header">Provinces</h5>
+
+        <div class="card-body">
+            <p class="card-text">
+                <button type="button" class="btn btn-danger" style="float:right;" data-toggle="modal" data-target="#AddProvince">Add</button>
+            </p>
+            <br /> <br />
+            <p class="card-text">
+                <select multiple class="form-control" id="provinceList" style="height:500px">
+                </select>
+            </p>
+        </div>
+    </div>
+    <div class="card">
+        <h5 class="card-header">Districts</h5>
+        <div class="card-body">
+            <p class="card-text">
+                <button type="button" class="btn btn-danger" style="float:right;" data-toggle="modal" data-target="#AddDistrict">Add</button>
+            </p>
+            <br /> <br />
+            <p class="card-text">
+                <select multiple class="form-control" id="districtList" style="height:500px">
+                </select>
+            </p>
+        </div>
+    </div>
+    <div class="card">
+        <h5 class="card-header">Postcodes</h5>
+        <div class="card-body">
+            <p class="card-text">
+                <button type="button" class="btn btn-danger" style="float:right;" data-toggle="modal" data-target="#AddPostcodeModal">Add</button>
+            </p>
+            <br /> <br />
+            <p class="card-text">
+                <select multiple class="form-control" id="postcodeList" style="height:500px">
+                </select>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Review Business Info Modal -->
+<div class="modal fade" id="AddPostcodeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Postcode</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Country:</label>
+                        <input data-id="0" type="text" class="form-control" id="AddPostcodeCountry" placeholder="Example input" value="" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Province:</label>
+                        <input data-id="0" type="text" class="form-control" id="AddPostcodeProvince" placeholder="Example input" value="" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">District:</label>
+                        <input data-id="0" type="text" class="form-control" id="AddPostcodeDistrict" placeholder="Example input" value="" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Postcode:</label>
+                        <input data-id="0" type="text" class="form-control" id="AddPostcodeInput" placeholder="New postcode" value="">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnAddPostcode">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            GetCountryList();
+            $('#districtList').change(function () {
+
+                GetPostcodeList($(this).val());
+            });
+            $('#provinceList').change(function () {
+                GetDistrictList($(this).val());
+                $("#districtList").val($("#districtList option:first").val());
+                $('#districtList').change();
+            });
+            $('#countryList').change(function () {
+                GetProvinceList($(this).val());
+                $("#provinceList").val($("#provinceList option:first").val());
+                $('#provinceList').change();
+            });
+            $("#countryList").val($("#countryList option:first").val());
+            $('#countryList').change();
+
+            $('#AddPostcodeModal').on('show.bs.modal', function () {
+                $("#AddPostcodeCountry").attr("data-id", $('#countryList').val());
+                $("#AddPostcodeCountry").val($("#countryList option:selected").html());
+                $("#AddPostcodeProvince").attr("data-id", $('#provinceList').val());
+                $("#AddPostcodeProvince").val($("#provinceList option:selected").html());
+                $("#AddPostcodeDistrict").attr("data-id", $('#districtList').val());
+                $("#AddPostcodeDistrict").val($("#districtList option:selected").html());
+                $("#AddPostcodeInput").val("");
+            })
+
+            $('#AddPostcodeModal').on('shown.bs.modal', function () {
+                $("#AddPostcodeInput").focus();
+            })
+
+            $('#btnAddPostcode').click(function () { AddPostcode(); });
+        });
+        function GetPostcodeList(districtId) {
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/Admin/Locations/GetPostcodeList/' + districtId,
+                success: function (response) {
+                    var options = "";
+                    $("#postcodeList").html();
+                    if (response.successful) {
+                        if (response.data != null) {
+                            $(response.data).each(function (index, item) {
+                                options += "<option value=" + item.id + ">" + item.name + "</option>";
+                            });
+                            $("#postcodeList").html(options);
+                        }
+                    }
+                }
+            });
+        }
+        function GetDistrictList(provinceId) {
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/Admin/Locations/GetDistrictList/' + provinceId,
+                success: function (response) {
+                    var options = "";
+                    $("#districtList").html();
+                    if (response.successful) {
+                        if (response.data != null) {
+                            $(response.data).each(function (index, item) {
+                                options += "<option value=" + item.id + ">" + item.name + "</option>";
+                            });
+                            $("#districtList").html(options);
+                        }
+                    }
+                }
+            });
+        }
+        function GetProvinceList(countryId) {
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                async: false,
+                url: '/Admin/Locations/GetProvinceList/' + countryId,
+                success: function (response) {
+                    var options = "";
+                    $("#provinceList").html();
+                    if (response.successful) {
+                        if (response.data != null) {
+                            $(response.data).each(function (index, item) {
+                                options += "<option value=" + item.id + ">" + item.name + "</option>";
+                            });
+                            $("#provinceList").html(options);
+                        }
+                    }
+                }
+            });
+        }
+
+        function GetCountryList() {
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                async: false,
+                url: '/Admin/Locations/GetCountryList',
+                success: function (response) {
+                    var options = "";
+                    $("#countryList").html();
+                    if (response.successful) {
+                        if (response.data != null) {
+                            $(response.data).each(function (index, item) {
+                                options += "<option value=" + item.id + ">" + item.name + "</option>";
+                            });
+                            $("#countryList").html(options);
+                        }
+                    }
+                }
+            });
+        }
+
+        function AddPostcode() {
+            var districtId = $("#AddPostcodeDistrict").attr("data-id");
+            var postcode = $("#AddPostcodeInput").val();
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    DistrictId: districtId, Name: postcode
+                },
+                url: '/Admin/Locations/AddPostcode',
+                success: function (response) {
+                    $('#AddPostcodeModal').modal('hide');
+                    GetPostcodeList(districtId);
+                }
+            });
+        }
+
+    </script>
+
+}
+
+

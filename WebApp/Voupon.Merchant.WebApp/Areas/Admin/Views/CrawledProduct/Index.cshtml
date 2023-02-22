@@ -1,0 +1,239 @@
+﻿@{
+    ViewData["Title"] = "Crawled Product";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .search-section {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        padding: 10px;
+    }
+
+    .searchText {
+        display: flex;
+        flex-grow: 2;
+        border: none;
+    }
+    .number-input{
+        display : flex;
+        justify-content : center;
+        width: 60px;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    .max-width{
+        max-width :200px
+
+    }
+
+    /* Firefox */
+    input[type=number] {
+      -moz-appearance: textfield;
+      text-align : center;
+    }
+</style>
+
+<div class="dashboard-main-wrapper">
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content ">
+            <div class="row">
+                <div class="col-lg-4 ">
+                    <h1 class="page-header">Crawled Product</h1>
+                </div>
+                <div class="row col-lg-4">
+                    <div class="search-section">
+                        <input type="text" id="searchText" class="form-control searchText" />
+                        <button type="button" class="btn btn-primary" onclick="search()">Search</button>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12">
+                    <table id="crawler-table" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Merchant Name</th>
+                                <th>Product URL</th>
+                                <th>Last Completed Crawl</th>
+                                <th>Crawl</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                        <tfoot>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-end m-3" id="pagi-number-list">
+                    <li class="page-item disabled" id="prev-button"><a class="page-link" tabindex="-1" onclick="prevPage()">Previous</a></li>
+                    <li class="page-item number-input"><input type='number' disabled class="form-control" onchange="onPageChange()" id='page-number' /></li>
+                    <li class="page-item pl-1" id="next-button"><a class="page-link" onclick="nextPage()">Next</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editCrawlerMerchantModal" data-id="0" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Detail Crawled Product</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="editForm" name="editForm" method="post">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label"> Product Name</label>
+                        <textarea  class="form-control" disabled id="editMerchantName" ></textarea>
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Product Url</label>
+                        <textarea class="form-control" disabled id="editMerchantUrl" > </textarea>
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button type="submit" class="btn btn-light"  data-dismiss="modal">Ok</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts {
+    <script>
+        var currentPage = 1;
+        var totalPage = 0;
+        //init
+        $(document).ready(function() {
+            getList(1)
+             $('#page-number').val(1);
+        })
+
+
+        function onPageChange(page_number) { 
+            $('#page-number').val(page_number);
+            getList(page_number)
+        }
+
+        function nextPage() { 
+            onPageChange(currentPage+=1)
+        }
+
+         function prevPage() { 
+            onPageChange(currentPage-=1)
+        }
+
+        function getList(pageNumber,searchText) {
+            currentPage = pageNumber;
+            var offset = 20;
+            var limit = (pageNumber - 1) * offset || 0;
+            
+            var url = `/Admin/CrawledProduct/GetCrawledProductList?limit=${limit}&offset=${offset}`
+            if (searchText) {
+                url = `${url}&searchValue=${searchText}`
+            }
+            $.ajax({
+                type: "Get",
+                async: false,
+                dataType: 'json',
+                url: url,
+                success: function(response) {
+                    if (response.successful) {
+                        if (response.data != null) {
+                            var crawlerData = response.data;
+                            var table = "";
+                            totalPage = response.data.pagination.totalPage
+                            generatePagination()
+                            $(response.data.crawled).each(function() {
+                                table += `<tr id="item_${this.id}">`;
+                                table += '<td class="ellipsis max-width">' + this.itemName + '</td>';
+                                table += '<td class="ellipsis max-width">' + this.merchantName + '</td>';
+                                table += '<td class="ellipsis max-width">' + this.pageUrl + '</td>';
+                                table += '<td>' + moment(this.lastUpdateAt).subtract(7, 'd').format("DD/MM/YYYY HH:mm") + '</td>';
+                                table += '<td><div class="switch-button switch-button-success"><input class="" onchange="updateStatus(this);" type="checkbox"' + (this.statusId == 1 ? 'checked' : '') + ' id="status_item_' + this.id + '" name="status_item_' + this.id + '" data-id="' + this.id + '"><span> <label for="status_item_' + this.id + '"></label> </span><span class="d-none publish-status-merchant">Published</span> </div></td>';
+                                table += '<td><button type="button" class="showEditModal btn btn-primary" data-id="' + this.id + '">Detail</button></td>';
+                                table += '</tr>';
+                            });
+                            $('#crawler-table > tbody').html(table);
+                            $(".showEditModal").click(function() {
+                                var id = $(this).attr('data-id');
+                                var crawler = crawlerData.crawled.find(x => x.id == id);
+                                if (crawler != null) {
+                                    $('#editCrawlerMerchantModal').attr('data-id', id)
+                                    $('#editMerchantName').val(crawler.itemName)
+                                    $('#editMerchantUrl').val(crawler.pageUrl)
+                                    $("#editCrawlerMerchantModal").modal('show');
+                                }
+                            });
+
+                        };
+                    }
+                }
+            })
+        };
+
+        function generatePagination() { 
+            
+             $('#prev-button').removeClass('disabled')
+             $('#next-button').removeClass('disabled')
+            if (currentPage == 1) { 
+                $('#prev-button').addClass('disabled')
+            }
+
+            if (currentPage == totalPage) { 
+                $('#next-button').addClass('disabled')
+            }
+            
+        }
+
+        function search() {
+            var searchText = $('#searchText').val();
+            getList(1,searchText)
+        };
+
+        function updateStatus(input) {
+            var status = $(input).is(":checked");
+            var id = $(input).attr("data-id");
+            $.ajax({
+                type: "Post",
+                dataType: 'json',
+                data: {
+                    id: id,
+                    status: status ? 1 : 0
+                },
+                url: `/Admin/CrawledProduct/UpdateCrawledProductStatus`,
+                success: function(response) {
+                    toastr.success("Successfully update crawler");
+                    if (response.successful) {
+                        getList(currentPage);
+                    }
+                    else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function() {
+                    toastr.error("Fail to send");
+                }
+            });
+        }
+
+    </script>
+}
+
+

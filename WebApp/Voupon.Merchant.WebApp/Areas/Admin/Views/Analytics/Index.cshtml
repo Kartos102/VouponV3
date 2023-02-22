@@ -1,0 +1,629 @@
+﻿
+@{
+    ViewData["Title"] = "Analytics";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row mt-5">
+    <div class="row col-lg-6">
+        <div class="row col-lg-12 px-0">
+            <div class="col-lg-2 col-4 my-lg-0 my-2 px-1">
+                <h3 class="section-title">Signup</h3>
+            </div>
+            <div class="col-lg-2 col-4 px-1 my-lg-0 my-2">
+                <input type="date" id="signupDateFrom" class="form-control" />
+            </div>
+            <div class="col-lg-2 col-4 my-lg-0 my-2 px-1">
+                <input type="date" id="signupDateTo" class="form-control" />
+            </div>
+            <div class="col-lg-2 col-4 px-1">
+                <select id="signupDateSelection" class="form-control">
+                    <option value="1">Last 24 Hours</option>
+                    <option value="2" selected>Last 7 Days</option>
+                    <option value="3">Last 30 Days</option>
+                </select>
+            </div>
+            <div class="col-lg-4 col-8 px-1">
+                <button type="button" class="btn-primary" id="btnSignupSearch">Search</button>
+                <button type="button" class="btn-primary" id="btnSignupExport">Export Data(Excel)</button>
+                <button type="button" class="btn-primary" id="btnSignupEmailExport" style="background: #ffc107 !important">Export Email(Excel)</button>
+            </div>
+        </div>
+        <div class="col-12 px-0">
+            <div class="chart-container py-2">
+                <span id="signupChartLoading" style="height:200px;">Loading...</span>
+                <canvas id="signupChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="row col-lg-6">
+        <div class="row col-lg-12 px-0">
+            <div class="col-lg-2 col-4 my-lg-0 my-2 px-1">
+                <h3 class="section-title">VPoints</h3>
+            </div>
+            <div class="col-lg-2 col-4 px-1 my-lg-0 my-2">
+                <input type="date" id="vPointsDateFrom" class="form-control" />
+            </div>
+            <div class="col-lg-2 col-4 my-lg-0 my-2 px-1">
+                <input type="date" id="vPointsDateTo" class="form-control" />
+            </div>
+            <div class="col-lg-2 col-4 px-1">
+                <select id="vPointsDateSelection" class="form-control">
+                    <option value="1">Last 24 Hours</option>
+                    <option value="2" selected>Last 7 Days</option>
+                    <option value="3">Last 30 Days</option>
+                </select>
+            </div>
+            <div class="col-lg-4 col-8 px-1">
+                <button type="button" class="btn-primary" id="btnVPointsSearch">Search</button>
+                <button type="button" class="btn-primary" id="btnVPointsExport">Export Data(Excel)</button>
+            </div>
+        </div>
+
+        <div class="col-12 px-0">
+            <div class="chart-container py-2">
+                <span id="vPointsChartLoading" style="height:200px;">Loading...</span>
+                <canvas id="vPointsChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="row col-lg-6">
+        <div class="row col-lg-12 px-0">
+            <div class="col-lg-2 col-4 my-lg-0 my-2 px-1">
+                <h3 class="section-title">Orders</h3>
+            </div>
+            <div class="col-lg-2 col-4 px-1 my-lg-0 my-2">
+                <input type="date" id="ordersDateFrom" class="form-control" />
+            </div>
+            <div class="col-lg-2 col-4 my-lg-0 my-2 px-1">
+                <input type="date" id="ordersDateTo" class="form-control" />
+            </div>
+            <div class="col-lg-2 col-4 px-1">
+                <select id="ordersDateSelection" class="form-control">
+                    <option value="1">Last 24 Hours</option>
+                    <option value="2" selected>Last 7 Days</option>
+                    <option value="3">Last 30 Days</option>
+                </select>
+            </div>
+            <div class="col-lg-4 col-8 px-1">
+                <button type="button" class="btn-primary" id="btnOrdersSearch">Search</button>
+                <button type="button" class="btn-primary" id="btnOrdersExport">Export Data(Excel)</button>
+            </div>
+        </div>
+
+        <div class="col-12 px-0">
+            <div class="chart-container py-2">
+                <span id="ordersChartLoading" style="height:200px;">Loading...</span>
+                <canvas id="ordersChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts{
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>
+
+    <script>
+        var signupChart;
+        var vPointsChart;
+        var ordersChart;
+        var signupEmailData = "";
+        var signupChartData = "";
+        var vPointsChartData = "";
+        var ordersChartData = "";
+        var isFirstLoad = true;
+
+        $(function () {
+            $("#signupDateFrom").val(moment().add('days', -7).format('YYYY-MM-DD'));
+            $("#signupDateTo").val(moment().format('YYYY-MM-DD'));
+
+            $("#vPointsDateFrom").val(moment().add('days', -7).format('YYYY-MM-DD'));
+            $("#vPointsDateTo").val(moment().format('YYYY-MM-DD'));
+
+            $("#ordersDateFrom").val(moment().add('days', -7).format('YYYY-MM-DD'));
+            $("#ordersDateTo").val(moment().format('YYYY-MM-DD'));
+
+            $("#signupDateSelection").change(function () {
+                var signupDateType = $(this).val();
+                var signupDateFrom = "";
+                var signupDateTo = "";
+
+                if (signupDateType == 1) {
+                    signupDateFrom = moment().add('days', -1).format('YYYY-MM-DD');
+                    signupDateTo = moment().format('YYYY-MM-DD');
+                }
+                else if (signupDateType == 2) {
+                    signupDateFrom = moment().add('days', -7).format('YYYY-MM-DD');
+                    signupDateTo = moment().format('YYYY-MM-DD');
+                }
+                else if (signupDateType == 3) {
+                    signupDateFrom = moment().add('days', -30).format('YYYY-MM-DD');
+                    signupDateTo = moment().format('YYYY-MM-DD');
+                }
+
+                $("#signupDateFrom").val(signupDateFrom);
+                $("#signupDateTo").val(signupDateTo);
+            });
+
+            $("#btnSignupExport").click(function () {
+                var rows = [
+                    ["Date", "Total Merchant Signup", "Total User Signup"]
+                ];
+                $(signupChartData).each(function () {
+                    rows.push([moment(this.date).format('YYYY-MM-DD'), this.totalMerchantSignup, this.totalUserSignup])
+                })
+                let csvContent = rows.map(e => e.join(",")).join("\n");
+
+                downloadBlob(csvContent, 'signup-data-' + new Date().getTime() + '.csv', 'text/csv;charset=utf-8;');
+
+            });
+
+            $("#btnSignupEmailExport").click(function () {
+                var rows = [
+                    ["Date", "Email", "Type"]
+                ];
+                $(signupChartData).each(function () {
+                    var date = this.date;
+                    if (this.merchantEmails != null && this.merchantEmails != "") {
+                        var emailList = this.merchantEmails.split(",");
+                        console.log(emailList)
+                        $(emailList).each(function () {
+                            rows.push([moment(date).format('YYYY-MM-DD'), this, "merchant"])
+                        });
+                    }
+                    if (this.userEmails != null && this.userEmails != "") {
+                        var emailList = this.userEmails.split(",");
+                        console.log(emailList)
+                        $(emailList).each(function () {
+                            rows.push([moment(date).format('YYYY-MM-DD'), this, "user"])
+                        });
+                    }
+                })
+                let csvContent = rows.map(e => e.join(",")).join("\n");
+
+                downloadBlob(csvContent, 'signup-email-data-' + new Date().getTime() + '.csv', 'text/csv;charset=utf-8;');
+
+            });
+
+            $("#btnVPointsExport").click(function () {
+                var rows = [
+                    ["Date", "Total VPoints Earn", "Total VPoints Used"]
+                ];
+                $(signupChartData).each(function () {
+                    rows.push([moment(this.date).format('YYYY-MM-DD'), this.totalPointsEarn, this.totalPointsUsed])
+                })
+                let csvContent = rows.map(e => e.join(",")).join("\n");
+
+                downloadBlob(csvContent, 'vPoints-data-' + new Date().getTime() + '.csv', 'text/csv;charset=utf-8;');
+            });
+
+            $("#vPointsDateSelection").change(function () {
+                var vPointsDateType = $(this).val();
+                var vPointsDateFrom = "";
+                var vPointsDateTo = "";
+
+                if (vPointsDateType == 1) {
+                    vPointsDateFrom = moment().add('days', -1).format('YYYY-MM-DD');
+                    vPointsDateTo = moment().format('YYYY-MM-DD');
+                }
+                else if (vPointsDateType == 2) {
+                    vPointsDateFrom = moment().add('days', -7).format('YYYY-MM-DD');
+                    vPointsDateTo = moment().format('YYYY-MM-DD');
+                }
+                else if (vPointsDateType == 3) {
+                    vPointsDateFrom = moment().add('days', -30).format('YYYY-MM-DD');
+                    vPointsDateTo = moment().format('YYYY-MM-DD');
+                }
+
+                $("#vPointsDateFrom").val(vPointsDateFrom);
+                $("#vPointsDateTo").val(vPointsDateTo);
+            });
+
+            $("#ordersDateSelection").change(function () {
+                var ordersDateType = $(this).val();
+                var ordersDateFrom = "";
+                var ordersDateTo = "";
+
+                if (ordersDateType == 1) {
+                    ordersDateFrom = moment().add('days', -1).format('YYYY-MM-DD');
+                    ordersDateTo = moment().format('YYYY-MM-DD');
+                }
+                else if (ordersDateType == 2) {
+                    ordersDateFrom = moment().add('days', -7).format('YYYY-MM-DD');
+                    ordersDateTo = moment().format('YYYY-MM-DD');
+                }
+                else if (ordersDateType == 3) {
+                    ordersDateFrom = moment().add('days', -30).format('YYYY-MM-DD');
+                    ordersDateTo = moment().format('YYYY-MM-DD');
+                }
+
+                $("#ordersDateFrom").val(ordersDateFrom);
+                $("#ordersDateTo").val(ordersDateTo);
+            });
+
+            $("#btnOrdersExport").click(function () {
+                var rows = [
+                    ["Date", "Total Orders"]
+                ];
+                $(ordersChartData).each(function () {
+                    rows.push([moment(this.date).format('YYYY-MM-DD'), this.totalOrders])
+                })
+                let csvContent = rows.map(e => e.join(",")).join("\n");
+
+                downloadBlob(csvContent, 'order-data-' + new Date().getTime() + '.csv', 'text/csv;charset=utf-8;');
+
+            });
+
+            $("#btnSignupSearch").click(function () {
+                $("#btnSignupSearch").prop('disabled');
+                $("#btnSignupSearch").addClass('disabled').text('Searching...');
+                $("#signupChartLoading").show();
+                $("#signupChart").hide();
+
+                $.ajax({
+                    url: "/admin/analytics/signup",
+                    method: "GET",
+                    data: {
+                        from: $("#signupDateFrom").val(),
+                        to: $("#signupDateTo").val()
+                    }
+                }).done(function (response) {
+                    signupChartData = response.data.items;
+                    $("#btnSignupSearch").prop('disabled', false);
+                    $("#btnSignupSearch").removeClass('disabled').text('Search');
+                    $("#signupChartLoading").hide();
+                    $("#signupChart").show();
+
+                    if (response.successful) {
+                        updateSignupChart(response.data.items);
+                    }
+                    else {
+                        toastr.error("Fail to update data");
+                    }
+                }).fail(function (res) {
+                    console.log(res);
+                    toastr.error("Fail to update data");
+                });
+            });
+            $("#btnSignupSearch").click();
+
+            $("#btnVPointsSearch").click(function () {
+                $("#btnVPointsSearch").prop('disabled');
+                $("#btnVPointsSearch").addClass('disabled').text('Searching...');
+                $("#vPointsChartLoading").show();
+                $("#vPointsChart").hide();
+
+                $.ajax({
+                    url: "/admin/analytics/vpoints",
+                    method: "GET",
+                    data: {
+                        from: $("#vPointsDateFrom").val(),
+                        to: $("#vPointsDateTo").val()
+                    }
+                }).done(function (response) {
+                    $("#btnVPointsSearch").prop('disabled', false);
+                    $("#btnVPointsSearch").removeClass('disabled').text('Search');
+                    $("#vPointsChartLoading").hide();
+                    $("#vPointsChart").show();
+
+                    if (response.successful) {
+                        updateVPointsChart(response.data.items);
+                    }
+                    else {
+                        toastr.error("Fail to update data");
+                    }
+                }).fail(function (res) {
+                    console.log(res);
+                    toastr.error("Fail to update data");
+                });
+            });
+            $("#btnVPointsSearch").click();
+
+            $("#btnOrdersSearch").click(function () {
+                $("#btnOrdersSearch").prop('disabled');
+                $("#btnOrdersSearch").addClass('disabled').text('Searching...');
+                $("#ordersChartLoading").show();
+                $("#ordersChart").hide();
+
+                $.ajax({
+                    url: "/admin/analytics/orders",
+                    method: "GET",
+                    data: {
+                        from: $("#ordersDateFrom").val(),
+                        to: $("#ordersDateTo").val()
+                    }
+                }).done(function (response) {
+                    ordersChartData = response.data.items;
+                    $("#btnOrdersSearch").prop('disabled', false);
+                    $("#btnOrdersSearch").removeClass('disabled').text('Search');
+                    $("#ordersChartLoading").hide();
+                    $("#ordersChart").show();
+
+                    if (response.successful) {
+                        updateOrdersChart(response.data.items);
+                    }
+                    else {
+                        toastr.error("Fail to update data");
+                    }
+                }).fail(function (res) {
+                    console.log(res);
+                    toastr.error("Fail to update data");
+                });
+            });
+            $("#btnOrdersSearch").click();
+        })
+
+
+
+
+        function updateSignupChart(data) {
+            var dates = [];
+            var userSignup = [];
+            var merchantSignup = [];
+            $(data).each(function () {
+                dates.push(this.dateString);
+            });
+
+            $(data).each(function () {
+                userSignup.push(this.totalUserSignup);
+            });
+
+            $(data).each(function () {
+                merchantSignup.push(this.totalMerchantSignup);
+            });
+
+            if (signupChart) {
+                signupChart.destroy();
+            }
+            var ctx = document.getElementById('signupChart').getContext('2d');
+            signupChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Merchant Signup',
+                        yAxisID: 'A',
+                        borderColor: '#ffbaa2',
+                        backgroundColor: 'white',
+                        data: merchantSignup,
+                        fill: false
+                    }, {
+                        label: 'User Signup',
+                        yAxisID: 'B',
+                        borderColor: '#91cf96',
+                        backgroundColor: 'white',
+                        data: userSignup,
+                        fill: false
+                    }]
+                },
+                options: {
+                    tooltips: {
+                        mode: 'nearest'
+                    },
+                    scales: {
+                        yAxes: [{
+                            id: 'A',
+                            type: 'linear',
+                            position: 'left',
+                            ticks: {
+                                min: 0,
+                                max: Math.max.apply(Math, merchantSignup),
+                                stepSize: 20,
+                                fontColor: '#ffbaa2',
+                                callback: function (value, index, values) {
+                                    return value;
+                                }
+                            }
+                        }, {
+                            id: 'B',
+                            type: 'linear',
+                            position: 'right',
+                            ticks: {
+                                min: 0,
+                                max: Math.max.apply(Math, userSignup),
+                                stepSize: 20,
+                                fontColor: '#91cf96',
+                                callback: function (value, index, values) {
+                                    return value;
+                                }
+                            }
+                        }]
+                    },
+                    elements: {
+                        line: {
+                            tension: 0, // disables bezier curves
+                        },
+                        point: {
+                            radius: 4,
+                            borderWidth: 2,
+                            pointStyle: 'circle'
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateVPointsChart(data) {
+            var dates = [];
+            var totalPointsEarn = [];
+            var totalPointsUsed = [];
+            $(data).each(function () {
+                dates.push(this.dateString);
+            });
+
+            $(data).each(function () {
+                totalPointsEarn.push(this.totalPointsEarn);
+            });
+
+            $(data).each(function () {
+                totalPointsUsed.push(this.totalPointsUsed);
+            });
+
+            if (vPointsChart) {
+                vPointsChart.destroy();
+            }
+
+            var ctx = document.getElementById('vPointsChart').getContext('2d');
+            vPointsChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'VPoints Earn',
+                        yAxisID: 'A',
+                        borderColor: '#ffbaa2',
+                        backgroundColor: 'white',
+                        data: totalPointsEarn,
+                        fill: false
+                    }, {
+                        label: 'VPoints Used',
+                        yAxisID: 'B',
+                        borderColor: '#91cf96',
+                        backgroundColor: 'white',
+                        data: totalPointsUsed,
+                        fill: false
+                    }]
+                },
+                options: {
+                    tooltips: {
+                        mode: 'nearest'
+                    },
+                    scales: {
+                        yAxes: [{
+                            id: 'A',
+                            type: 'linear',
+                            position: 'left',
+                            ticks: {
+                                min: 0,
+                                max: Math.max.apply(Math, totalPointsEarn) + 50,
+                                stepSize: 200,
+                                padding: 10,
+                                fontColor: '#ffbaa2',
+                                autoSkip: false,
+                                callback: function (value, index, values) {
+                                    return value;
+                                }
+                            }
+                        }, {
+                            id: 'B',
+                            type: 'linear',
+                            position: 'right',
+                            ticks: {
+                                min: 0,
+                                max: Math.max.apply(Math, totalPointsUsed) + 50,
+                                stepSize: 200,
+                                padding: 10,
+                                fontColor: '#91cf96',
+                                autoSkip: false,
+                                callback: function (value, index, values) {
+                                    return value;
+                                }
+                            }
+                        }]
+                    },
+                    elements: {
+                        line: {
+                            tension: 0, // disables bezier curves
+                        },
+                        point: {
+                            radius: 4,
+                            borderWidth: 2,
+                            pointStyle: 'circle'
+                        }
+                    }
+                }
+            });
+
+            if (!isFirstLoad) {
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#vPointsChart").offset().top
+                }, 1000);
+            }
+            isFirstLoad = false;
+
+        }
+
+        function updateOrdersChart(data) {
+            var dates = [];
+            var orders = [];
+            $(data).each(function () {
+                dates.push(this.dateString);
+            });
+
+            $(data).each(function () {
+                orders.push(this.totalOrders);
+            });
+
+            if (ordersChart) {
+                ordersChart.destroy();
+            }
+            var ctx = document.getElementById('ordersChart').getContext('2d');
+            ordersChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Orders',
+                        yAxisID: 'A',
+                        borderColor: '#ffbaa2',
+                        backgroundColor: 'white',
+                        data: orders,
+                        fill: false
+                    }]
+                },
+                options: {
+                    tooltips: {
+                        mode: 'nearest'
+                    },
+                    scales: {
+                        yAxes: [{
+                            id: 'A',
+                            type: 'linear',
+                            position: 'left',
+                            ticks: {
+                                min: 0,
+                                max: Math.max.apply(Math, orders),
+                                stepSize: 20,
+                                fontColor: '#ffbaa2',
+                                callback: function (value, index, values) {
+                                    return value;
+                                }
+                            }
+                        }]
+                    },
+                    elements: {
+                        line: {
+                            tension: 0, // disables bezier curves
+                        },
+                        point: {
+                            radius: 4,
+                            borderWidth: 2,
+                            pointStyle: 'circle'
+                        }
+                    }
+                }
+            });
+        }
+
+        function downloadBlob(content, filename, contentType) {
+            // Create a blob
+            var blob = new Blob([content], { type: contentType });
+            var url = URL.createObjectURL(blob);
+
+            // Create a link to download it
+            var pom = document.createElement('a');
+            pom.href = url;
+            pom.setAttribute('download', filename);
+            pom.click();
+        }
+    </script>
+
+}
+
+

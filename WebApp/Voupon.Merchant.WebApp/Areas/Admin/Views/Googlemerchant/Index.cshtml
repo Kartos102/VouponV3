@@ -1,0 +1,273 @@
+﻿@model Voupon.Merchant.WebApp.Areas.Admin.Controllers.FinanceSummaryViewModel
+@{
+    ViewData["Title"] = "Google Merchant";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="dashboard-main-wrapper">
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content ">
+            <h1>Google Merchant Keywords</h1>
+            <div class="clearfix"></div>
+            <div>
+                <form>
+                    <div class="float-left">
+                        <div class="fileupload fileupload-new" data-provides="fileupload">
+                            <div class="input-append">
+                                <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-exists"></span><input type="file" class="float-left" id="fileUpload" name="fileUpload" /></span><span class="fileupload-new btn btn-primary float-right" style="width:100px;" id="btnFileUpload">Upload</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="float-right">
+                        <button id="btnShowAddKeywordModal" class="btn btn-primary float-right">Add Keyword</button><button type="button" class="btn btn-primary float-right" style="margin:0 10px;" id="btnRegenerateXML">Regenerate XML</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="clearfix"></div>
+            <div class="table-responsive-lg" style="margin-top:50px;">
+                <table id="keywordsTable" class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col" style="text-align: center;">Keyword</th>
+                            <th scope="col" style="text-align: center;">Sort</th>
+                            <th scope="col" style="text-align: center;">Total Listing</th>
+                            <th scope="col" style="text-align: center;">Action</th>
+                            <th scope="col" style="text-align: center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Commission Modal -->
+    <div class="modal fade" id="addKeywordModal" tabindex="-1" role="dialog" aria-labelledby="newKeyword" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="EditCommissionModalTitle">New keyword</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">keyword</label>
+                            <input type="text" class="form-control" step="any" id="newKeyword" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Total Listing</label>
+                            <input type="number" class="form-control" step="any" id="newTotalListing" value="" min="0" max="100">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Sort By</label>
+                            <input type="text" class="form-control" step="any" id="newSortby" value="sold" disabled="disabled">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnCreateKeyword">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+
+            $("#btnRegenerateXML").click(function () {
+                $.ajax({
+                    url: "https://vodus-api-serverless.azurewebsites.net/api/GenerateGoogleMerchantXML",
+                    type: "GET",
+                    async: true,
+                }).done(function (response) {
+                    
+                });
+                toastr.success("We have started generating google merchant XML. You will receive an email after it's generated");
+                location.reload();
+            });
+
+            $("#btnShowAddKeywordModal").click(function () {
+                $("#addKeywordModal").modal('show');
+            });
+
+            $("#btnFileUpload").click(function () {
+                toastr.clear();
+                var file = document.getElementById("fileUpload").files[0];
+                if (file == null) {
+                    toastr.error("Please select a file");
+                }
+
+                var formData = new FormData();
+                formData.append('file', file);
+                $.ajax({
+                    url: "/Admin/Googlemerchant/upload-file/",
+                    type: "POST",
+                    async: false,
+                    data: formData,
+                    enctype: 'multipart/form-data',
+                    processData: false,
+                    contentType: false
+                }).done(function (response) {
+                    if (response.successful) {
+                        toastr.success(response.message);
+                        getKeywords();
+                    }
+                    else
+                        toastr.error(response.message);
+                });
+            });
+
+            $("#btnCreateKeyword").click(function () {
+                var data = {
+                    keyword: $("#newKeyword").val(),
+                    totalListing: $("#newTotalListing").val(),
+                    sortBy: 'sold'
+                }
+
+                if (data.keyword == null || data.keyword == "") {
+                    toastr.error("Keyword is required");
+                    return;
+                }
+
+                if (data.keyword == null || data.keyword == "") {
+                    toastr.error("Total listing is required");
+                    return;
+                }
+
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    data: data,
+                    url: '/Admin/GoogleMerchant/create-keywords',
+                    success: function (response) {
+                        if (response.successful) {
+
+                            toastr.success("Successfully created keywords");
+                            $("#addKeywordModal").modal('hide');
+                            getKeywords();
+
+                        }
+                        else {
+                            toastr.error("Fail to create keywords");
+                        }
+
+                    },
+                    error: function () {
+                        toastr.error("Fail to send");
+                    }
+                });
+
+            })
+
+            getKeywords();
+        });
+
+        function getKeywords() {
+            $('#keywordsTable').DataTable().clear().destroy();
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                url: '/Admin/GoogleMerchant/get-keywords',
+                success: function (response) {
+                    if (response.successful) {
+                        console.log(response);
+                        var row = "";
+
+                        $("#keywordsTable > tbody").html("");
+                        $(response.data.items).each(function () {
+                            row += '<tr id="' + "row_" + this.id + '">';
+                            row += '<td><input type="text" class="form-control keyword" value="' + this.keyword + '"/></td>';
+                            row += '<td><select class="form-control sort" id="sort_' + this.id + '">';
+                            row += '<option value="sold">sold</option>';
+                            row += '</select></td>';
+                            row += '<td><input type="number" min="0" class="form-control totalListing" value="' + this.totalListing + '"/></td>';
+                            row += '<td>' + this.language + '</td>';
+                            row += '<td>' + '<button type="button" class="btn btn-danger removeKeyword" data-id="' + this.id + '">Remove</button></td>';
+                            row += '<td>' + '<button type="button" class="btn btn-primary updateKeyword" data-id="' + this.id + '">Update</button></td>';
+                            row += '</tr>';
+                        });
+                        $("#keywordsTable > tbody").html(row);
+                        $('#keywordsTable').DataTable({ "iDisplayLength": 100, "order": [] });
+                        $(".removeKeyword").click(function () {
+                            deleteKeyword($(this).attr('data-id'));
+                        });
+                        $(".updateKeyword").click(function () {
+                            updateKeyword($(this).attr('data-id'));
+                        });
+                    }
+                    else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function () {
+                    toastr.error("Fail to send");
+                }
+            });
+        }
+
+        function deleteKeyword(id) {
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    id: id
+                },
+                url: '/Admin/GoogleMerchant/delete-keywords',
+                success: function (response) {
+                    toastr.success("Successfully removed keywords");
+                    if (response.successful) {
+                        $("#row_" + id).remove();
+                    }
+                    else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function () {
+                    toastr.error("Fail to send");
+                }
+            });
+        }
+
+        function updateKeyword(id) {
+
+            var row = $("#row_" + id);
+
+            var data = {
+                id: id,
+                keyword: row.find(".keyword").val(),
+                sortBy: row.find(".sort option:selected").val(),
+                totalListing: row.find(".totalListing").val()
+            };
+
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                data: data,
+                url: '/Admin/GoogleMerchant/update-keywords',
+                success: function (response) {
+                    if (response.successful) {
+
+                        toastr.success("Successfully updated keywords");
+                    }
+                    else {
+                        toastr.error("Fail to update keywords");
+                    }
+
+                },
+                error: function () {
+                    toastr.error("Fail to send");
+                }
+            });
+        }
+    </script>
+}
+

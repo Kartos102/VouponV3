@@ -1,0 +1,120 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = null;
+}
+
+@model Voupon.Rewards.WebApp.Services.Checkout.Commands.CreatePaymentCommand.PaymentResponseViewModel;
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> @(@ViewBag.Title != "Home" && !string.IsNullOrEmpty(ViewBag.Title) ? ViewBag.Title : "Vodus Rewards - Earn Rewards and Discounts from Surveys.")</title>
+    <meta name="description" content="@(ViewBag.Description != "Home" && !string.IsNullOrEmpty(ViewBag.Description) ? ViewBag.Description :  "Earn Rewards and Discounts from Surveys.")" />
+    <meta name="title" content="@(ViewBag.Title != null && !string.IsNullOrEmpty(ViewBag.Title) ? ViewBag.Title :  "Vodus Rewards - Earn Rewards and Discounts from Surveys.")">
+    <meta name="keywords" content="@(ViewBag.Keywords != null && !string.IsNullOrEmpty(ViewBag.Keywords) ? ViewBag.Keywords :  "Ecommerce, Marketplace, Surveys, Rewards, Cash Vouchers")">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta property="og:title" content="@(ViewBag.Title != null && !string.IsNullOrEmpty(ViewBag.Title) ? ViewBag.Title :  "Vodus Rewards")">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="@(ViewBag.OGUrl != null && !string.IsNullOrEmpty(ViewBag.OGUrl) ? ViewBag.OGUrl :  "https://vodus.my")">
+    <meta property="og:site_name" content="Vodus Rewards">
+    <meta property="og:description" content="@(ViewBag.Description != null && !string.IsNullOrEmpty(ViewBag.Description) ? ViewBag.Description :  "Earn Rewards and Discounts from Surveys.")">
+    <meta property="og:image" content="@(ViewBag.OGImage != null && !string.IsNullOrEmpty(ViewBag.OGImage) ? ViewBag.OGImage :  "https://vodus.my/images/Vodus-V3-Logo-Small.svg")">
+
+    <link rel="shortcut icon" type="image/svg" href="~/Vodus V3 Logo Favicon" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" />
+    <link href="~/lib/toastr/toastr.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/icons/elegant-icons/style.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" />
+    <link href="/lib/owlcarousel2/owl.carousel.min.css" rel="stylesheet">
+    <link href="/lib/owlcarousel2/owl.theme.default.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.2.0/lazysizes.min.js"></script>
+
+    <style type="text/css">
+        .m-lg {
+            margin: 0 30px;
+        }
+
+        #page-wrapper {
+            transition: none;
+        }
+    </style>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+    <script src="~/lib/toastr/toastr.min.js"></script>
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true">
+</head>
+<body>
+    <div class="checkout-complete" style="max-width:800px;margin:20vh auto;">
+        <div class="checkout-response">
+            <div class="col-12 row justify-center">
+                <img src="~/images/Vodus-V3-Logo-Small.svg" class="logo-img logo-horizontal lazyload" />
+            </div>
+            <div class="col-12 row justify-center px-2">
+                @if (ViewData["error"] != null)
+                {
+                    <p class="alert alert-danger">@ViewData["error"]</p>
+                    <a href="/" class="btn btn-primary mt-4">Back to home page</a>
+                }
+                else
+                {
+                    <div style="width:400px;margin:20px auto;text-align:center;">
+                        <p class="alert alert-success"><span style="font-size:18px;">Thank you for your payment.</span></p>
+                        <br /><a href="/order/history" class="btn btn-primary">View My Purchases</a> <a href="/" class="btn btn-primary">Back to Home Page</a>
+                    </div>
+
+                }
+            </div>
+        </div>
+    </div>
+
+    <script>
+            $(function () {
+                var test = '@Model';
+                console.log(test);
+                if (test != null && test != "") {
+                    var data =  @Html.Raw(Json.Serialize(@Model));
+                    if (data != null) {
+                        if (data.updatePoints) {
+                            vodusRewardCreateCookie('Rewards.Temporary.Points', data.availablePoints, 3650);
+                            $(".userPoints").html(data.availablePoints + " VPoints");
+                            console.log('Done...');
+                        }
+                    }
+                }
+
+            });
+
+
+            function vodusRewardCreateCookie(name, value, days) {
+                document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+
+                if (days) {
+                    var date = new Date();
+                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                    var expires = "; expires=" + date.toGMTString();
+                }
+                else {
+                    var expires = "";
+                }
+
+                var domain = "" + document.domain;
+                if (domain == 'localhost') {
+                    document.cookie = name + "=" + value + " " + expires + ";domain=" + domain + ";path=/";
+                }
+                else {
+                    document.cookie = name + "=" + value + " " + expires + ";domain=" + domain + ";path=/";
+                    document.cookie = name + "=" + value + " " + expires + ";domain=" + "." + domain + ";path=/";
+                }
+
+            };
+
+    </script>
+
+</body>
+</html>

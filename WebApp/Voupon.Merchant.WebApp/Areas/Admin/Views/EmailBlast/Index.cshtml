@@ -1,0 +1,270 @@
+﻿
+@{
+    ViewData["Title"] = "Email Blast";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<div class="dashboard-main-wrapper email-blast">
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content ">
+            <div class="row">
+                <div class="col-lg-12 mb-2 section-block" style="justify-content:space-between;">
+                    <h3 class="page-header">Email Blast</h3>
+                    <div class="row ecommerce-widget table-function">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <button type="button" id="sendtoRespondents" type-id="1" class="btn btn-primary sendEmail mr-3">Send to Respondents</button>
+                                <button type="button" id="sendtoMerchants" type-id="2" class="btn btn-primary sendEmail mr-3">Send to Merchants</button>
+                                <button type="button" id="testEmail" class="btn btn-primary">Test email</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-lg-6 col-sm-12">
+                    <div class="form-group">
+                        <h4>Email Subject</h4>
+                        <input id="emailTitle" type="text" class="form-control" value="">
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <h4>Email Body</h4>
+                    <div class="col-12">
+                        <p class="greeting-message mb-3 text-left">Hi -firstname-,</p>
+                    </div>
+                    <div id="standalone-container">
+                        <div id="toolbar-container">
+                            <span class="ql-formats">
+                                <select class="ql-font"></select>
+                                <select class="ql-size"></select>
+                            </span>
+                            <span class="ql-formats">
+                                <button class="ql-bold"></button>
+                                <button class="ql-italic"></button>
+                                <button class="ql-underline"></button>
+                                <button class="ql-strike"></button>
+                            </span>
+                            <span class="ql-formats">
+                                <select class="ql-color"></select>
+                                <select class="ql-background"></select>
+                            </span>
+                            <span class="ql-formats">
+                                <button class="ql-script" value="sub"></button>
+                                <button class="ql-script" value="super"></button>
+                            </span>
+                            <span class="ql-formats">
+                                <button class="ql-header" value="1"></button>
+                                <button class="ql-header" value="2"></button>
+                                <button class="ql-blockquote"></button>
+                                <button class="ql-code-block"></button>
+                            </span>
+                            <span class="ql-formats">
+                                <button class="ql-list" value="ordered"></button>
+                                <button class="ql-list" value="bullet"></button>
+                                <button class="ql-indent" value="-1"></button>
+                                <button class="ql-indent" value="+1"></button>
+                            </span>
+                            <span class="ql-formats">
+                                <button class="ql-direction" value="rtl"></button>
+                                <select class="ql-align"></select>
+                            </span>
+                            <span class="ql-formats">
+                                <button class="ql-link"></button>
+                                <button class="ql-image"></button>
+                                <button class="ql-video"></button>
+                                <button class="ql-formula"></button>
+                            </span>
+                            <span class="ql-formats">
+                                <button class="ql-clean"></button>
+                            </span>
+                        </div>
+                        <div id="editor">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <button type="button" id="btnPreviewHtml" class="btn btn-primary ">Preview</button>
+                    </div>
+                    <div class="row mt-3">
+                        <h4>HTML Object Library</h4>
+                        <p id="library-tags"></p>
+                    </div>
+                    <div class="style-container mt-3">
+                        <h4>Email Styles</h4>
+                        <textarea id="email-style"> </textarea>
+                    </div>
+                </div>
+                <div class="col-lg-6" style="display: block; padding-left: 20px; padding-right: 20px; text-align: center;">
+                    <h4>Email Preview</h4>
+                    <div class="previewEmailContainer">
+                        <div style="display:none">
+                            <p class="greeting-message mb-3 text-left">Hi -firstname-,</p>
+                        </div>
+                        <div id="previewHtml">
+                            <p class="mb-3 text-left">Hi -firstname-,</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="sendToTesttModal" data-id="0" remarks="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Send to email to test</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <div class="col-12">
+                        <label class="col-form-label">Email to send to</label>
+                        <input id="SendTotestEmail" type="email" class="form-control" value="">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary sendEmail" id="sendtoTestEmail" type-id="3">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style id="defaultStyle">
+    p {
+        margin-bottom: 0;
+        text-align: left;
+    }
+
+    .email-btn {
+        color: #fff !important;
+        background: linear-gradient( 90deg, #8C37F6,#5147FE);
+        padding: 0.6em 1.2em;
+        border: none;
+        margin: 10px 0;
+    }
+
+        .email-btn:hover {
+            color: #fff !important;
+            background: linear-gradient( 270deg, #8C37F6,#5147FE);
+        }
+
+        .email-btn.focus,
+        .email-btn:focus {
+            color: #fff !important;
+            background: linear-gradient( 270deg, #8C37F6,#5147FE);
+        }
+
+        .email-btn:not(:disabled):not(.disabled).active:focus,
+        .email-btn:not(:disabled):not(.disabled):active:focus {
+            box-shadow: 0 0 0 0.2rem rgb(37, 52, 158);
+        }
+
+        .email-btn:not(:disabled):not(.disabled).active,
+        .email-btn:not(:disabled):not(.disabled):active {
+            color: #fff !important;
+            background: linear-gradient( 270deg, #8C37F6,#5147FE);
+        }
+</style>
+
+@section styles
+{
+    <!-- Theme included stylesheets -->
+    <link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
+
+    <!-- Core build with no theme, formatting, non-essential modules -->
+    <link href="//cdn.quilljs.com/1.3.6/quill.core.css" rel="stylesheet">
+}
+@section scripts{
+
+    <!-- Main Quill library -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script src="//cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#email-style').val($("#defaultStyle").text())
+            $('#defaultStyle').remove();
+            $('#library-tags').text('<a class="email-btn" target="_blank" href="https://vodus.my">Button</a>');
+
+            var quill = new Quill('#editor', {
+                modules: {
+                    syntax: true,
+                    toolbar: '#toolbar-container'
+                },
+                placeholder: 'Write the email body here...',
+                theme: 'snow'
+            });
+            $("#testEmail").click(function () {
+                $("#sendToTesttModal").modal("show");
+            });
+            $("#btnPreviewHtml").click(function () {
+                var emailText = quill.root.innerHTML;
+                var emailStyle = $('#email-style').val();
+                emailText = emailText.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
+                $("#previewHtml").html("").append($(".greeting-message").clone().first().removeClass("greeting-message")).append(emailText);
+                $("#emailStyles").remove()
+                $(".previewEmailContainer").prepend("<style id='emailStyles'>" + emailStyle + "</style>");
+                $('#previewHtml').makeCssInline();
+            });
+
+            $(".sendEmail").click(function () {
+                $("#btnPreviewHtml").click();
+                var emailText = $("#previewHtml").html();
+                emailText = emailText.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
+                $.ajax({
+                    url: "/admin/EmailBlast/EmailBlast",
+                    method: "POST",
+                    data: {
+                        emailContent: emailText,
+                        EmailType: parseInt($(this).attr("type-id")),
+                        emailTitle: $("#emailTitle").val(),
+                        testEmail: $("#SendTotestEmail").val(),
+                    }
+                }).done(function (res) {
+                    if (res.successful) {
+
+                        toastr.success(res.message);
+                        $("#sendToTesttModal").modal("hide");
+
+                    }
+                }).fail(function (res) {
+                    console.log(res);
+                    toastr.error("Fail to update data");
+                });
+            });
+        });
+
+        (function ($) {
+            $.extend($.fn, {
+                makeCssInline: function () {
+                    this.each(function (idx, el) {
+                        var style = el.style;
+                        var properties = [];
+                        for (var property in style) {
+                            if ($(this).css(property)) {
+                                properties.push(property + ':' + $(this).css(property));
+                            }
+                        }
+                        this.style.cssText = properties.join(';');
+                        $(this).children().makeCssInline();
+                    });
+                }
+            });
+        }(jQuery));
+    </script>
+
+}
+

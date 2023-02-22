@@ -1,0 +1,1705 @@
+﻿@model int;
+@using System.Security.Claims
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/App/Views/Shared/_Layout.cshtml";
+    var identity = User.Identity as ClaimsIdentity;
+
+}
+
+<div class="dashboard-main-wrapper pending-action">
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content no-padding">
+            <div class="row">
+                <div class="col-xl-7 col-lg-6 col-md-6 col-12 mt-0 mb-0 section-block">
+                    <h3 class="page-header">Refunded Orders</h3>
+                </div>
+                <div class="col-xl-5 col-lg-6 col-md-6 col-12 row search-row ">
+                    <div class="col-6 pl-0 pr-1 ml-auto align-center row" id="pageSize">
+                        <label>Total entries:</label>
+                        <select id="selectpageSize" name="pageSize" aria-controls="pageSize" class="">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option selected="selected" value="100">100</option>
+                        </select>
+                    </div>
+                    <div class="input-group col-6 no-padding">
+                        <input class="form-control py-2 border-right-0 border" type="search" value="" placeholder="Search..." id="product-search-input">
+                        <span class="input-group-append">
+                            <button class="btn btn-outline-secondary border-left-0 border" type="button" id="product-search-btn">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!--#region .............................................  PENDING SALES  ............................................. -->
+
+            <div class="row products-card-row col-lg-12 col-md-12">
+                <div class="row products-table-card col-lg-12 col-md-12 mt-2">
+                    <div class="no-transaction-outlet col-12 px-0">
+                        <div class="align-center mt-3" id="noSales">
+                            No transaction found
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div style="display:none">
+                <div class="row card-table-row card-table-template-outlet">
+                    <div class="mobile-card-row row col-12">
+                        <div class="row col-xl-3 col-lg-3 col-md-3 col-12 no-padding">
+                            <div class="row col-xl-5 col-lg-12 col-md-12 col-4 no-padding mb-2 mb-xl-0">
+                                <div class="row col-12 no-padding">
+                                    <div class="col-12 px-0 card-record-row purchased-date-outlet pl-1">
+                                        17/09/2020
+                                    </div>
+                                    <div class="col-12 px-0 card-title-row pl-1">
+                                        Order Date
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row col-xl-7 col-lg-12 col-md-12 col-8 no-padding">
+                                <div class="row col-12 no-padding">
+                                    <div class="col-12 card-record-row order-id ellipsis">
+                                        1
+                                    </div>
+                                    <div class="col-12 card-title-row ">
+                                        Order ID
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row col-xl-9 col-lg-9 col-md-9 col-12 no-padding">
+                            <div class="row col-3 col-md-3 col-lg-3 col-xl-3 no-padding">
+                                <div class="row col-xl-6 col-12 mb-2 mb-xl-0 no-padding">
+                                    <div class="col-12 px-0 card-record-row card-title-name-outlet product-title ellipsis-3">
+                                        Test
+                                    </div>
+                                    <div class="col-12 px-0 card-title-row ellipsis">
+                                        Product Name
+                                    </div>
+                                </div>
+                                <div class="row col-xl-6 col-12 no-padding">
+                                    <div class="col-12 card-record-row product-email ellipsis pr-0 pl-1">
+                                        5.00
+                                    </div>
+                                    <div class="col-12 card-title-row pl-1">
+                                        Email
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row col-3 col-md-3 col-lg-3 col-xl-3 no-padding">
+                                <div class="row col-xl-7 col-12 mb-2 mb-xl-0 no-padding">
+                                    <div class="col-12 card-record-row revenue pr-0">
+                                        RM 5.00
+                                    </div>
+                                    <div class="col-12 card-title-row">
+                                        Revenue
+                                    </div>
+                                </div>
+                                <div class="row col-xl-5 col-12 no-padding">
+                                    <div class="col-12 card-record-row order-status">
+                                        5.00
+                                    </div>
+                                    <div class="col-12 card-title-row">
+                                        Status
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row col-3 col-md-3 col-lg-3 col-xl-3 no-padding">
+                                <div class="row col-xl-5 col-12 no-padding">
+                                    <div class="col-12 card-record-row order-last-update px-0">
+                                        17/09/2020
+                                    </div>
+                                    <div class="col-12 card-title-row px-0">
+                                        Last Update
+                                    </div>
+                                </div>
+                                <div class="row col-xl-7 col-12 no-padding">
+                                    <div class="col-12 card-record-row order-last-update-by ellipsis">
+                                        kok.hong@vodus.com
+                                    </div>
+                                    <div class="col-12 card-title-row">
+                                        Promo discount
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row col-3 card-record-row order-action action-outlet p-0 justify-content-around">
+                                <div class="action-btn-group">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--#endregion .............................................  PENDING SALES  END  ............................................. -->
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!--#region .............................................  Digital  ............................................. -->
+
+    <div class="modal fade" id="createGifteeTokenModalDigital" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalTitle">Update</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Are you sure you want to create Giftee voucher for this item?</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnCreatDigital">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="updateTokenModalDigital" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalTitle">Update</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Token:</label>
+                            <input type="text" class="form-control" id="txtTokenDigital">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnUpdateDigital">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade modal-list" id="showDetailsModalDigital" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalTitle">Order Details</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label for="message-text" class="col-form-label">Email</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtEmailDigital"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Product name</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtProductNameDigital"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Purchased Date</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtPurchasedDateDigital"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">VPoints</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtVPointsDigital"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Price</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtPriceDigital"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">User's full name</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtPFullNameDigital"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Phone number</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtPhoneNumberDigital"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Address</label>
+                        </div>
+                        <div class="col-9">
+                            <label style="white-space: unset;" type="text" class="col-form-label" id="txtAddressDigital"></label>
+                        </div>
+                    </div>
+                    <div style="border-top: 1px solid #ddd;padding: 10px 0;margin-top: 10px;">
+                        <div class="form-group row">
+                            <div class="col-3">
+                                <label for="refundPointsDigital" class="col-form-label">Refund Points</label>
+                            </div>
+                            <div class="col-9">
+                                <p class="col-form-label" id="refundPointsDigital">Refund Points</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-3">
+                                <label for="refundAmountDigital" class="col-form-label">Refund Amount</label>
+                            </div>
+                            <div class="col-9">
+                                <input type="number" id="refundAmountDigital" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+                                <label for="message-text" class="col-form-label">Refund Type</label>
+                            </div>
+                            <div class="col-9">
+                                <input type="radio" id="refundDigitalType_1" name="refundDigitalType" value="1" data-id="1" /> <label for="refundDigitalType_1">Invalid points</label><br />
+                                <input type="radio" id="refundDigitalType_2" name="refundDigitalType" value="2" data-id="2" /> <label for="refundDigitalType_2">Insufficient stock</label><br />
+                                <input type="radio" id="refundDigitalType_3" name="refundDigitalType" value="3" data-id="3" /> <label for="refundDigitalType_3">Others</label><br />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+                                <label for="message-text" class="col-form-label">Refund Remark</label>
+                            </div>
+                            <div class="col-9">
+                                <textarea type="text" id="digitalRefundRemark" cols="20" style="width:400px;"></textarea>
+                                <button type="button" class="btn btn-primary refundAction" data-type="digital">Refund</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--#endregion .............................................  Digital END  ............................................. -->
+    <!--#region .............................................  OUTLET  ............................................. -->
+
+    <div class="modal fade modal-list" id="showDetailsModalOutlet" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalTitle">Order Details</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label for="message-text" class="col-form-label">Email</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtEmailOutlet"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Product name</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtProductNameOutlet"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Purchased Date</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtPurchasedDateOutlet"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">VPoints</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtVPointsOutlet"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Price (RM)</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtPriceOutlet"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">User's full name</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtPFullNameOutlet"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Phone number</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtPhoneNumberOutlet"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Address</label>
+                        </div>
+                        <div class="col-9">
+                            <label style="white-space: unset;" type="text" class="col-form-label" id="txtAddressOutlet"></label>
+                        </div>
+                    </div>
+                    @*<div style="border-top: 1px solid #ddd; padding: 10px 0;margin-top: 10px;">
+                        <div class="form-group row">
+                            <div class="col-3">
+
+                                <label for="message-text" class="col-form-label">VPoints</label>
+                            </div>
+                            <div class="col-9">
+                                <label type="text" class="col-form-label" id="txtVPointsOutlet"></label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+                                <label for="refundAmount" class="col-form-label">Refund Amount</label>
+                            </div>
+                            <div class="col-9">
+                                <input type="number" id="refundInStoreAmount" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+                                <label for="message-text" class="col-form-label">Refund Type</label>
+                            </div>
+                            <div class="col-9">
+                                <input type="radio" id="refundInStoreType_1" name="refundInStoreType" value="1" data-id="1" /> <label for="refundInStoreType_1">Invalid points</label><br />
+                                <input type="radio" id="refundInStoreType_2" name="refundInStoreType" value="2" data-id="2" /> <label for="refundInStoreType_2">Insufficient stock</label><br />
+                                <input type="radio" id="refundInStoreType_3" name="refundInStoreType" value="3" data-id="3" /> <label for="refundInStoreType_3">Others</label><br />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+                                <label for="message-text" class="col-form-label">Refund Remark</label>
+                            </div>
+                            <div class="col-9">
+                                <textarea type="text" id="instoreRefundRemark" cols="20" style="width:400px;"></textarea>
+                                <button type="button" class="btn btn-primary refundAction" data-type="instore">Refund</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--#endregion .............................................  OUTLET END  ............................................. -->
+    <!--#region .............................................  DELIVERY  ............................................. -->
+
+    <div class="modal fade" id="updateTokenModalDelivery" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalTitle">Update Tracking Number</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label class="col-form-label">Select a courier:</label>
+                            <select class="form-control" id="selectCourierDelivery">
+                                <option url="https://www.tracking.my/abx">Abx Express</option>
+                                <option url="https://www.tracking.my/poslaju">Poslaju</option>
+                                <option url="https://www.tracking.my/dhl-ecommerce">DHL</option>
+                                <option url="https://www.tracking.my/jt">J&T Express</option>
+                                <option url="https://www.ninjavan.co/en-my/tracking">Ninjavan</option>
+                                <option value="-1" url="https://www.tracking.my">Others</option>
+                            </select>
+                            <label for="message-text" class="col-form-label othercourierDelivery" style="display:none">Others Courier:</label>
+                            <input type="text" class="form-control othercourierDelivery" id="txtOthersCourierDelivery" style="display:none" />
+
+                            <label for="message-text" class="col-form-label">Tracking Number:</label>
+                            <input type="text" class="form-control" id="txtTokenDelivery">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnUpdateDelivery">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade modal-list" id="showDetailsModalDelivery" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalTitle">Order Details</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label for="message-text" class="col-form-label">Email</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtEmailDelivery"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Product name</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtProductNameDelivery"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Variation</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtProductVariationText"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Purchased Date</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtPurchasedDateDelivery"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">VPoints</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtVPointsDelivery"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Price (RM)</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtPriceDelivery"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row" id="divQuanDelivery">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Quantity </label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtQuanDelivery"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Shipping Cost (RM)</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtProductShippingCost"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">User's full name</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtPFullNameDelivery"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Phone number</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtPhoneNumberDelivery"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Address</label>
+                        </div>
+                        <div class="col-9">
+                            <label style="white-space: unset;" type="text" class="col-form-label" id="txtAddressDelivery"></label>
+                        </div>
+                    </div>
+
+                    <!--<div style="border-top: 1px solid #ddd; padding: 10px 0;margin-top: 10px;">
+                        <div class="form-group row">
+                            <div class="col-3">
+                                <label for="refundPointsDelivery" class="col-form-label">Refund Points</label>
+                            </div>
+                            <div class="col-9">
+                                <p class="col-form-label" id="refundPointsDelivery">Refund Points</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-3">
+                                <label for="refundAmountDelivery" class="col-form-label">Refund Amount</label>
+                            </div>
+                            <div class="col-9">
+                                <input type="number" id="refundAmountDelivery" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-3">
+                                <label for="message-text" class="col-form-label">Refund Type</label>
+                            </div>
+                            <div class="col-9">-->
+                                @*<input type="radio" id="refundDeliveryType_1" name="refundDeliveryType" value="1" data-id="1" /> <label for="refundDeliveryType_1">Invalid points</label><br />*@
+                                <!--<input type="radio" id="refundDeliveryType_2" name="refundDeliveryType" value="2" data-id="2" /> <label for="refundDeliveryType_2">Insufficient stock</label><br />
+                                <input type="radio" id="refundDeliveryType_3" name="refundDeliveryType" value="3" data-id="3" /> <label for="refundDeliveryType_3">Others</label><br />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+                                <label for="message-text" class="col-form-label">Refund Remark</label>
+                            </div>
+                            <div class="col-9">
+                                <textarea type="text" id="deliveryRefundRemark" cols="20" style="width:400px;max-width:100%"></textarea>
+                                <button type="button" class="btn btn-primary refundAction" data-type="delivery">Refund</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="display:none">
+        <div class="row shop-temlate col-12">
+            <h5 class="merchant-name row mb-0">
+            </h5>
+        </div>
+    </div>
+
+    <div class="modal fade modal-list" id="showDetailsModalOrder" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalTitle">Order Details</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label for="message-text" class="col-form-label">Email</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtEmailOrder"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Purchased Date</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtPurchasedDateOrder"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label for="message-text" class="col-form-label">Quantity</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label txtQuantity" id="txtQuantityOrder"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">VPoints</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label txtVPointsOrder" id="txtVPointsOrder"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Price (RM)</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtPriceOrder"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label for="message-text" class="col-form-label">SubPriceOrder</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label txtSubTotalPrice" id="txtSubTotalPriceOrder"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Shipping Cost (RM)</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtProductShippingCostOrder"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label for="message-text" class="col-form-label">Total Price</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label txtTotalPrice" id="txtTotalPriceOrder"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">User's full name</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtUserFullNameOrder"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Phone number</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtUserPhoneNumberOrder"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Address</label>
+                        </div>
+                        <div class="col-9">
+                            <label style="white-space: unset;" type="text" class="col-form-label" id="txtAddressOrder"></label>
+                        </div>
+                    </div>
+
+                    @*<div style="border-top: 1px solid #ddd; padding: 10px 0;margin-top: 10px;">
+                        <div class="form-group row">
+                            <div class="col-3">
+
+                                <label for="message-text" class="col-form-label">VPoints</label>
+                            </div>
+                            <div class="col-9">
+                                <label type="text" class="col-form-label txtVPointsOutlet" id="txtVPointsOutlet"></label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+                                <label for="message-text" class="col-form-label">Refund Type</label>
+                            </div>
+                            <div class="col-9">
+                                <input type="radio" id="fullRefundInStoreType_1" name="fullRefundInStoreType" value="1" data-id="1" /> <label for="fullRefundInStoreType_1">Invalid points</label><br />
+                                <input type="radio" id="fullRefundInStoreType_2" name="fullRefundInStoreType" value="2" data-id="2" /> <label for="fullRefundInStoreType_2">Insufficient stock</label><br />
+                                <input type="radio" id="fullRefunddInStoreType_3" name="fullRefundInStoreType" value="3" data-id="3" /> <label for="fullRefundInStoreType_3">Others</label><br />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+                                <label for="message-text" class="col-form-label">Refund Remark</label>
+                            </div>
+                            <div class="col-9">
+                                <textarea type="text" id="fullRefundRemark" cols="20" style="width:400px;"></textarea>
+                                <button type="button" class="btn btn-primary fullRefundAction" data-type="merchant-order">Refund</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--#endregion .............................................  DELIVERY END  ............................................. -->
+
+
+
+
+
+    @section scripts{
+
+        <!--#region .............................................  Pending SALES   ............................................. -->
+
+        <script>
+        var selectedRow = null;
+        var merchantId = @Model;
+        const adminMerchant = "@identity.Name.ToLower()";
+        var selectedOrderItemId = "";
+        var selectedOrderItemShortId = "";
+
+
+    $(document).ready(function () {
+        $("#navSales").addClass("show");
+        $("#navSalesControl").attr("aria-expanded", true);
+
+        $(".refundAction").click(function () {
+            var refundButton = $(this);
+            var type = $(this).attr('data-type');
+            var remark = "";
+            var refundType = "1";
+            var refundAmount = "";
+
+            if (type == "delivery") {
+                remark = $("#deliveryRefundRemark").val();
+                refundType = $("input[type='radio'][name='refundDeliveryType']:checked").val();
+                refundAmount = $("#refundAmountDelivery").val();
+            }
+            else if (type == "digital") {
+                remark = $("#digitalRefundRemark").val();
+                refundType = $("input[type='radio'][name='refundDigitalType']:checked").val();
+                refundAmount = $("#refundAmountDigital").val();
+            }
+            else if (type == "instore") {
+                remark = $("#instoreRefundRemark").val();
+                refundType = $("input[type='radio'][name='refundInStoreType']:checked").val();
+                refundAmount = $("#refundAmountInStore").val();
+            }
+
+            if (refundType == undefined) {
+                toastr.clear();
+                toastr.error("Please select a refund type");
+                return;
+            }
+
+            if (confirm('Are you sure you want to refund this order?')) {
+                $(refundButton).text("Processing...");
+                $(refundButton).attr("disabled", true);
+                $(refundButton).addClass("disabled");
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    data: {
+                        orderItemId: selectedOrderItemId,
+                        refundType: refundType,
+                        refundAmount: refundAmount,
+                        remark: remark
+                    },
+                    url: '/App/Sales/Refund',
+                    success: function (response) {
+                        if (response.successful) {
+                            toastr.success(response.message);
+
+                            if (type == "delivery") {
+                                $("#deliveryRefundRemark").val("");
+                                $("#showDetailsModalDelivery").modal('hide');
+                            }
+                            else if (type == "digital") {
+                                $("#digitalRefundRemark").val("");
+                                $("#showDetailsModalDigital").modal('hide');
+                            }
+                            else if (type == "instore") {
+                                $("#instoreRefundRemark").val("");
+                                $("#showDetailsModalOutlet").modal('hide');
+                            }
+                            $(refundButton).attr("disabled", false);
+                            $(refundButton).removeClass("disabled");
+                            $(refundButton).text("Refund");
+                            $(".order_item_id_" + selectedOrderItemShortId).hide();
+                            location.reload();
+                        }
+                        else {
+                            toastr.error(response.message);
+                            $(refundButton).attr("disabled", false);
+                            $(refundButton).removeClass("disabled");
+                            $(refundButton).text("Refund");
+                        }
+                    },
+                    error: function () {
+                        toastr.error("Something went wrong...");
+                        $(refundButton).attr("disabled", false);
+                        $(refundButton).removeClass("disabled");
+                        $(refundButton).text("Refund");
+                    }
+                });
+
+                return true;
+            } else {
+                // Do nothing!
+            }
+        });
+
+        $(".fullRefundAction").click(function () {
+            var refundButton = $(this);
+            var type = $(this).attr('data-type');
+            var remark = "";
+            var refundType = "1";
+            var refundAmount = "";
+
+
+            if (type == "merchant-order") {
+                remark = $("#fullRefundRemark").val();
+                refundType = $("input[type='radio'][name='fullRefundInStoreType']:checked").val();
+            }
+
+            if (refundType == undefined) {
+                toastr.clear();
+                toastr.error("Please select a refund type");
+                return;
+            }
+
+            if (confirm('Are you sure you want to refund this order?')) {
+                $(refundButton).text("Processing...");
+                $(refundButton).attr("disabled", true);
+                $(refundButton).addClass("disabled");
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    data: {
+                        orderId: selectedOrderId,
+                        refundType: refundType,
+                        remark: remark,
+                        isExternal: false
+                    },
+                    url: '/Admin/Sales/FullRefund',
+                    success: function (response) {
+                        if (response.successful) {
+                            toastr.success(response.message);
+                            $("#fullRefundRemark").val("");
+                            $("#showDetailsModalExternalOrder").modal('hide');
+                            $(refundButton).attr("disabled", false);
+                            $(refundButton).removeClass("disabled");
+                            $(refundButton).text("Refund");
+                            location.reload();
+                        }
+                        else {
+                            toastr.error(response.message);
+                            $(refundButton).attr("disabled", false);
+                            $(refundButton).removeClass("disabled");
+                            $(refundButton).text("Refund");
+                        }
+                    },
+                    error: function () {
+                        toastr.error("Something went wrong...");
+                        $(refundButton).attr("disabled", false);
+                        $(refundButton).removeClass("disabled");
+                        $(refundButton).text("Refund");
+                    }
+                });
+
+                return true;
+            } else {
+                // Do nothing!
+            }
+        });
+
+        $("#product-search-btn").on("click", function () {
+            var execludedList = [];
+            var value = $("#product-search-input").val().toLowerCase();
+            if (value == "") {
+                $(".products-card-row .mobile-card-row").each(function () {
+                    $(this).show();
+                })
+                return false;
+            }
+
+            $(".products-card-row .mobile-card-row").hide()
+            $(".card-record-row").each(function () {
+                var textToFilter = $(this).text();
+                if (textToFilter.toLowerCase().indexOf(value) !== -1) {
+                    $(this).closest('.mobile-card-row').show();
+                }
+            });
+        });
+
+        $("#product-search-input").on("search", function () {
+            var execludedList = [];
+            var value = $("#product-search-input").val().toLowerCase();
+            if (value == "") {
+                $(".products-card-row .mobile-card-row").each(function () {
+                    $(this).show();
+                })
+                return false;
+            }
+
+            $(".products-card-row .mobile-card-row").hide()
+            $(".card-record-row").each(function () {
+                var textToFilter = $(this).text();
+                if (textToFilter.toLowerCase().indexOf(value) !== -1) {
+                    $(this).closest('.mobile-card-row').show();
+                }
+            });
+        });
+
+        GetPendingSalesRedemptionTokens(@Model);
+
+
+        $(".btn-send-outlet").click(function () {
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                data: {
+                },
+                url: '/App/Sales/SendInStoreRedemptionNotification',
+                success: function (response) {
+                    if (response.successful) {
+                        toastr.success(response.message);
+                    }
+                    else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function () {
+                    toastr.error("Fail to send");
+                }
+            });
+            $(selectedRow).closest("tr").find(".token").html($("#txtToken").val());
+
+            $('#updateTokenModal').modal("hide");
+        });
+
+        $("#selectCourierDelivery").change(function () {
+            if ($(this).val() == "-1") {
+                $(".othercourierDelivery").show();
+            }
+            else {
+                $(".othercourierDelivery").hide();
+            }
+        });
+
+        $("#btnUpdateDelivery").click(function () {
+
+            var courierUrl = "https://www.tracking.my";
+            var token = $("#txtTokenDelivery").val();
+            var id = $('#updateTokenModalDelivery').attr("data-id");
+            var type = $('#updateTokenModalDelivery').attr("type");
+            var courier = "";
+            if ($("#selectCourierDelivery").val() == "-1") {
+                courier = $("#txtOthersCourierDelivery").val();
+            }
+            else {
+                courierUrl = $("#selectCourierDelivery").children("option:selected").attr("url");
+                courier = $("#selectCourierDelivery").children("option:selected").html();
+            }
+            if (type == 1) {
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    data: {
+                        Id: id, Token: token, CourierProvider: courier, CourierUrl: courierUrl
+                    },
+                    url: '/App/Sales/UpdateDeliveryRedemptionTokenForAllOrderItems',
+                    success: function (response) {
+                        if (response.successful) {
+                            toastr.success(response.message);
+                            $(selectedRow).closest("tr").find(".courier-delivey").html(courier);
+                            $(selectedRow).closest("tr").find(".token").html($("#txtTokenDelivery").val());
+                            $(selectedRow).closest("tr").find(".redemptionAt").html(moment().format("DD/MM/YYYY"));
+                            location.reload();
+                        }
+                        else {
+                            toastr.error(response.message);
+                        }
+                    },
+                    error: function () {
+                        toastr.error("Fail to send");
+                    }
+                });
+
+            } else {
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    data: {
+                        Id: id, Token: token, CourierProvider: courier, CourierUrl: courierUrl
+                    },
+                    url: '/App/Sales/UpdateDeliveryRedemptionToken',
+                    success: function (response) {
+                        if (response.successful) {
+                            toastr.success(response.message);
+                            $(selectedRow).closest("tr").find(".courier-delivey").html(courier);
+                            $(selectedRow).closest("tr").find(".token").html($("#txtTokenDelivery").val());
+                            $(selectedRow).closest("tr").find(".redemptionAt").html(moment().format("DD/MM/YYYY"));
+                            location.reload();
+                        }
+                        else {
+                            toastr.error(response.message);
+                        }
+                    },
+                    error: function () {
+                        toastr.error("Fail to send");
+                    }
+                });
+            }
+            $('#updateTokenModalDelivery').modal("hide");
+        });
+
+        $("#btnCreatDigital").click(function () {
+
+            var id = $('#createGifteeTokenModalDigital').attr("data-id");
+            var productId = $('#createGifteeTokenModalDigital').attr("product-id");
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    Id: id,
+                    ProductId: productId
+                },
+                url: '/App/Sales/CreateGuifteeDigitalRedemptionToken',
+                success: function (response) {
+                    if (response.successful) {
+                        toastr.success(response.message);
+                        location.reload();
+                    }
+                    else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function () {
+                    toastr.error("Fail to send");
+                }
+            });
+
+            $('#updateTokenModalDigital').modal("hide");
+        });
+
+        $("#btnUpdateDigital").click(function () {
+
+            var id = $('#updateTokenModalDigital').attr("data-id");
+            var token = $("#txtTokenDigital").val();
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    Id: id,
+                    Token: token
+                },
+                url: '/App/Sales/UpdateDigitalRedemptionToken',
+                success: function (response) {
+                    if (response.successful) {
+                        toastr.success(response.message);
+                        $(selectedRow).closest("tr").find(".token").html($("#txtTokenDigital").val());
+                        $(selectedRow).closest("tr").find(".redemptionAtDigital").html(moment().format("DD/MM/YYYY"));
+                        location.reload();
+                    }
+                    else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function () {
+                    toastr.error("Fail to send");
+                }
+            });
+
+
+            //$.ajax({
+            //    type: "POST",
+            //    dataType: 'json',
+            //    data: {
+            //    },
+            //    url: '/App/Sales/SendDigitalRedemptionNotification',
+            //    success: function (response) {
+            //        if (response.successful) {
+            //            toastr.success(response.message);
+            //        }
+            //        else {
+            //            toastr.error(response.message);
+            //        }
+            //    },
+            //    error: function () {
+            //        toastr.error("Fail to send");
+            //    }
+            //});
+            //$(selectedRow).closest("tr").find(".token").html($("#txtTokenDigital").val());
+
+            $('#updateTokenModalDigital').modal("hide");
+        });
+
+        $("#selectpageSize").change(function () {
+            $("#product-search-input").val('');
+            $(".pagination").remove();
+            GetPendingSalesRedemptionTokens();
+        });
+    });
+
+        function GetPendingSalesRedemptionTokens() {
+            var length = $("#pageSize").find(":selected").attr("value");
+            var start = "0"
+            if ($(".nav-order-page.active").length > 0)
+                start = parseInt($(".nav-order-page.active").attr("order")) * parseInt(length);
+            var searchValue = $("#product-search-input").val().toLowerCase();
+        var list = "";
+        $.ajax({
+            type: "GET",
+            async: false,
+            dataType: 'json',
+            data: { start: start, length: length, searchValue: searchValue },
+            url: '/App/Sales/Refund-Items/',
+            success: function (response) {
+                if (response.successful) {
+                    if (response.data != null) {
+                        if (response.data.data != null) {
+                            var count = 0;
+                            var orderCount = 1;
+                            $(response.data.data).each(function (index, order) {
+                                var orderRow = $(".shop-temlate").clone().removeClass("shop-temlate");
+                                orderRow.find(".merchant-name").hide();
+                                $(".products-table-card").append(orderRow);
+
+                                //Order Template
+                                var template = $(".card-table-template-outlet").clone();
+                                template.attr("class", "order_item_id_" + order.orderId).addClass("w-100");
+                                template.find(".product-title").parent().remove();
+                                //template.find(".order-id").html(item.shortOrderId);
+                                template.find(".order-id").html(order.orderId);
+                                template.find(".product-ItemId").parent().remove();
+                                template.find(".product-email").html(order.email);
+                                template.find(".product-status").html(order.status);
+                                //template.find(".order-last-update-by").html("RM " + parseFloat(order.promoCodeDiscount));
+                                template.find(".order-last-update").html(moment(order.lastUpdatedAt).format("DD/MM/YYYY") == "Invalid date" ? "-" : moment(order.lastUpdatedAt).format("DD/MM/YYYY"));
+
+                                if (order.status == 1) {
+                                    template.find(".order-status").addClass("orange").html("Pending");
+                                }
+                                else if (order.status == 2) {
+                                    template.find(".order-status").addClass("blue").html("Sent");
+                                }
+                                else if (order.status == 3) {
+                                    template.find(".order-status").addClass("blue").html("Done");
+                                }
+                                else if (order.status == 4) {
+                                    template.find(".order-status").addClass("blue").html("Refund in Progress");
+                                }
+                                else if (order.status == 5) {
+                                    template.find(".order-status").addClass("green").html("Refunded");
+                                }
+                                else if (order.status == 6) {
+                                    template.find(".order-status").addClass("green").html("Completed");
+                                }
+                                else if (order.status == 7) {
+                                    template.find(".order-status").addClass("orange").html("Pending Payment");
+                                }
+                                else if (order.status == 8) {
+                                    template.find(".order-status").addClass("orange").html("Pending Refund");
+                                }
+                                else if (order.status == 9) {
+                                    template.find(".order-status").addClass("red").html("Refund Rejected");
+                                }
+                                if (order.promoCodeDiscount != null) {
+                                    template.find(".revenue").html("RM " + (order.revenue - order.promoCodeDiscount).toFixed(2));
+                                    template.find(".order-last-update-by").html("RM " + parseFloat(order.promoCodeDiscount));
+                                }
+                                else {
+                                    template.find(".revenue").html("RM " + order.revenue.toFixed(2));
+                                    template.find(".order-last-update-by").html("-");
+                                }
+                                //template.find(".revenue").html("RM " + order.revenue.toFixed(2));
+                                template.find(".purchased-date-outlet").html(moment(order.createdAt).format("DD/MM/YYYY") == "Invalid date" ? "-" : moment(order.createdAt).format("DD/MM/YYYY"));
+
+                                var trackingNo = order.trackingNo != null ? order.trackingNo : "";
+                                if (order.status == 1 || order.status == 2) {
+                                    template.find(".action-btn-group").html("<span class='col-xl-6 btn-edit-delivery-order' status-id='" + order.status
+                                        + "' data-id='" + order.orderId + "' tracking-no='" + trackingNo + "' >Update All</span>")
+                                }
+                                template.find(".action-btn-group").append("<span class='col-xl-6 btn-details-order' data-id='" + order.orderId + "' >Details</span>");
+
+                                template.find(".order-action").append("<a class='align-center' data-toggle='collapse' data-target='#Order_" + orderCount + "'><i class='fa fa-chevron-down' aria-hidden='true'></i></a>")
+
+
+                                $(".products-table-card").append(template);
+
+
+                                var divElement = $('<div class="child-item collapse" id="Order_' + orderCount + '">');
+                                orderCount++;
+
+                                if (response.data.data[orderCount-2].pendingHandlingItemViewModels != null) {
+                                    var count = 0;
+                                    //$(".products-table-card").html("");
+                                    $(order.pendingHandlingItemViewModels).each(function (index, item) {
+
+                     
+                                        //Order Item Template
+                                        var template = $(".card-table-template-outlet").clone();
+                                        template.attr("class", "order_item_id_" + item.id);
+                                        template.find(".product-title").html('<a href="' + item.externalUrl + '" target="_blank">' + item.productTitle + '</span>');
+                                        template.find(".product-ItemId").html(item.id);
+                                        template.find(".product-email").html(order.email);
+                                        template.find(".product-status").html(item.status);
+                                        template.find(".order-last-update-by").parent().find(".card-title-row").html("Variant");
+                                        if (item.variant != null)
+                                            template.find(".order-last-update-by").html(item.variant);
+                                        else
+                                            template.find(".order-last-update-by").html("-");
+
+                                        template.find(".order-last-update").html(item.quantity);
+                                        template.find(".order-last-update").parent().find(".card-title-row").html("Quantity");
+
+                                        if (item.status == 1) {
+                                            template.find(".order-status").addClass("orange").html("Pending");
+                                        }
+                                        else if (item.status == 2) {
+                                            template.find(".order-status").addClass("blue").html("Sent");
+                                        }
+                                        else if (item.status == 3) {
+                                            template.find(".order-status").addClass("blue").html("Done");
+                                        }
+                                        else if (item.status == 4) {
+                                            template.find(".order-status").addClass("blue").html("Refund in progress");
+                                        }
+                                        else if (item.status == 5) {
+                                            template.find(".order-status").addClass("green").html("Refunded");
+                                        }
+                                        else if (item.status == 6) {
+                                            template.find(".order-status").addClass("green").html("Completed");
+                                        }
+                                        else if (item.status == 7) {
+                                            template.find(".order-status").addClass("orange").html("Pending Payment");
+                                        }
+                                        else if (item.status == 8) {
+                                            template.find(".order-status").addClass("orange").html("Pending Refund");
+                                        }
+                                        else if (order.status == 9) {
+                                            template.find(".order-status").addClass("red").html("Refund Rejected");
+                                        }
+                                        template.find(".revenue").html("RM " + item.revenue.toFixed(2));
+                                        template.find(".purchased-date-outlet").siblings(0).html("Recipient Name");
+                                        template.find(".purchased-date-outlet").html(order.shippingName);
+
+                                        template.find(".order-id").siblings(0).html("Shipping Address");
+                                        template.find(".order-id").html(order.shippingAddress);
+
+                                        if (item.type == 1) {
+                                            template.find(".action-outlet").html("<span class='btn-details-outlet' data-id='" + item.shortOrderItemId + "'>Details</span>");
+
+                                        }
+                                        else if (item.type == 2) {
+                                            template.find(".action-outlet").html(/*"<span class='col-xl-6 btn-edit-delivery' data-id='" + item.id + "'>Update</span>"*/"<span class='col-xl-6 btn-details-delivery' data-id='" + item.shortOrderItemId + "' >Details</span>");
+
+                                        }
+                                        else if (item.type == 3) {
+                                            if (item.thirdPartyTypeId == 1) {
+                                                
+                                                template.find(".action-outlet").html(/*"<span class='col-xl-6 btn-edit-delivery' data-id='" + item.id + "'>Update</span>"*/"<span class='col-xl-6 btn-details-delivery' data-id='" + item.shortOrderItemId + "' >Details</span>");
+                                            
+                                                //template.find(".action-outlet").html("<span class='col-xl-6 btn-edit-giftee-digital' data-id='" + item.id + "' product-id='" + item.productId + "'>Create Giftee Token</span> <span class='col-xl-6 btn-details-digital' data-id='" + item.shortOrderItemId + "' >Details</span>");
+                                            }
+                                            else {
+                                                
+                                                template.find(".action-outlet").html(/*"<span class='col-xl-6 btn-edit-delivery' data-id='" + item.id + "'>Update</span>"*/"<span class='col-xl-6 btn-details-delivery' data-id='" + item.shortOrderItemId + "' >Details</span>");
+
+                                            }
+                                        }
+
+                                        count = count + 1;
+
+
+                                        divElement.append(template);
+
+                                        @*@if (User.IsInRole("Staff"))
+                                        {
+                                             @Html.Raw("}")
+                                        }*@
+                                        //}
+                                    });
+                                    $(".products-table-card").append(divElement);
+                                    if ($(".pagination").length == 0) {
+                                        var pagingHtml = '<div class="pagination"><a class="prev-order-page" href="#">&laquo;</a> <a class="nav-order-page active" order="0" href="#" class="active">1</a>';
+                                        var pagingNumber = 1;
+                                        var recordsPerPage = parseInt($("#pageSize").find(":selected").attr("value"));
+                                        for (index = 0; index < response.data.recordsTotal; index++) {
+                                            if (index % recordsPerPage == 0 && index != 0)
+                                                pagingHtml += ' <a class="nav-order-page" order="' + pagingNumber++ + '" href="#">' + parseInt(index / recordsPerPage + 1) + '</a>';
+                                        }
+                                        pagingHtml += '<a class="next-order-page" href="#">&raquo;</a></div>';
+                                        $(".products-card-row").append(pagingHtml);
+                                        createPagingActions();
+                                    }
+
+                                    $(".pagination-details").remove();
+                                    var from = parseInt($(".nav-order-page.active").attr("order")) * parseInt($("#pageSize").find(":selected").attr("value")) + 1;
+                                    var to = from + response.data.recordsFiltered - 1;
+                                    var pageDetails = '<div class="pagination-details">Showing ' + from + ' to ' + to + ' of ' + response.data.recordsTotal + ' entries</div>';
+                                    $(".products-card-row").append(pageDetails);
+
+                                    if (count == 0)
+                                        $(".no-transaction-outlet").show();
+                                    else
+                                        $(".no-transaction-outlet").hide();
+
+                                }
+
+                            });
+
+
+                        }
+                        else {
+                            $(".no-transaction-outlet").show();
+                        }
+                    }
+                } else
+                    toastr.error(response.message);
+            },
+            error: function (error) {
+                toastr.error(error);
+            }
+        });
+            bindActions();
+        }
+            function createPagingActions() {
+                $(".next-order-page").click(function () {
+                    if ($(".nav-order-page.active").next().hasClass("nav-order-page"))
+                        $(".nav-order-page.active").removeClass("active").next().click().addClass("active");
+                });
+                $(".prev-order-page").click(function () {
+                    if ($(".nav-order-page.active").prev().hasClass("nav-order-page"))
+                        $(".nav-order-page.active").removeClass("active").prev().click().addClass("active");
+                });
+
+                $(".nav-order-page").click(function () {
+                    if (!$(this).hasClass("active")) {
+                        $(".nav-order-page.active").removeClass("active");
+                        $(this).addClass("active");
+                        GetPendingSalesRedemptionTokens();
+                    }
+                });
+
+            }
+
+            function bindActions() {
+
+                $(".btn-edit-giftee-digital").click(function () {
+                    selectedRow = this;
+                    $('#createGifteeTokenModalDigital').attr("data-id", $(this).attr("data-id"));
+                    $('#createGifteeTokenModalDigital').attr("product-id", $(this).attr("product-id"));
+                    $('#createGifteeTokenModalDigital').modal("show");
+                });
+
+                $(".btn-edit-digital").click(function () {
+                    $("#txtTokenDigital").val("");
+                    selectedRow = this;
+                    $('#updateTokenModalDigital').attr("data-id", $(this).attr("data-id"));
+                    $('#updateTokenModalDigital').modal("show");
+                });
+
+                $(".btn-edit-delivery").click(function () {
+                    $("#txtTokenDelivery").val("");
+                    selectedRow = this;
+                    $('#updateTokenModalDelivery').attr("data-id", $(this).attr("data-id"));
+                    $('#updateTokenModalDelivery').modal("show");
+                });
+                 $(".btn-edit-delivery-order").click(function () {
+                    $("#txtTokenDelivery").val("");
+                    selectedRow = this;
+                    $('#updateTokenModalDelivery').attr("data-id", $(this).attr("data-id"));
+                    $('#updateTokenModalDelivery').attr("type", 1);
+                    $('#updateTokenModalDelivery').modal("show");
+                });
+
+                $(".btn-details-delivery").click(function () {
+                    var ShortOrderItmeId = $(this).attr("data-id");
+
+                    $.ajax({
+                        type: "GET",
+                        dataType: 'json',
+                        data: {
+                            merchantId: merchantId,
+                            shortOrderItemId: ShortOrderItmeId
+                        },
+                        url: '/App/Sales/GetOrderDetailsByShortOrderId',
+                        success: function (response) {
+                            if (response.successful) {
+                                //toastr.success(response.message);
+                                $("#divQuanDelivery").show();
+                                $(response.data.orderItem).each(function (index, item) {
+                                    selectedOrderItemId = item.id;
+                                    selectedOrderItemShortId = item.shortId;
+                                    $("#txtEmailDelivery").html(item.order.email);
+                                    $("#txtProductNameDelivery").html(item.productTitle);
+                                    $("#txtPurchasedDateDelivery").html(moment(item.order.createdAt).format("DD-MM-YYYY HH:mm"));
+                                    $("#txtQuanDelivery").html(response.data.quantity);
+
+
+                                    console.log("Exp------> " + item.expirationTypeId)
+
+                                    if(item.expirationTypeId == 4) { 
+                                       
+                                           $("#txtVPointsDelivery").html(item.points);
+                                           $("#txtPriceDelivery").html(item.price);
+                                           console.log("AAAAAAA")
+
+                                    }
+
+                                    else {
+                                          
+                                        $("#txtVPointsDelivery").html(item.points * response.data.quantity);
+                                        $("#txtPriceDelivery").html(item.price * response.data.quantity);
+                                        
+                                    }
+                                    
+                                 
+                                    
+                                    
+                                    $("#refundPointsDelivery").html(item.points);
+                                  
+                                   
+                                    
+                                    $("#txtProductShippingCost").html(item.shippingCost);
+                                    if (item.isVariationProduct) {
+                                        $("#txtProductVariationText").html(item.variationText);
+                                        $("#txtProductVariationText").parent().parent().show();
+                                    }
+                                    else {
+                                        $("#txtProductVariationText").parent().parent().hide();
+                                    }
+                                    $("#refundAmountDelivery").val(parseFloat(item.price));
+                                    $("#txtPFullNameDelivery").html(item.order.shippingPersonFirstName + " " + item.order.shippingPersonLastName);
+                                    $("#txtPhoneNumberDelivery").html(item.order.shippingMobileCountryCode + item.order.shippingMobileNumber);
+                                    if (item.order.shippingAddressLine2 != null) {
+                                        $("#txtAddressDelivery").html(item.order.shippingAddressLine1 + ", " + item.order.shippingAddressLine2 + ", " + item.order.shippingPostcode
+                                            + ", " + item.order.shippingCity + ", " + item.order.shippingState + ", " + item.order.shippingCountry);
+                                    }
+                                    else {
+                                        $("#txtAddressDelivery").html(item.order.shippingAddressLine1 + ", " + item.order.shippingPostcode
+                                            + ", " + item.order.shippingCity + ", " + item.order.shippingState + ", " + item.order.shippingCountry);
+                                    }
+                                });
+
+                            }
+                            else {
+                                toastr.error(response.message);
+                            }
+                        },
+                        error: function () {
+                            toastr.error("Fail to send 123");
+                        }
+                    });
+
+                    $('#showDetailsModalDelivery').attr("data-id", $(this).attr("data-id"));
+                    $('#showDetailsModalDelivery').modal("show");
+                });
+
+                $(".btn-details-digital").click(function () {
+                    var ShortOrderItmeId = $(this).attr("data-id");
+
+                    $.ajax({
+                        type: "GET",
+                        dataType: 'json',
+                        data: {
+                            merchantId: merchantId,
+                            shortOrderItemId: ShortOrderItmeId
+                        },
+                        url: '/App/Sales/GetOrderDetailsByShortOrderId',
+                        success: function (response) {
+                            if (response.successful) {
+                                $("#divQuanDelivery").hide();
+                                //toastr.success(response.message);
+                                $(response.data.orderItem).each(function (index, item) {
+                                    selectedOrderItemId = item.id;
+                                    selectedOrderItemShortId = item.shortId;
+                                    $("#txtEmailDigital").html(item.order.email);
+                                    $("#txtProductNameDigital").html(item.productTitle);
+                                    $("#txtPurchasedDateDigital").html(moment(item.order.createdAt).format("DD-MM-YYYY HH:mm"));
+                                    
+                                    $("#txtVPointsDigital").html(item.points);
+                                    $("#txtPriceDigital").html(item.price);
+                                    
+                                    
+                                    $("#refundPointsDigital").html(item.points);
+                                    $("#refundAmountDigital").val(item.price);
+                                    $("#txtPFullNameDigital").html(item.order.shippingPersonFirstName + " " + item.order.shippingPersonLastName);
+                                    $("#txtPhoneNumberDigital").html(item.order.shippingMobileCountryCode + item.order.shippingMobileNumber);
+                                    if (item.order.shippingAddressLine2 != null) {
+                                        $("#txtAddressDigital").html(item.order.shippingAddressLine1 + ", " + item.order.shippingAddressLine2 + ", " + item.order.shippingPostcode
+                                            + ", " + item.order.shippingCity + ", " + item.order.shippingState + ", " + item.order.shippingCountry);
+                                    }
+                                    else {
+                                        $("#txtAddressDigital").html(item.order.shippingAddressLine1 + ", " + item.order.shippingPostcode
+                                            + ", " + item.order.shippingCity + ", " + item.order.shippingState + ", " + item.order.shippingCountry);
+                                    }
+                                });
+
+                            }
+                            else {
+                                toastr.error(response.message);
+                            }
+                        },
+                        error: function () {
+                            toastr.error("Fail to send 123");
+                        }
+                    });
+
+                    $('#showDetailsModalDigital').attr("data-id", $(this).attr("data-id"));
+                    $('#showDetailsModalDigital').modal("show");
+                });
+
+                $(".btn-details-outlet").click(function () {
+                    var ShortOrderItmeId = $(this).attr("data-id");
+
+                    $.ajax({
+                        type: "GET",
+                        dataType: 'json',
+                        data: {
+                            merchantId: merchantId,
+                            shortOrderItemId: ShortOrderItmeId
+                        },
+                        url: '/App/Sales/GetOrderDetailsByShortOrderId',
+                        success: function (response) {
+                            if (response.successful) {
+                                $("#divQuanDelivery").hide();
+                                //toastr.success(response.message);
+                                $(response.data.orderItem).each(function (index, item) {
+                                    selectedOrderItemId = item.id;
+                                    selectedOrderItemShortId = item.shortId;
+                                    $("#txtEmailOutlet").html(item.order.email);
+                                    $("#txtProductNameOutlet").html(item.productTitle);
+                                    $("#txtPurchasedDateOutlet").html(moment(item.order.createdAt).format("DD-MM-YYYY HH:mm"));
+                                    
+                                    $("#txtVPointsOutlet").html(item.points);
+                                    $("#txtPriceOutlet").html("RM " + item.price);
+                                    
+                                    $("#refundMoneyValue").val(item.price);
+                                    
+                                    $("#txtPFullNameOutlet").html(item.order.shippingPersonFirstName + " " + item.order.shippingPersonLastName);
+                                    $("#txtPhoneNumberOutlet").html(item.order.shippingMobileCountryCode + item.order.shippingMobileNumber);
+                                    if (item.order.shippingAddressLine2 != null) {
+                                        $("#txtAddressOutlet").html(item.order.shippingAddressLine1 + ", " + item.order.shippingAddressLine2 + ", " + item.order.shippingPostcode
+                                            + ", " + item.order.shippingCity + ", " + item.order.shippingState + ", " + item.order.shippingCountry);
+                                    }
+                                    else {
+                                        $("#txtAddressOutlet").html(item.order.shippingAddressLine1 + ", " + item.order.shippingPostcode
+                                            + ", " + item.order.shippingCity + ", " + item.order.shippingState + ", " + item.order.shippingCountry);
+                                    }
+
+                                });
+
+                            }
+                            else {
+                                toastr.error(response.message);
+                            }
+                        },
+                        error: function () {
+                            toastr.error("Fail to send 123");
+                        }
+                    });
+
+                    $('#showDetailsModalOutlet').attr("data-id", $(this).attr("data-id"));
+                    $('#showDetailsModalOutlet').modal("show");
+                });
+
+                $(".btn-details-order").click(function () {
+                    var orderId = $(this).attr("data-id");
+
+                    $.ajax({
+                        type: "GET",
+                        dataType: 'json',
+                        data: {
+                            orderId: orderId
+                        },
+                        url: '/App/Sales/GetOrderDetailsByOrderId',
+                        success: function (response) {
+                            if (response.successful) {
+                                $(response.data.order).each(function (index, item) {
+
+                                    $("#txtEmailOrder").html(item.email);
+                                    $("#txtPurchasedDateOrder").html(moment(item.createdAt).format("DD-MM-YYYY HH:mm"));
+                                    $("#txtVPointsOrder").html(item.totalPoints);
+                                    $("#txtTotalPriceOrder").html("RM " + (parseFloat(item.totalPrice) + parseFloat(item.totalShippingCost)).toFixed(2));
+                                    $("#txtQuantityOrder").html(item.totalItems);
+                                    $("#txtSubTotalPriceOrder").html("RM " + item.totalPrice);
+                                    $("#txtPriceOrder").html("RM " + item.totalPrice);
+                                    $("#txtProductShippingCostOrder").html(item.totalShippingCost);
+                                    $("#txtUserFullNameOrder").html(item.shippingPersonFirstName + " " + item.shippingPersonLastName);
+                                    $("#txtUserPhoneNumberOrder").html(item.shippingMobileCountryCode + item.shippingMobileNumber);
+                                    if (item.shippingAddressLine2 != null) {
+                                        $("#txtAddressOrder").html(item.shippingAddressLine1 + ", " + item.shippingAddressLine2 + ", " + item.shippingPostcode
+                                            + ", " + item.shippingCity + ", " + item.shippingState + ", " + item.shippingCountry);
+                                    }
+                                    else {
+                                        $("#txtAddressOrder").html(item.shippingAddressLine1 + ", " + item.shippingPostcode
+                                            + ", " + item.shippingCity + ", " + item.shippingState + ", " + item.shippingCountry);
+                                    }
+
+                                });
+
+                            }
+                            else {
+                                toastr.error(response.message);
+                            }
+                        },
+                        error: function () {
+                            toastr.error("Fail to get details");
+                        }
+                    });
+
+                    $('#showDetailsModalOrder').attr("data-id", $(this).attr("data-id"));
+                    selectedOrderId = $(this).attr("data-id");
+                    $('#showDetailsModalOrder').modal("show");
+                });
+
+            }
+        </script>
+
+        <!--#endregion .............................................  Pending SALES END  ............................................. -->
+
+
+    }

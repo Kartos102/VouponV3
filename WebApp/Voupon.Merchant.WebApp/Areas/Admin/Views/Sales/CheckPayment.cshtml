@@ -1,0 +1,218 @@
+﻿@using System.Security.Claims
+
+@{
+    ViewData["Title"] = "Sales Transactions";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var identity = User.Identity as ClaimsIdentity;
+
+}
+
+<div class="dashboard-main-wrapper sales-summary">
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content no-padding">
+            <div class="row">
+                <div class="col-lg-12 mb-2">
+                    <h1 class="page-header">Check Order Payment</h1>
+                </div>
+            </div>
+            <div class="ecommerce-widget sales-history-table row">
+                Short Id <input type="text" id="shortId" />
+                <button type="button" id="btnCheckOrder">Check</button>
+            </div>
+        </div>
+    </div>
+    <pre id="json-renderer"></pre>
+    <button id="btnGeneratePaymentData">Generate Payment Data</button>
+</div>
+
+@section styles{
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery.json-viewer@1.4.0/json-viewer/jquery.json-viewer.min.css" />
+}
+
+
+@section scripts{
+    <script src="https://cdn.jsdelivr.net/npm/jquery.json-viewer@1.4.0/json-viewer/jquery.json-viewer.min.js"></script>
+    <script>
+        $(function () {
+            $("#navSales").addClass("show");
+            $("#navSalesControl").attr("aria-expanded", true);
+
+            $("#btnCheckOrder").click(function () {
+                var shortId = $("#shortId").val();
+                if (shortId === null || shortId === "") {
+                    toastr.error("Short Id is required");
+                    return;
+                }
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    data: { shortId: shortId },
+                    url: '/Admin/RevenueMonster/get-by-short-id',
+                    success: function (response) {
+                        if (response.successful) {
+                            console.log(response.data);
+                            var options = {
+                                collapsed: false,
+                                rootCollapsable: false,
+                                withQuotes: false,
+                                withLinks: true
+                            };
+                            $('#json-renderer').jsonViewer(JSON.parse(JSON.stringify(response.data)), options);
+                        }
+                        else
+                            toastr.error(response.message);
+                    },
+                    error: function (error) {
+                        toastr.error(error);
+                    }
+                });
+            });
+
+            $("#btnGeneratePaymentData").click(function () {
+                var shortId = $("#shortId").val();
+                if (shortId === null || shortId === "") {
+                    toastr.error("Short Id is required");
+                    return;
+                }
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    data: { shortId: shortId },
+                    url: '/Admin/RevenueMonster/generate-order-payment',
+                    success: function (response) {
+                        if (response.successful) {
+                            toastr.error("Generated");
+                        }
+                        else {
+                            toastr.error(response.message);
+                        }
+                    },
+                    error: function (error) {
+                        toastr.error(error);
+                    }
+                });
+            });
+        });
+
+        function GetSalesByDate() {
+            var from = moment($("#salesHistoryFrom").val()).format("YYYY-MM-DD");
+            var to = moment($("#salesHistoryTo").val()).format("YYYY-MM-DD");
+            var length = $("#pageSize").find(":selected").attr("value");
+            var start = "0"
+            if ($(".nav-order-page.active").length > 0)
+                start = parseInt($(".nav-order-page.active").attr("order")) * parseInt(length);
+
+            $("#searchCriteria").text("Search by date: " + from + " - " + to);
+
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                data: { start: start, length: length },
+                url: '/Admin/Sales/sales-by-date/' + from + "/" + to,
+                success: function (response) {
+                    if (response.successful) {
+                        if (response.data != null) {
+
+                            GenerateRefundsView(response.data, false);
+                        } else {
+                            $("#noSales").show();
+                            $("#salesTable").hide();
+                        }
+                    }
+                    else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+
+        }
+
+        function GetSalesByShortId() {
+            toastr.clear();
+            var shortId = $("#shortId").val();
+
+            if (shortId == null || shortId == "") {
+                toastr.error("Please enter short id");
+                return;
+            }
+
+            $("#searchCriteria").text("Search by ShortId: " + shortId);
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/Admin/Sales/sales-by-short-id/' + shortId,
+                success: function (response) {
+                    if (response.successful) {
+                        if (response.data != null) {
+
+                            GenerateRefundsView(response, true);
+                        } else {
+                            $("#noSales").show();
+                            $("#salesTable").hide();
+                        }
+                    }
+                    else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+
+        }
+
+        function GenerateRefundsView(data, isSearchById) {
+            var view = "";
+            $(data.data).each(function (index, item) {
+                view += '<tr>';
+                view += '<td>' + item.createdAtString + '</td>';
+                view += '<td>' + item.shortId + '</td>';
+                view += '<td>' + item.email + '</td>';
+                view += '<td>' + 'item name' + '</td>';
+                view += '<td>' + 'item price' + '</td>';
+                view += '<td>' + 'item quantity' + '</td>';
+                view += '<td>' + 'vpoints discount' + '</td>';
+                view += '<td>RM' + item.totalPrice + '</td>';
+                view += '<td>' + 'merchant' + '</td>';
+                view += '<td>' + 'Delivery' + '</td>';
+                view += '<tr>';
+            });
+
+            $("#salesTable > tbody").html(view);
+            $("#salesTable").show();
+            $("#noSales").hide();
+            if (!isSearchById) {
+                if ($(".pagination").length == 0) {
+                    var pagingHtml = '<div class="pagination"><a class="prev-order-page" href="#">&laquo;</a> <a class="nav-order-page active" order="0" href="#" class="active">1</a>';
+                    var pagingNumber = 1;
+                    var recordsPerPage = parseInt($("#pageSize").find(":selected").attr("value"));
+                    for (index = 0; index < data.recordsTotal; index++) {
+                        if (index % recordsPerPage == 0 && index != 0)
+                            pagingHtml += ' <a class="nav-order-page" order="' + pagingNumber++ + '" href="#">' + parseInt(index / recordsPerPage + 1) + '</a>';
+                    }
+                    pagingHtml += '<a class="next-order-page" href="#">&raquo;</a></div>';
+                    $(".salse-table-paging").append(pagingHtml);
+                    createPagingActions();
+                }
+
+                $(".pagination-details").remove();
+                var from = parseInt($(".nav-order-page.active").attr("order")) * parseInt($("#pageSize").find(":selected").attr("value")) + 1;
+                var to = from + data.recordsFiltered - 1;
+                var pageDetails = '<div class="pagination-details">Showing ' + from + ' to ' + to + ' of ' + data.recordsTotal + ' entries</div>';
+                $(".salse-table-paging").append(pageDetails);
+            }
+            else {
+                $(".pagination-details").remove();
+                $(".pagination").remove();
+            }
+        }
+
+
+
+    </script>
+
+}

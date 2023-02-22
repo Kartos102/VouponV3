@@ -1,0 +1,40 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@{
+    Layout = null;
+}
+
+<script>
+    check();
+
+
+    function check()
+    {
+
+      var cookieName = "Vodus.Token";
+      var cookie = getCookieValue("Vodus.Token");
+
+        window.addEventListener('message', function (event) {
+            console.log(cookie);
+            event.source.postMessage(cookie, event.origin);
+            window.removeEventListener("message", check, false);
+            return;
+        });
+       
+    }
+    function getCookieValue(name) {
+        let result = document.cookie.match("(^|[^;]+)\\s*" + name + "\\s*=\\s*([^;]+)")
+        return result ? result.pop() : ""
+    }
+
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+</script>

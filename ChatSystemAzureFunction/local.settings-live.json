@@ -1,0 +1,29 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+    "SqlConnectionString": "Data Source=vodus-live.database.windows.net;Initial Catalog=VodusV2;User ID=Vodus;Password=Pleasechangethis2017;MultipleActiveResultSets=True;",
+    "RewardsSqlConnectionString": "Data Source=voupon.database.windows.net;Initial Catalog=RewardsDB;User ID=Voupon;Password=Vodus!234##;MultipleActiveResultSets=True",
+    "RedisConnectionString": "vodus-live.redis.cache.windows.net:6379,password=TNSikJyei+6n0V9c8CTiR4W46CZW92xIjB3WUUoE+Qw=,ssl=False,abortConnect=False",
+    "SENDGRID_APIKEY": "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",
+    "TechTeamEmails": "osa@vodus.my", //"kok.hong@vodus.my,belal@vodus.my"
+    "MerchantAdminEmails": "ang@vodus.my,Merchant@vodus.my", //"ang@vodus.my,Merchant@vodus.my"
+    "VouponBaseUrl": "https://vodus.my",
+    "CDNUrl": "https://voduscdn.azureedge.net",
+    "VouponUrl": "https://vodus.my",
+    "VouponMerchantAppBaseUrl": "https://merchant.vodus.my",
+    "IsSecure": true,
+    "VpointCap": "500",
+    "TemplateCacheBusterCode": "202011231644",
+    "RewardsAdsTemplateCacheBusterCode": "202011231644",
+    "AzureStorageConnectionString": "DefaultEndpointsProtocol=https;AccountName=voduslive;AccountKey=840RrHBFGpsC4Ye1jkrGLzLcLcd7nE1j+HLfvzVQOOfVgMoKTc6Aqx47DDWPPyWd4KvBkafTkaUxVwDuPTCWhA==;EndpointSuffix=core.windows.net",
+    "AzureConfigurationsStorageAccount": "vouponlive",
+    "AzureConfigurationsStorageKey": "7jPDZmGvlKqFMOWccS31qWI502O6qhPFXML7syKNU4RnYRnRXRWJG7P0tYR10akR3U/obf2D3HEr49xaqRf3aw==",
+    "AzureSignalRConnectionString": "Endpoint=https://voupon-chat.service.signalr.net;AccessKey=901YhxK1E3P7Aw35oQI8k+t2nb7sssO0mJDXNKsFa9Q=;Version=1.0;"
+  },
+  "Host": {
+    "LocalHttpPort": 7071,
+    "CORS": "*"
+  }
+}

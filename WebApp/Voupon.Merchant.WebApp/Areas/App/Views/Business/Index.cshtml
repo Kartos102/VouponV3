@@ -1,0 +1,1672 @@
+﻿@model Voupon.Merchant.WebApp.Areas.App.Services.Business.ViewModels.BusinessDetailsViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+<style>
+</style>
+<link rel="stylesheet" href="~/app/Business/css/Index.css">
+<div class="dashboard-main-wrapper business-page">
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Business Profile</h1>
+                </div>
+            </div>
+            <div class="row" id="business">
+                <div class="col-lg-12" style="margin-top:15px;">
+                    <div class="alert alert-secondary" role="alert" id="merchantStatusBadge">
+                        <h4 class="alert-heading" id="businessStatus" data-id="@Model.Merchant.StatusTypeId">@Model.Merchant.Status <i class="fas fa-chevron-down" id="expand-message"></i></h4>
+                        <hr>
+                        <div class="remarks-container message-collapsed">
+                            <p class="mb-0" id="businessRemarks">@Html.Raw((Model.Merchant.Remarks != null ? Model.Merchant.Remarks : ""))</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-5 no-padding">
+                <div class="section-block">
+                    <p></p>
+                </div>
+
+                <div class="tab-regular">
+                    <ul class="nav nav-tabs nav-fill" id="myTab7" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active show" id="profile-tab-justify" data-toggle="tab" href="#business-info" role="tab" aria-controls="profile" aria-selected="false">Business Info</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " id="home-tab-justify" data-toggle="tab" href="#personal-info" role="tab" aria-controls="home" aria-selected="true">Person In Charge Info</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" id="contact-tab-justify" data-toggle="tab" href="#bank-info" role="tab" aria-controls="contact" aria-selected="false">Bank Info</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent7">
+                        <div class="tab-pane fade" id="personal-info" role="tabpanel" aria-labelledby="home-tab-justify">
+                            <form id="personal-info-form" name="personal-info-form" method="post" enctype="multipart/form-data">
+                                <div class="form-group row">
+                                    @Html.HiddenFor(m => m.PersonInCharge.Id)
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                        <label class="col-form-label">Name of Person In Charge</label>
+                                        <input type="text" asp-for="PersonInCharge.Name" class="form-control" id="personInChargeName">
+                                        <span asp-validation-for="PersonInCharge.Name" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+
+                                        <label asp-for="PersonInCharge.Contact" class="col-form-label">Contact number</label>
+                                        <input id="contact" asp-for="PersonInCharge.Contact" type="text" class="form-control">
+                                        <span asp-validation-for="PersonInCharge.Contact" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                        <label class="col-form-label">Position of Person In Charge</label>
+                                        <input id="position" asp-for="PersonInCharge.Position" type="text" class="form-control">
+                                        <span asp-validation-for="PersonInCharge.Position" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                        <label asp-for="PersonInCharge.IdentityNumber" class="col-form-label">Identity number (NRIC/Passport)</label>
+                                        <input type="text" asp-for="PersonInCharge.IdentityNumber" class="form-control" id="identityNumber">
+                                        <span asp-validation-for="PersonInCharge.IdentityNumber" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 row">
+                                        <label asp-for="PersonInCharge.DocumentUrl" class="col-form-label">@*Upload your*@ Proof of Identity - <i>NRIC/Passport/Proof of association with the company</i></label>
+                                        <div class="col-12 px-0">
+                                            @if (Model.PersonInCharge!= null && !String.IsNullOrEmpty(@Model.PersonInCharge.DocumentUrl))
+                                            {
+                                                <span class="btn btn-primary btn-identity-file">
+                                                    Upload Document
+                                                    <i class="fa fa-upload ml-1"></i>
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="btn btn-primary btn-identity-file">
+                                                    Upload Document
+                                                    <i class="fa fa-upload ml-1"></i>
+                                                </span>
+                                            }
+                                        </div>
+                                        <div class="col-12 pt-2">
+                                            @{
+                                                if (Model.PersonInCharge != null && !String.IsNullOrEmpty(@Model.PersonInCharge.DocumentUrl))
+                                                {
+                                                        <a class="anchor-text" id="identityDocumentLink" target="_blank" href="@Model.PersonInCharge.DocumentUrl">View your document</a>
+                                                }
+                                                else
+                                                {
+                                                        <a class="anchor-text" id="identityDocumentLink" target="_blank" style="display:none">View your Document</a>
+                                                }
+                                            }
+                                        </div>
+                                        <input type="file" asp-for="PersonInCharge.DocumentUrl" id="identityDocument" class="form-control">
+                                        <span asp-validation-for="PersonInCharge.DocumentUrl" class="text-danger" id="identityDocumentValidation"></span>
+                                    </div>
+                                </div>
+                                <div class="col-12 save-instructions">
+                                    <p>Please click "Submit for Review" after completing or editing your application. </p>
+                                </div>
+                                <div class="form-group row save-div">
+                                    <a id="UpdatePersonInCharge" href="#" class="btn btn-secondary mr-2">Save</a>
+                                    <a href="#" class="btn btn-primary sendMessageToAdmin" id="sendMessageToAdmin">Message Admin</a>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="tab-pane fade  active show" id="business-info" role="tabpanel" aria-labelledby="profile-tab-justify">
+                            <form class="row" id="business-info-form" name="business-info-form" method="post">
+                                <div class="container col-xl-3 col-lg-3 col-md-4 col-sm-4 col-mb-4">
+                                    <div class="form-group row business-upload-container">
+                                        @Html.HiddenFor(m => m.Merchant.Id)
+                                        <div class="logo-container mb-4">
+                                            <div class="picture">
+                                                <img src="@Model.Merchant.LogoUrl" class="logo-src" id="logoPreview" title="">
+                                                <input asp-for="Merchant.LogoUrl" type="file" id="logoUpload">
+                                                <span asp-validation-for="Merchant.LogoUrl" class="text-danger" id="logoUploadValidation"></span>
+                                            </div>
+                                            <span class="btn btn-primary mt-2">
+                                                Upload Company Logo
+                                            </span>
+                                        </div>
+                                        <div class="row justify-content-center">
+                                            <label asp-for="Merchant.BIDDocumentUrl" class="col-form-label pl-0">Business Registration Certificate (Form 9)</label>
+                                            @if (!String.IsNullOrEmpty(@Model.Merchant.BIDDocumentUrl))
+                                            {
+                                                <span class="btn btn-primary btn-bid-file">
+                                                    Upload Document
+                                                    <i class="fa fa-upload"></i>
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="btn btn-primary btn-bid-file">
+                                                    Upload Document
+                                                    <i class="fa fa-upload"></i>
+                                                </span>
+                                            }
+                                            @{
+                                                if (!String.IsNullOrEmpty(@Model.Merchant.BIDDocumentUrl))
+                                                {
+                                                        <a class="anchor-text mt-2" id="bidDocumentLink" target="_blank" href="@Model.Merchant.BIDDocumentUrl">View your document</a>
+                                                }
+                                                else
+                                                {
+                                                        <a class="anchor-text mt-2" id="bidDocumentLink" target="_blank" style="display:none">View your document</a>
+                                                }
+                                            }
+                                            <input type="file" id="bidDocument" class="form-control" asp-for="Merchant.BIDDocumentUrl">
+                                            <span asp-validation-for="Merchant.BIDDocumentUrl" class="text-danger" id="bidDocumentValidation"></span>
+                                            <script>
+                                                $("select").selectpicker("render");
+                                            </script>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-9 col-lg-9 col-md-8 col-sm-8 col-mb-8 p-0">
+                                    <div class="form-group row">
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <label asp-for="Merchant.CompanyName" class="col-form-label">Company name</label>
+                                            <input asp-for="Merchant.CompanyName" id="companyName" type="text" class="form-control" value="@Model.Merchant.CompanyName">
+                                            <span asp-validation-for="Merchant.CompanyName" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <label asp-for="Merchant.RegistrationNumber" class="col-form-label">Company registration number</label>
+                                            <input asp-for="Merchant.RegistrationNumber" id="companyRegistrationNo" type="text" class="form-control" value="@Model.Merchant.RegistrationNumber">
+                                            <span asp-validation-for="Merchant.RegistrationNumber" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <label asp-for="Merchant.DisplayName" class="col-form-label">Company display Name</label>
+                                            <input asp-for="Merchant.DisplayName" id="displayName" type="text" class="form-control" value="@Model.Merchant.DisplayName">
+                                            <span asp-validation-for="Merchant.DisplayName" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <label asp-for="Merchant.BusinessTypeId" class="col-form-label">Business Type</label>
+                                            <select class="form-control selectpicker" id="selectBusinessType" asp-for="Merchant.BusinessTypeId">
+                                                <option value="">Business Type</option>
+                                            </select>
+                                            <span asp-validation-for="Merchant.BusinessTypeId" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <label asp-for="Merchant.CountryId" class="col-form-label">Country</label>
+                                            <select asp-for="Merchant.CountryId" class="form-control selectpicker" id="selectCountry">
+                                                <option value="">Choose Country</option>
+                                            </select>
+                                            <span asp-validation-for="Merchant.CountryId" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <label asp-for="Merchant.ProvinceId" class="col-form-label">State</label>
+                                            <select asp-for="Merchant.ProvinceId" class="form-control selectpicker" id="selectprovince" data-live-search="true">
+                                                <option value="">Choose State</option>
+                                            </select>
+                                            <span asp-validation-for="Merchant.ProvinceId" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+
+                                            <label asp-for="Merchant.DistritId" class="col-form-label">District</label>
+                                            <select asp-for="Merchant.DistritId" class="form-control data selectpicker" id="selectDistrict" data-live-search="true">
+                                                <option value="">Choose District</option>
+                                            </select>
+                                            <span asp-validation-for="Merchant.DistritId" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <label asp-for="Merchant.PostCodeId" class="col-form-label">Post Code</label>
+                                            <select asp-for="Merchant.PostCodeId" class="form-control selectpicker" id="selectPostCode" data-live-search="true">
+                                                <option value="">Choose PostCode</option>
+                                            </select>
+                                            <span asp-validation-for="Merchant.PostCodeId" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <label asp-for="Merchant.Address_1" class="col-form-label">Address1</label>
+                                            <input asp-for="Merchant.Address_1" id="address1" type="text" class="form-control" value="@Model.Merchant.Address_1">
+                                            <span asp-validation-for="Merchant.Address_1" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <label asp-for="Merchant.Address_2" class="col-form-label">Address2</label>
+                                            <input asp-for="Merchant.Address_2" id="address2" type="text" class="form-control" value="@Model.Merchant.Address_2">
+                                            <span asp-validation-for="Merchant.Address_2" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <label asp-for="Merchant.CompanyContact" class="col-form-label">Company Contact Number</label>
+                                            <input asp-for="Merchant.CompanyContact" id="companyContact" type="text" class="form-control" value="@Model.Merchant.CompanyContact">
+                                            <span asp-validation-for="Merchant.CompanyContact" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <label asp-for="Merchant.WebsiteSiteUrl" class="col-form-label">Website</label>
+                                            <div class="input-group input-group-sm mb-3">
+                                                <input asp-for="Merchant.WebsiteSiteUrl" type="text" placeholder="" class="form-control" id="website">
+                                            </div>
+                                            <span asp-validation-for="Merchant.WebsiteSiteUrl" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                            <label class="col-form-label" asp-for="Merchant.Description">Describe your company to your customers​</label>
+                                            <input type="hidden" id="companyDescription" asp-for="@Model.Merchant.Description" />
+                                            <div class="company-description">
+                                                @Html.Raw(Model.Merchant.Description)
+                                            </div>
+                                            <span asp-validation-for="Merchant.Description" class="text-danger" id="descriptionDocumentValidation"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 save-instructions">
+                                    <p>Please click "Submit for Review" after completing or editing your application. </p>
+                                </div>
+                                <div class="form-group row save-div">
+                                    <a id="UpdateBusiness" href="#" class="btn btn-secondary mr-2">Save</a>
+                                    <a href="#" class="btn btn-primary sendMessageToAdmin" id="sendMessageToAdmin">Message Admin</a>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="bank-info" role="tabpanel" aria-labelledby="contact-tab-justify">
+                            <form id="Bank-info-form">
+                                <div class="form-group row">
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                        @Html.HiddenFor(m => m.BankAccount.Id)
+                                        <label asp-for="BankAccount.BankId" class="col-form-label">Bank Type</label>
+                                        <select asp-for="BankAccount.BankId" class="form-control selectpicker" id="selectBankType" data-live-search="true">
+                                            <option value="">Choose Bank</option>
+                                        </select>
+                                        <span asp-validation-for="BankAccount.BankId" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                        <label asp-for="BankAccount.Name" class="col-form-label">Bank Account Name</label>
+                                        <input id="bankAccountName" type="text" class="form-control" asp-for="BankAccount.Name">
+                                        <span asp-validation-for="BankAccount.Name" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                        <label asp-for="BankAccount.AccountNumber" class="col-form-label">Account Number</label>
+                                        <input id="bankAccountNumber" type="text" class="form-control" asp-for="BankAccount.AccountNumber">
+                                        <span asp-validation-for="BankAccount.AccountNumber" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-12 row">
+                                        <label asp-for="BankAccount.DocumentUrl" class="col-form-label">Bank Document</label>
+                                        <div class="col-12">
+                                            @if (Model.PersonInCharge != null && !String.IsNullOrEmpty(@Model.PersonInCharge.DocumentUrl))
+                                            {
+                                                <span class="btn btn-primary btn-bank-file mr-4">
+                                                    Upload your Document
+                                                    <i class="fa fa-upload"></i>
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="btn btn-primary btn-bank-file mr-4">
+                                                    Upload your Document
+                                                    <i class="fa fa-upload"></i>
+                                                </span>
+                                            }
+                                        </div>
+                                        <div class="col-12 pt-2">
+                                            @{
+                                                if (Model.BankAccount != null && !String.IsNullOrEmpty(@Model.BankAccount.DocumentUrl))
+                                                {
+                                                        <a class="anchor-text" id="bankDocumentLink" target="_blank" href="@Model.BankAccount.DocumentUrl">View your document</a>
+                                                }
+                                                else
+                                                {
+                                                        <a class="anchor-text" id="bankDocumentLink" target="_blank" style="display:none">View your document</a>
+                                                }
+                                            }
+                                        </div>
+                                        <input type="file" id="bankDocument" class="form-control" asp-for="BankAccount.DocumentUrl">
+                                        <span style="line-height:2em;" asp-validation-for="BankAccount.DocumentUrl" class="text-danger" id="bankDocumentValidation"></span>
+                                    </div>
+                                </div>
+                                <div class="col-12 save-instructions">
+                                    <p>Please click "Submit for Review" after completing or editing your application. </p>
+                                </div>
+                                <div class="form-group row save-div">
+                                    <a id="UpdateBankAccount" href="#" class="btn btn-secondary mr-2">Save</a>
+                                    <a href="#" class="btn btn-primary sendMessageToAdmin" id="sendMessageToAdmin">Message Admin</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Review Person In Charge Info Modal -->
+<div class="modal fade" id="reviewPersonInChargeModal" status-id="0" remarks="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Submit Review</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Confirm Review Submission?</label><br />
+                        <label for="message-text" class="col-form-label message-to-admin">Message to Admin (optional):</label>
+                        <textarea class="form-control" id="personInChargeRemarks"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnReviewPersonInCharge">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Review Merchant Info Modal -->
+<div class="modal fade" id="reviewMerchantModal" status-id="0" remarks="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Submit Review</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Confirm Review Submission ?</label><br />
+                        <label for="message-text" class="col-form-label message-to-admin">Message to Admin (optional):</label>
+                        <textarea class="form-control" id="merchantRemarks"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnReviewMerchant">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Review Bank Account Info Modal -->
+<div class="modal fade" id="reviewBankAccountModal" status-id="0" remarks="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Submit Review</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Confirm Review Submission ?</label><br />
+                        <label for="message-text" class="col-form-label message-to-admin">Message to Admin (optional):</label>
+                        <textarea class="form-control" id="bankAccountRemarks"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnReviewBankAccount">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Common Modal Info Modal -->
+<div class="modal fade" id="reviewAllInfoModal" status-id="0" remarks="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Submit Review</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Confirm Review Submission ?</label><br />
+                        <label for="message-text" class="col-form-label message-to-admin">Message to Admin (optional):</label>
+                        <textarea class="form-control" id="AllInfoRemarks"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnReviewAllInfo">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="sendMessageToAdminModal" status-id="0" remarks="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Send Message to Admin</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label message-to-admin">Message to Admin :</label>
+                        <textarea class="form-control" id="txtMessageToAdmin"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnSendMessageToAmin">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section styles{
+    <!-- Theme included stylesheets -->
+    <link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
+
+    <!-- Core build with no theme, formatting, non-essential modules -->
+    <link href="//cdn.quilljs.com/1.3.6/quill.core.css" rel="stylesheet">
+}
+
+
+
+@section scripts{
+
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script src="//cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <script src="~/lib/FilesValidations.js"></script>
+
+    <script>
+    $(document).ready(function () {
+        var toolbarOptions = [
+            ['bold', 'italic', 'underline'],
+            ['link'],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            [{ 'script': 'sub' }, { 'script': 'super' }],
+            ['clean']
+        ];
+        var quill = new Quill('.company-description', {
+            modules: {
+                toolbar: toolbarOptions
+            },
+            placeholder: 'Compose an epic...',
+            theme: 'snow'
+        });
+        $('.collapse').on('shown.bs.collapse', function () {
+            $(this).parent().find(".fa-angle-down").removeClass("fa-angle-down").addClass("fa-angle-up");
+        }).on('hidden.bs.collapse', function () {
+            $(this).parent().find(".fa-angle-up").removeClass("fa-angle-up").addClass("fa-angle-down");
+        });
+
+        UpdateBadge();
+
+        $(".btn-identity-file").click(function () {
+                $('#identityDocument').click();
+         });
+
+        $('#identityDocument').on("change", function () {
+            if (ValidateExtension(this)) {
+                var merchantId = $("#Merchant_Id").val();
+                var personinchargedocumentfile = document.getElementById("identityDocument").files[0];
+                if (personinchargedocumentfile != null) {
+                    var formData = new FormData();
+                    formData.append("Document", personinchargedocumentfile);
+                    $.ajax({
+                        url: "/App/Business/UploadMerchantPersonInChargeDocument/" + merchantId,
+                        type: "POST",
+                        data: formData,
+                        async: false,
+                        enctype: 'multipart/form-data',
+                        processData: false, // tell jQuery not to process the data
+                        contentType: false // tell jQuery not to set contentType
+                    }).done(function (response) {
+                        if (response.successful) {
+                            personinchargedocumentfilename = response.data;
+                            $("#identityDocumentLink").attr("href", personinchargedocumentfilename);
+                            $("#identityDocumentLink").show();
+                            $("#identityDocumentValidation").html("");
+
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    });
+                }
+            }
+            else {
+                $("#identityDocumentLink").attr("href", "");
+                $("#identityDocumentLink").hide();
+                $("#identityDocumentValidation").html("Please upload files having <b> .pdf </b> extension only. and less than 4 MB");
+            }
+        });
+
+        $("#bidDocument").on('change', function () {
+             var isValid = ValidateExtension(this);
+            if (isValid) {
+                var merchantId = $("#Merchant_Id").val();
+                var bidDocumentfile = document.getElementById("bidDocument").files[0];
+                if (bidDocumentfile != null) {
+                    var formData = new FormData();
+                    formData.append("Document", bidDocumentfile);
+                    $.ajax({
+                        url: "/App/Business/UploadMerchantDocument/" + merchantId,
+                        type: "POST",
+                        data: formData,
+                        async: false,
+                        enctype: 'multipart/form-data',
+                        processData: false, // tell jQuery not to process the data
+                        contentType: false // tell jQuery not to set contentType
+                    }).done(function (response) {
+                        if (response.successful) {
+                            bidDocumentfilename = response.data;
+                            $("#bidDocumentLink").attr("href", bidDocumentfilename);
+                            $("#bidDocumentLink").show();
+                            $("#bidDocumentValidation").html("");
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    });
+                }
+            }
+            else {
+                $("#bidDocumentLink").attr("href", "");
+                $("#bidDocumentLink").hide();
+                $("#bidDocumentValidation").html("Please upload files having <b> .pdf </b> extension only. and less than 4 MB");
+            }
+        });
+        $(".btn-bid-file").click(function () {
+
+                $('#bidDocument').click();
+
+        });
+        $('#bankDocument').on("change", function () {
+
+            if (ValidateExtension(this)) {
+                var merchantId = $("#Merchant_Id").val();
+                var bankAccountDocumentfile = document.getElementById("bankDocument").files[0];
+                if (bankAccountDocumentfile != null) {
+                    var formData = new FormData();
+                    formData.append("Document", bankAccountDocumentfile);
+                    $.ajax({
+                        url: "/App/Business/UploadMerchantBankAccountDocument/" + merchantId,
+                        type: "POST",
+                        data: formData,
+                        async: false,
+                        enctype: 'multipart/form-data',
+                        processData: false, // tell jQuery not to process the data
+                        contentType: false // tell jQuery not to set contentType
+                    }).done(function (response) {
+                        if (response.successful) {
+                            bankAccountDocumentfilename = response.data;
+                            $("#bankDocumentLink").attr("href", bankAccountDocumentfilename);
+                            $("#bankDocumentLink").show();
+                            $("#bankDocumentValidation").html("");
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    });
+                }
+            }
+            else {
+                $("#bankDocumentLink").attr("href", "");
+                $("#bankDocumentLink").hide();
+                $("#bankDocumentValidation").html("Please upload files having <b> .pdf </b> extension only. and less than 4 MB");
+            }
+        });
+
+        $(".btn-bank-file").click(function () {
+            $('#bankDocument').click();
+        });
+          // Prepare the preview for profile picture
+        $("#logoUpload").change(function () {
+            readURL(this);
+        });
+        GetCountryList();
+        $('#selectDistrict').change(function () {
+
+            GetPostcodeList($(this).val());
+            $("#selectPostCode").selectpicker("refresh");
+        });
+        $('#selectprovince').change(function () {
+            GetDistrictList($(this).val());
+            $("#selectDistrict").val($("#selectDistrict option:first").val());
+            $('#selectDistrict').change();
+        });
+        $('#selectCountry').change(function () {
+            GetProvinceList($(this).val());
+            $("#selectprovince").val($("#selectprovince option:first").val());
+            $('#selectprovince').change();
+        });
+
+        $("#selectCountry").val(@Model.Merchant.CountryId);
+        //$("#selectCountry").val($("#selectCountry option:first").val());
+        $('#selectCountry').change();
+
+        $("#selectprovince").val(@Model.Merchant.ProvinceId);
+        $('#selectprovince').change();
+        $("#selectDistrict").val(@Model.Merchant.DistritId);
+        $('#selectDistrict').change();
+
+        $('#UpdatePersonInCharge').click(function (e) {
+            e.preventDefault();
+            updatePersonInCharge(true);
+            UpdateStatus();
+        });
+
+        function UpdateStatus() {
+
+
+            var remarks = $("#txtMessageToAdmin").val();
+
+            var personInChargeId = $("#PersonInCharge_Id").val();
+
+            var bankAccountId = $("#BankAccount_Id").val();
+
+            var merchantId = $("#Merchant_Id").val();
+            var personInChargeName = $("#personInChargeName").val();
+
+
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    BankAccountId: bankAccountId, MerchantId: merchantId, PersonInChargeId: personInChargeId, PersonInChargeName: personInChargeName
+                },
+                url: '/App/Business/UpdateStatus',
+                success: function (response) {
+                    if (response.successful) {
+                        console.log(response);
+                        $("#bankInfoStatus").attr("data-id", 2);
+                        $("#bankInfoStatus").html("Pending Review");
+                        $("#personInChargeStatus").attr("data-id", 2);
+                        $("#personInChargeStatus").html("Pending Review");
+                        $("#businessStatus").attr("data-id", 2);
+                        $("#businessStatus").html("Pending Review");
+
+                        UpdateBadge();
+                    }
+                    else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function () {
+                    toastr.error("Fail Update Status");
+                }
+            });
+
+        }
+
+        function updatePersonInCharge(showMessage) {
+             if ($("#personal-info-form").valid()) {
+            var id = $("#PersonInCharge_Id").val();
+            var merchantId = $("#Merchant_Id").val();
+            var contact = $("#contact").val();
+            var postion = $("#position").val();
+            var name = $("#personInChargeName").val();
+            var identityNumber = $("#identityNumber").val();
+            var identityDocument = $("#identityDocument").val();
+
+            var personinchargedocumentfilename = $("#identityDocumentLink").attr("href");
+            var personinchargedocumentfile = document.getElementById("identityDocument").files[0];
+            if (personinchargedocumentfile != null) {
+                var formData = new FormData();
+                formData.append("Document", personinchargedocumentfile);
+                $.ajax({
+                    url: "/App/Business/UploadMerchantPersonInChargeDocument/" + merchantId,
+                    type: "POST",
+                    data: formData,
+                    async: false,
+                    enctype: 'multipart/form-data',
+                    processData: false, // tell jQuery not to process the data
+                    contentType: false // tell jQuery not to set contentType
+                }).done(function (response) {
+                    if (response.successful) {
+                        personinchargedocumentfilename = response.data;
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            }
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    Id: id, MerchantId: merchantId, Name: name, Contact: contact, Position: postion, IdentityNumber: identityNumber, DocumentUrl: (personinchargedocumentfilename != undefined ? personinchargedocumentfilename.split("?")[0] : personinchargedocumentfilename)
+                },
+                url: '/App/Business/UpdatePersonInCharge',
+                success: function (response) {
+                    if (response.successful) {
+                        if (personinchargedocumentfilename != "" && personinchargedocumentfilename != undefined) {
+                            $("#identityDocumentLink").attr("href", personinchargedocumentfilename);
+                            $("#identityDocumentLink").show();
+                        }
+                        //$("#personInChargeStatus").attr("data-id", 2);
+                        //$("#personInChargeStatus").html("Pending Review");
+                        $("#bankInfoStatus").attr("data-id", 2);
+                        $("#bankInfoStatus").html("Pending Review");
+                        UpdateBadge();
+                        if (showMessage)
+                            toastr.success(response.message);
+                    }
+                    else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function () {
+                    toastr.error("Fail to Update Person In Charge Info");
+                }
+            });
+            }
+             else
+             toastr.error("Information not completed");}
+        //}
+
+        $('#UpdateBankAccount').click(function (e) {
+            e.preventDefault();
+            updateBankAccount(true);
+            UpdateStatus();
+        });
+
+        function updateBankAccount(showmessage){
+            if ($("#Bank-info-form").valid()) {
+
+            var merchantId = $("#Merchant_Id").val();
+            var id = $("#BankAccount_Id").val();
+            var bankId = $("#selectBankType option:selected").val();
+            var bankName = $("#selectBankType option:selected").html();
+            var accountNumber = $("#bankAccountNumber").val();
+            var name = $("#bankAccountName").val();
+            var bankDocument = $("#bankDocument").val();
+            if (bankId == "") {
+                bankId = null;
+            }
+
+            var bankAccountDocumentfilename = $("#bankDocumentLink").attr("href");
+            var bankAccountDocumentfile = document.getElementById("bankDocument").files[0];
+
+            if (bankAccountDocumentfile != null) {
+                var formData = new FormData();
+                formData.append("Document", bankAccountDocumentfile);
+                $.ajax({
+                    url: "/App/Business/UploadMerchantBankAccountDocument/" + merchantId,
+                    type: "POST",
+                    data: formData,
+                    async: false,
+                    enctype: 'multipart/form-data',
+                    processData: false, // tell jQuery not to process the data
+                    contentType: false // tell jQuery not to set contentType
+                }).done(function (response) {
+                    if (response.successful) {
+                        bankAccountDocumentfilename = response.data;
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            }
+
+
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    Id: id, BankId: bankId, AccountNumber: accountNumber, Name: name, DocumentUrl: (bankAccountDocumentfilename != undefined ? bankAccountDocumentfilename.split("?")[0] : bankAccountDocumentfilename)
+                },
+                async: false,
+                url: '/App/Business/UpdateBankAccount',
+                success: function (response) {
+                    console.log(response);
+                    if (response.successful) {
+                        if (bankAccountDocumentfilename != "" && bankAccountDocumentfilename != undefined) {
+                            $("#bankDocumentLink").attr("href", bankAccountDocumentfilename);
+                            $("#bankDocumentLink").show();
+                        }
+                        //$("#bankInfoStatus").attr("data-id", 2);
+                        //$("#bankInfoStatus").html("Pending Review");
+                        $("#businessStatus").attr("data-id", 2);
+                        $("#businessStatus").html("Pending Review");
+                        UpdateBadge();
+                        if (showmessage)
+                            toastr.success(response.message);
+                    }
+                    else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function () {
+                    toastr.error("Fail to Update Bank Info");
+                }
+            });
+            }
+            else {
+                toastr.error("Information not completed");
+            }
+
+        }
+        $('#UpdateBusiness').click(function (e) {
+            e.preventDefault();
+            updateBusiness(true);
+        });
+
+        function updateBusiness(showMessage) {
+               if ($("#business-info-form").valid()) {
+            //$("#business-info-form").unbind('validate');
+            document.getElementById('companyDescription').value = quill.root.innerHTML;
+            var companyType = $("#selectBusinessType").val();
+            var country = $("#selectCountry").val();
+            var province = $("#selectprovince").val();
+            var district = $("#selectDistrict").val();
+            var postcode = $("#selectPostCode").val();
+            if (companyType == "") {
+                companyType = null;
+            }
+            if (country == "") {
+                country = null;
+            }
+            if (province == "") {
+                province = null;
+            }
+            if (district == "") {
+                district = null;
+            }
+            if (postcode == "") {
+                postcode = null;
+            }
+
+            var merchantId = $("#Merchant_Id").val();
+
+            var displayname = $("#displayName").val();
+            var companyname = $("#companyName").val();
+            var registrationnumber = $("#companyRegistrationNo").val();
+            var companycontact = $("#companyContact").val();
+            var companywebsite = $("#website").val();
+            var companyDescription = quill.root.innerHTML;
+            var bidDocument = $("#bidDocument").val();
+            var address1 = $("#address1").val();
+            var address2 = $("#address2").val();
+            var logofilename = $("#logoPreview").attr("src");
+            var logofile = document.getElementById("logoUpload").files[0];
+            if (logofile != null) {
+                var formData = new FormData();
+                formData.append("Document", logofile);
+                $.ajax({
+                    url: "/App/Business/UploadMerchantLogo/" + merchantId,
+                    type: "POST",
+                    data: formData,
+                    async: false,
+                    enctype: 'multipart/form-data',
+                    processData: false, // tell jQuery not to process the data
+                    contentType: false // tell jQuery not to set contentType
+                }).done(function (response) {
+                    if (response.successful) {
+                        logofilename = response.data;
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            }
+
+            var bidDocumentfilename = $("#bidDocumentLink").attr("href");
+            var bidDocumentfile = document.getElementById("bidDocument").files[0];
+            if (bidDocumentfile != null) {
+                var formData = new FormData();
+                formData.append("Document", bidDocumentfile);
+                $.ajax({
+                    url: "/App/Business/UploadMerchantDocument/" + merchantId,
+                    type: "POST",
+                    data: formData,
+                    async: false,
+                    enctype: 'multipart/form-data',
+                    processData: false, // tell jQuery not to process the data
+                    contentType: false // tell jQuery not to set contentType
+                }).done(function (response) {
+                    if (response.successful) {
+                        bidDocumentfilename = response.data;
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            }
+
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                async: false,
+                data: {
+                    MerchantId: merchantId, CompanyTypeId: companyType, CountryId: country, ProvinceId: province, DistrictId: district, PostcodeId: postcode,
+                    DisplayName: displayname, CompanyName: companyname, RegistrationNumber: registrationnumber, CompanyContact: companycontact, CompanyWebsite: companywebsite, Description: companyDescription, BIDDocumentUrl: (bidDocumentfilename != undefined ? bidDocumentfilename.split("?")[0] : bidDocumentfilename), Address_1: address1, Address_2: address2, LogoUrl: logofilename
+                },
+                url: '/App/Business/UpdateMerchant',
+                success: function (response) {
+                    if (response.successful) {
+                        if (bidDocumentfilename != "" && bidDocumentfilename != undefined) {
+                            $("#bidDocumentLink").attr("href", bidDocumentfilename);
+                            $("#bidDocumentLink").show();
+                        }
+
+                        if (logofilename != "") {
+                            $("#logoPreview").attr("src", logofilename);
+                        }
+
+                        $("#businessStatus").attr("data-id", 2);
+                        $("#businessStatus").html("Pending Review");
+                        UpdateBadge();
+                        if (showMessage)
+                            toastr.success(response.message);
+                    }
+                    else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function () {
+                    toastr.error("Fail to Update Business Info");
+                }
+            });
+            }
+            else {
+                toastr.error("Information not completed");
+            }
+        }
+
+        GetPostcodeList($("#selectDistrict").val());
+        $("#selectPostCode").val(@(Model.Merchant.PostCodeId.HasValue ? Model.Merchant.PostCodeId.Value.ToString() :""));
+        GetBankList();
+        if(bankId != "")
+        {
+            $("#selectBankType").val(bankId);
+            $("#selectBusinessType").selectpicker("refresh");
+        }
+        else
+        {
+            $("#selectBusinessType").selectpicker("refresh");
+             //$("#selectBankType").val(0);
+        }
+
+        $("#selectBankType").selectpicker("refresh");
+        GetBusinessTypeList();
+        $("#selectBusinessType").val(@Model.Merchant.BusinessTypeId);
+        $("#selectBusinessType").selectpicker("refresh");
+        $("#selectPostCode").selectpicker("refresh");
+        $('#reviewPersonInCharge').click(function () {
+            $("#identityDocumentValidation").html("");
+            if ($("#personal-info-form").valid()) {
+                //if (document.getElementById("identityDocument").files[0] == undefined && ($("#identityDocumentLink").attr("href") == "" || $("#identityDocumentLink").attr("href") == undefined)) {
+                //    $("#identityDocumentValidation").html("The Identity document is required");
+                //    return false;
+                //}
+                $("#personInChargeStatusRemarks").val("");
+                $('#reviewPersonInChargeModal').modal("show");
+            }
+            else
+                toastr.error("Person in charge Information not completed");
+        });
+
+        $('#reviewMerchant').click(function () {
+            $("#bidDocumentValidation").html("");
+            $("#descriptionDocumentValidation").html("");
+            if ($("#logoPreview").attr("src") == "" || $("#logoPreview").attr("src") == undefined) {
+                toastr.error("The Logo is required");
+                $("#logoUpload").focus();
+                return;
+                //alert('dd');
+                ////console.log($("#logoPreview").src);
+                //$("#logoUpload").val($("#logoPreview").attr("src"));
+            }
+            document.getElementById('companyDescription').value = quill.root.innerHTML;
+            if ($("#business-info-form").valid()) {
+                if (document.getElementById('companyDescription').value == "<p><br></p>") {
+                    $("#descriptionDocumentValidation").html("Please provide Description for your Company");
+                    $(".ql-editor").focus();
+                    toastr.error("Business Information not completed");
+                    return false;
+                }
+                //if (document.getElementById("bidDocument").files[0] == undefined && ($("#bidDocumentLink").attr("href") == "" || $("#bidDocumentLink").attr("href") == undefined)) {
+                //    $("#bidDocumentValidation").html("The Business Registration Certificate is Requird");
+                //    $('html, body').animate({
+                //    scrollTop: $(".btn-bid-file").offset().top
+                //    });
+                //    toastr.error("Information not completed");
+                //    return;
+                //}
+                $("#merchantStatusRemarks").val("");
+                $('#reviewMerchantModal').modal("show");
+            }
+            else
+                toastr.error("Business Information not completed");
+        });
+
+        $('#reviewBankAccount').click(function () {
+            $("#bankDocumentValidation").html("");
+            if ($("#Bank-info-form").valid()) {
+                //if (document.getElementById("bankDocument").files[0] == undefined && ($("#bankDocumentLink").attr("href") == "" || $("#bankDocumentLink").attr("href") == undefined)) {
+                //    $("#bankDocumentValidation").html("Bank document is required for payout into your account.");
+                //    return;
+                //}
+                $("#bankAccountStatusRemarks").val("");
+                $('#reviewBankAccountModal').modal("show");
+            }
+            else
+                toastr.error("Bank Information not completed");
+        });
+
+        $('.reviewAllInfo').click(function () {
+            $('#reviewAllInfoModal').modal("show");
+        });
+         $('.sendMessageToAdmin').click(function () {
+            //validateAllInfo();
+             $('#sendMessageToAdminModal').modal("show");
+        });
+
+        $("#btnReviewPersonInCharge").click(function () {
+            if ($("#personal-info-form").valid()) {
+                updatePersonInCharge(false);
+                var id = $("#PersonInCharge_Id").val();
+                var remarks = $("#personInChargeRemarks").val();
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    data: {
+                        PersonInChargeId: id, Remarks : remarks
+                    },
+                    url: '/App/Business/SubmitReviewPersonInCharge',
+                    success: function (response) {
+                        if (response.successful) {
+                            $("#personInChargeStatus").attr("data-id", 2);
+                            $("#personInChargeStatus").html("Pending Review");
+                            $("#personInChargeStatusRemarks").html(remarks);
+                            UpdateBadge();
+                            $('#reviewPersonInChargeModal').modal("hide");
+                            //toastr.success(response.message);
+                        }
+                        else {
+                            toastr.error(response.message);
+                        }
+                    },
+                    error: function () {
+                        toastr.error("Fail to Submit Person In Charge Info for review");
+                    }
+            });
+            }
+             else
+             toastr.error("Information not completed");
+        });
+        $("#btnReviewMerchant").click(function () {
+            if ($("#business-info-form").valid()) {
+                updateBusiness(false);
+                var id = $("#Merchant_Id").val();
+                var remarks = $("#merchantRemarks").val();
+                var personInChargeName = $("#personInChargeName").val();
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    data: {
+                        MerchantId: id, Remarks: remarks, PersonInChargeName: personInChargeName
+                    },
+                    url: '/App/Business/SubmitReviewMerchant',
+                    success: function (response) {
+                        if (response.successful) {
+                            $("#businessStatus").attr("data-id", 2);
+                            $("#businessStatus").html("Pending Review");
+                            $("#businessRemarks").html(remarks);
+                            UpdateBadge();
+                            $('#reviewMerchantModal').modal("hide");
+                            //toastr.success(response.message);
+                            //if ($("#personInChargeStatus").attr("data-id") == 1 || $("#personInChargeStatus").attr("data-id") == 3)
+                            //{
+                            //    $('#home-tab-justify').click();
+                            //    return;
+                            //}
+                            //if ($("#bankInfoStatus").attr("data-id") == 1 || $("#bankInfoStatus").attr("data-id") == 3)
+                            //{
+                            //    $('#contact-tab-justify').click();
+                            //    return;
+                            //}
+                            //window.location.href = "/App/Products";
+                        }
+                        else {
+                            toastr.error(response.message);
+                        }
+                    },
+                    error: function () {
+                        toastr.error("Fail to Submit Business Info for review");
+                    }
+                });
+            }
+        });
+        $("#btnReviewBankAccount").click(function () {
+            if ($("#Bank-info-form").valid()) {
+
+                updateBankAccount(false);
+                var id = $("#BankAccount_Id").val();
+                var remarks = $("#bankAccountRemarks").val();
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    data: {
+                        BankAccountId: id, Remarks: remarks
+                    },
+                    url: '/App/Business/SubmitReviewBankAccount',
+                    success: function (response) {
+                        if (response.successful) {
+                            $("#bankInfoStatus").attr("data-id", 2);
+                            $("#bankInfoStatus").html("Pending Review");
+                            $("#bankInfoRemarks").html(remarks);
+                            UpdateBadge();
+                            $('#reviewBankAccountModal').modal("hide");
+                            //toastr.success(response.message);
+                        }
+                        else {
+                            toastr.error(response.message);
+                        }
+                    },
+                    error: function () {
+                        toastr.error("Fail to Submit Business Info for review");
+                    }
+                });
+            }
+        });
+        $("#btnReviewAllInfo").click(function () {
+
+            updateBankAccount(false);
+            var remarks = $("#AllInfoRemarks").val();
+            // turn off
+            //toastr.options.target = null;
+
+            $("#bankAccountRemarks").val(remarks);
+            $("#merchantRemarks").val(remarks);
+            $("#personInChargeRemarks").val(remarks);
+            $("#btnReviewBankAccount").click();
+            $("#btnReviewPersonInCharge").click();
+            $("#btnReviewMerchant").click();
+            // turn on
+            //toastr.options.target = 'body';
+
+            toastr.success("Successfully Submitted");
+            $('#reviewAllInfoModal').modal("hide");
+        });
+
+        $("#btnSendMessageToAmin").click(function () {
+
+
+            var remarks = $("#txtMessageToAdmin").val();
+
+            var personInChargeId = $("#PersonInCharge_Id").val();
+
+            var bankAccountId = $("#BankAccount_Id").val();
+
+            var merchantId = $("#Merchant_Id").val();
+            var personInChargeName = $("#personInChargeName").val();
+
+
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    BankAccountId: bankAccountId, MerchantId: merchantId, PersonInChargeId: personInChargeId, PersonInChargeName: personInChargeName, Remarks: remarks
+                },
+                url: '/App/Business/SendMessageToAdmin',
+                success: function (response) {
+                    if (response.successful) {
+                        console.log(response);
+                        $("#bankInfoStatus").attr("data-id", 2);
+                        $("#bankInfoStatus").html("Pending Review");
+                        $("#bankInfoRemarks").html(response.data);
+                        $("#personInChargeStatus").attr("data-id", 2);
+                        $("#personInChargeStatus").html("Pending Review");
+                        $("#personInChargeStatusRemarks").html(response.data);
+                        $("#businessStatus").attr("data-id", 2);
+                        $("#businessStatus").html("Pending Review");
+                        $("#businessRemarks").html(response.data);
+
+                        UpdateBadge();
+                        $('#sendMessageToAdminModal').modal("hide");
+                        toastr.success(response.message);
+                    }
+                    else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function () {
+                    toastr.error("Fail to Send Message to Admin");
+                }
+            });
+        });
+
+        $("#expand-message").click(function () {
+            if ($(".remarks-container").hasClass("message-collapsed")) {
+                $(".remarks-container").removeClass("message-collapsed");
+                $(".remarks-container p").css("margin-top", 0);
+                $('.remarks-container').scrollTop($('.remarks-container')[0].scrollHeight);
+            } else {
+                $(".remarks-container").addClass("message-collapsed");
+                var marginTop = -($(".remarks-container p").height() - 20);
+                $(".remarks-container p").css("margin-top", marginTop + "px");
+            }
+        })
+    });
+
+        $.validator.setDefaults({ ignore: '' });
+
+
+        function GetPostcodeList(districtId) {
+            if (districtId == 0) {
+                var options = "<option value=''>Choose Postcode</option>";
+                $("#postCodeSelect").html();
+                $("#selectPostCode").html(options);
+                $("#selectPostCode").selectpicker('refresh');
+                return;
+            }
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/App/Locations/GetPostcodeList/' + districtId,
+                success: function (response) {
+                    var options = "<option value=''>Choose Postcode</option>";
+                    $("#selectPostCode").html();
+                    if (response.successful) {
+                        if (response.data != null) {
+                            $(response.data).each(function (index, item) {
+                                options += "<option value=" + item.id + ">" + item.name + "</option>";
+                            });
+                            $("#selectPostCode").html(options).selectpicker('refresh');
+                        }
+                    }
+                }
+            });
+        }
+
+        function GetDistrictList(provinceId) {
+            if (provinceId == 0) {
+                var options = "<option value=''>Choose District</option>";
+                $("#selectDistrict").html();
+                $("#selectDistrict").html(options);
+                $("#selectDistrict").selectpicker('refresh');
+                return;
+            }
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/App/Locations/GetDistrictList/' + provinceId,
+                success: function (response) {
+                    var options = "<option value=''>Choose District</option>";
+                    $("#selectDistrict").html();
+                    if (response.successful) {
+                        if (response.data != null) {
+                            $(response.data).each(function (index, item) {
+                                options += "<option value=" + item.id + ">" + item.name + "</option>";
+                            });
+                            $("#selectDistrict").html(options).selectpicker('refresh');
+                        }
+                    }
+                }
+            });
+        }
+
+        function GetProvinceList(countryId) {
+            if (countryId == 0) {
+                var options = "<option value=''>Choose Province</option>";
+                $("#selectprovince").html();
+                $("#selectprovince").html(options);
+                $("#selectprovince").selectpicker('refresh');
+                return;
+            }
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                async: false,
+                url: '/App/Locations/GetProvinceList/' + countryId,
+                success: function (response) {
+                    var options = "<option value=''>Choose Province</option>";
+                    $("#selectprovince").html();
+                    if (response.successful) {
+                        if (response.data != null) {
+                            $(response.data).each(function (index, item) {
+                                options += "<option value=" + item.id + ">" + item.name + "</option>";
+                            });
+                            $("#selectprovince").html(options).selectpicker('refresh');
+                        }
+                    }
+                }
+            });
+        }
+
+        function GetCountryList() {
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                async: false,
+                url: '/App/Locations/GetCountryList',
+                success: function (response) {
+                    var options = "<option value=''>Choose Country</option>";
+                    $("#selectCountry").html();
+                    if (response.successful) {
+                        if (response.data != null) {
+                            $(response.data).each(function (index, item) {
+                                options += "<option value=" + item.id + ">" + item.name + "</option>";
+                            });
+                            $("#selectCountry").html(options).selectpicker('refresh');
+                        }
+                    }
+                }
+            });
+        }
+
+        function GetBusinessTypeList() {
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                async: false,
+                url: '/App/Business/GetBusinessTypeList',
+                success: function (response) {
+                    var options = "<option value=''>Choose Business Type</option>";
+                    $("#selectBusinessType").html();
+                    if (response.successful) {
+                        if (response.data != null) {
+                            $(response.data).each(function (index, item) {
+                                options += "<option value=" + item.id + ">" + item.name + "</option>";
+                            });
+                            $("#selectBusinessType").html(options).selectpicker("refresh");
+                        }
+                    }
+                }
+            });
+        }
+
+        function GetBankList() {
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                async: false,
+                url: '/App/Business/GetBankList',
+                success: function (response) {
+                    var options = "<option value=''>Choose Bank</option>";
+                    $("#selectBankType").html();
+                    if (response.successful) {
+                        if (response.data != null) {
+                            $(response.data).each(function (index, item) {
+                                options += "<option value=" + item.id + ">" + item.name + "</option>";
+                            });
+                            $("#selectBankType").html(options);
+                            $("#selectBankType").html(options).selectpicker("refresh");
+                        }
+                    }
+                }
+            });
+        }
+
+        function readURL(input) {
+
+            if (input.files && input.files[0]) {
+                var allowedFiles = [".jpeg", ".png", ".jpg", ".jfif"];
+                //var fileUpload = document.getElementById(input.attr("id"));
+                var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(" + allowedFiles.join('|') + ")$");
+                if (!regex.test(input.value.toLowerCase())) {
+                    //$("#logoUploadValidation").html("Please upload files having extensions: <b>" + allowedFiles.join(', ') + "</b> only.");
+                    toastr.error("Please upload files having extensions: <b>" + allowedFiles.join(', ') + "</b> only.");
+                    return false;
+                }
+                var reader = new FileReader();
+
+                var validDimentions = false;
+
+                reader.onload = function (e) {
+                    var image = new Image();
+                    image.src = e.target.result;
+
+                    image.onload = function () {
+
+                        var height = this.height;
+                        var width = this.width;
+                        var size = Math.round((input.files[0].size / 1024));
+                        if (width > imageMinwidth && width < imageMaxwidth && height > imageMinHeight && height < imageMaxHeight && size > 0 && size < imageMaxSize) {
+                            validDimentions = true;
+                        }
+
+                        if (validDimentions) {
+                            $('#logoPreview').attr('src', e.target.result).fadeIn('slow');
+                        }
+                        else {
+                            toastr.error("Please ensure that each image file has the following dimensions and file size: Width: \n Between" + imageMinwidth + " to " + imageMaxwidth + "px \n Height: Between " + imageMinHeight + " to " + imageMaxHeight + "px \n Size: Less than " + imageMaxSize + "KB");
+                        }
+                    }
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function GetMerchantDetails(merchantId) {
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/Admin/Merchants/GetMerchantPendingChanges/' + merchantId,
+                success: function (response) {
+                    if (response.successful) {
+                        if (response.data != null) {
+                            if (response.data.displayName != $("#merchantDisplayName").html()) {
+                                $("#merchantDisplayName2").html(" -> " + response.data.displayName);
+                                $("#merchantDisplayName2").show();
+                            }
+                            if (response.data.businessType != $("#merchantBusinessType").html()) {
+                                $("#merchantBusinessType2").html(" -> " + response.data.businessType);
+                                $("#merchantBusinessType2").show();
+                            }
+                            if (response.data.countryName != $("#merchantCountry").html()) {
+                                $("#merchantCountry2").html(" -> " + response.data.countryName);
+                                $("#merchantCountry2").show();
+                            }
+                            if (response.data.companyName != $("#merchantCompanyName").html()) {
+                                $("#merchantCompanyName2").html(" -> " + response.data.companyName);
+                                $("#merchantCompanyName2").show();
+                            }
+                            if (response.data.registrationNumber != $("#merchantRegistrationNumber").html()) {
+                                $("#merchantRegistrationNumber2").html(" -> " + response.data.registrationNumber);
+                                $("#merchantRegistrationNumber2").show();
+                            }
+                            if (response.data.companyContact != $("#merchantCompanyContact").html()) {
+                                $("#merchantCompanyContact2").html(" -> " + response.data.companyContact);
+                                $("#merchantCompanyContact2").show();
+                            }
+                            if (response.data.address_1 != $("#merchantAddress_1").html()) {
+                                $("#merchantAddress_12").html(" -> " + response.data.address_1);
+                                $("#merchantAddress_12").show();
+                            }
+                            if (response.data.address_2 != $("#merchantAddress_2").html()) {
+                                $("#merchantAddress_22").html(" -> " + response.data.address_2);
+                                $("#merchantAddress_22").show();
+                            }
+                            if (response.data.distritName != $("#merchantDistrit").html()) {
+                                $("#merchantDistrit2").html(" -> " + response.data.distritName);
+                                $("#merchantDistrit2").show();
+                            }
+                            if (response.data.provinceName != $("#merchantProvince").html()) {
+                                $("#merchantProvince2").html(" -> " + response.data.provinceName);
+                                $("#merchantProvince2").show();
+                            }
+                            if (response.data.postCodeName != $("#merchantPostcode").html()) {
+                                $("#merchantPostcode2").html(" -> " + response.data.postCodeName);
+                                $("#merchantPostcode2").show();
+                            }
+                            if (response.data.websiteSiteUrl != $("#merchantWebsiteSiteUrl").html().trim()) {
+                                $("#merchantWebsiteSiteUrl2").html(" -> " + response.data.websiteSiteUrl);
+                                $("#merchantWebsiteSiteUrl2").show();
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function GetBankAccountDetails(merchantId) {
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/Admin/Merchants/GetBankAccountPendingChanges/' + merchantId,
+                success: function (response) {
+                    if (response.successful) {
+                        if (response.data != null) {
+                            if (response.data.bank != $("#bankAccountBank").html()) {
+                                $("#bankAccountBank2").html(" -> " + response.data.bank);
+                                $("#bankAccountBank2").show();
+                            }
+                            if (response.data.name != $("#bankAccountName").html()) {
+                                $("#bankAccountName2").html(" -> " + response.data.name);
+                                $("#bankAccountName2").show();
+                            }
+                            if (response.data.accountNumber != $("#bankAccountNumber").html()) {
+                                $("#bankAccountNumber2").html(" -> " + response.data.accountNumber);
+                                $("#bankAccountNumber2").show();
+                            }
+
+                        }
+                    }
+                }
+            });
+        }
+
+        function GetPersonInChargeDetails(merchantId) {
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/Admin/Merchants/GetPersonInChargePendingChange/' + merchantId,
+                success: function (response) {
+                    if (response.successful) {
+                        if (response.data != null) {
+                            if (response.data.name != $("#personInChargeName").html()) {
+                                $("#personInChargeName2").html(" -> " + response.data.name);
+                                $("#personInChargeName2").show();
+                            }
+                            if (response.data.position != $("#personInChargePosition").html()) {
+                                $("#personInChargePosition2").html(" -> " + response.data.position);
+                                $("#personInChargePosition2").show();
+                            }
+                            if (response.data.identityNumber != $("#personInChargeIdentityNumber").html()) {
+                                $("#personInChargeIdentityNumber2").html(" -> " + response.data.identityNumber);
+                                $("#personInChargeIdentityNumber2").show();
+                            }
+                            if (response.data.contact != $("#personInChargeContact").html()) {
+                                $("#personInChargeContact2").html(" -> " + response.data.contact);
+                                $("#personInChargeContact2").show();
+                            }
+
+                        }
+                    }
+                }
+            });
+        }
+
+        function UpdateBadge() {
+            $("#merchantStatusBadge").removeClass();
+            $("#merchantStatusBadge").addClass(GetBadgeClassName($("#businessStatus").attr("data-id")));
+            $('.remarks-container').scrollTop($('.remarks-container')[0].scrollHeight);
+        }
+
+        function GetBadgeClassName(type) {
+            if (type == 1) {
+                return "alert alert-secondary";
+            }
+            if (type == 2) {
+                return "alert alert-warning";
+            }
+            if (type == 3) {
+                return "alert alert-pending-revision";
+            }
+            if (type == 4) {
+                $("#business").hide();
+                return "alert alert-success";
+            }
+            return "alert alert-danger";
+        }
+
+        function ValidateExtension(element) {
+            var allowedFiles = [".pdf"];
+            //var fileUpload = document.getElementById(element.attr("id"));
+            var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(" + allowedFiles.join('|') + ")$");
+            if (!regex.test(element.value.toLowerCase()) || element.files[0].size / 1000000 > 4) {
+                //$("#bidDocumentValidation").html("Please upload files having extensions: <b>" + allowedFiles.join(', ') + "</b> only.");
+                element.value = "";
+                return false;
+            }
+            return true;
+        }
+
+        function validateAllInfo() {
+
+
+            //Business
+            $("#bidDocumentValidation").html("");
+            $("#descriptionDocumentValidation").html("");
+            if ($("#logoPreview").attr("src") == "" || $("#logoPreview").attr("src") == undefined) {
+                toastr.error("The Logo is required");
+                $("#profile-tab-justify").click();
+                $("#logoUpload").focus();
+                return;
+            }
+            var quill = new Quill('.company-description');
+            document.getElementById('companyDescription').value = quill.root.innerHTML;
+            if ($("#business-info-form").valid()) {
+
+                if (document.getElementById('companyDescription').value == "<p><br></p>") {
+                    $("#descriptionDocumentValidation").html("Please provide Description for your Company");
+                    $("#profile-tab-justify").click();
+                    $(".ql-editor").focus();
+                    toastr.error("Business Information not completed");
+                    return false;
+                }
+
+                $("#merchantStatusRemarks").val("");
+            }
+            else {
+                $("#profile-tab-justify").click();
+                toastr.error("Business Information not completed");
+                return;
+            }
+
+            //Person In Charge
+            //$("#home-tab-justify").click();
+            if ($("#personal-info-form").valid()) {
+
+
+                $("#personInChargeStatusRemarks").val("");
+            }
+            else {
+                $("#home-tab-justify").click();
+                toastr.error("Person in charge Information not completed");
+                return;
+            }
+
+            //Bank
+            $("#bankDocumentValidation").html("");
+            if ($("#Bank-info-form").valid()) {
+
+                $("#bankAccountStatusRemarks").val("");
+            }
+            else {
+                $("#contact-tab-justify").click();
+                toastr.error("Bank Information not completed");
+                return;
+            }
+            $('#reviewAllInfoModal').modal("show");
+
+        }
+
+    </script>
+}
+

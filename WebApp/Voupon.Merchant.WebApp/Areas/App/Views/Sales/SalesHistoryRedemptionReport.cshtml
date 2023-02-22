@@ -1,0 +1,86 @@
+﻿@model Voupon.Merchant.WebApp.Areas.App.Controllers.SalesHistoryRedemptionReport;
+
+@{
+    Layout = null;
+}
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Sales Report</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="license" href="https://www.opensource.org/licenses/mit-license/">
+    <script src="script.js"></script>
+    <link href="~/css/demo.css" rel="stylesheet" />
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+<body>
+    <article>
+        <h1>Sales Report</h1>
+        <table class="meta">
+            <tr>
+                <th><span contenteditable>Merchant</span></th>
+                <td><span contenteditable>@Model.MerchantName</span></td>
+            </tr>
+            <tr>
+                <th><span contenteditable>Date</span></th>
+                <td><span contenteditable>@Model.Date</span></td>
+            </tr>
+            <tr>
+                <th><span contenteditable>Total Revenue</span></th>
+                <td><span>@Model.TotalRevenue</span></td>
+            </tr>
+        </table>
+        <br />
+        <br />
+        <table class="inventory">
+            <thead>
+                <tr>
+                    <th><span contenteditable>Product TransID</span></th>
+                    <th><span contenteditable>Type</span></th>
+                    <th><span contenteditable>Product Name</span></th>
+                    <th><span contenteditable>Revenue(RM)</span></th>
+                    <th><span contenteditable>Purchased Date</span></th>
+                    <th><span contenteditable>Redeemed Date</span></th>
+                    <th><span contenteditable>Outlet</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (var redemption in Model.RedemptionList)
+                    {
+                        <tr>
+                            <td>@(redemption.ProductTransID)</td>
+                            <td>@redemption.Type</td>
+                            <td>@redemption.ProductName</td>
+                            <td>@redemption.Revenue</td>
+                            <td>@redemption.PurchasedDate</td>
+                            <td>@redemption.RedeemedDate</td>
+                            <td>@redemption.Outlet</td>
+                        </tr>
+
+                    }
+                }
+            </tbody>
+        </table>
+
+    </article>
+
+
+</body>
+</html>  

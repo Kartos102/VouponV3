@@ -1,0 +1,630 @@
+﻿
+@{
+    ViewData["Title"] = "Products";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="dashboard-main-wrapper">
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content ">
+            <div class="row">
+                <div class="col-lg-12 mb-2 section-block" style="justify-content:space-between;">
+                    <h3 class="page-header">Products</h3>
+                    <div class="m-auto" id="pageSize"><label>Show <select id="selectpageSize" name="pageSize" aria-controls="pageSize" class=""><option value="10">10</option><option value="25">25</option><option value="50">50</option><option selected="selected" value="100">100</option></select> entries</label></div>
+                    <div class="row ecommerce-widget table-function">
+                        <button type="button" class="btn btn-primary pull-right" id="shoHideDeletedProducts" style="float:right;margin-left:10px;">Show deleted Products</button>
+                        <button type="button" class="btn btn-primary pull-right" id="btnAddProduct" style="float:right;margin-left:10px;"><span class="fa fa-plus"></span>Add Product</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 row">
+                <div class="sort-div col-6 pl-0">
+                    <button class="dropdown-toggle" id="menu1" type="button" data-toggle="dropdown">
+                        <p>Sort by: <span>Date of Creation (Latest)</span></p>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu sort-list-menu" role="menu" aria-labelledby="menu1">
+                        <li role="presentation"><a class="product-sorting" role="menuitem" tabindex="-1" href="#" value="createdAt" order="desc">Date of Creation (Latest)</a></li>
+                        <li role="presentation"><a class="product-sorting" role="menuitem" tabindex="-1" href="#" value="createdAt" order="asc">Date of Creation (Earliest)</a></li>
+
+                        <li role="presentation"><a class="product-sorting" role="menuitem" tabindex="-1" href="#" value="StatusType" order="asc">Status (A - Z)</a></li>
+                        <li role="presentation"><a class="product-sorting" role="menuitem" tabindex="-1" href="#" value="StatusType" order="desc">Status (Z - A)</a></li>
+                        <li role="presentation"><a class="product-sorting" role="menuitem" tabindex="-1" href="#" value="Title" order="asc">Product name (A - Z)</a></li>
+                        <li role="presentation"><a class="product-sorting" role="menuitem" tabindex="-1" href="#" value="Title" order="desc">Product name (Z - A)</a></li>
+                        <li role="presentation"><a class="product-sorting" role="menuitem" tabindex="-1" href="#" value="DiscountedPrice" order="asc">Price (A - Z)</a></li>
+                        <li role="presentation"><a class="product-sorting" role="menuitem" tabindex="-1" href="#" value="DiscountedPrice" order="desc">Price (Z - A)</a></li>
+                        <li role="presentation"><a class="product-sorting" role="menuitem" tabindex="-1" href="#" value="IsActivated" order="desc">Published</a></li>
+                        <li role="presentation"><a class="product-sorting" role="menuitem" tabindex="-1" href="#" value="IsActivated" order="asc">Unpublished</a></li>
+
+                    </ul>
+                </div>
+                <div class="search-row input-group col-6 no-padding">
+                    <input class="form-control py-2 border-right-0 border" type="search" value="" placeholder="Search a product" id="product-search-input">
+                    <span class="input-group-append">
+                        <button class="btn btn-outline-secondary border-left-0 border" type="button" id="product-search-btn">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+            <div class="row products-card-row col-lg-12 col-md-12 px-0 mt-2">
+                <div class="row products-table-card col-lg-12 col-md-12">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="display:none">
+    <div class="row card-table-row card-table-template col-12 no-padding">
+        <div class="mobile-card-row product-row row col-12">
+            <div class="row col-xl-8 col-lg-8 col-md-8 col-12 no-padding">
+                <div class="row col-xl-6 col-lg-6 col-md-6 col-12 no-padding">
+                    <div class="row col-8 no-padding mt-2">
+                        <div class="row col-2 no-padding">
+                            <div class="col-12 card-record-row product-order px-0">
+                                12
+                            </div>
+                            <div class="col-12 card-title-row px-0">
+                                ID
+                            </div>
+                        </div>
+                        <div class="row col-10 no-padding">
+                            <div class="col-12 card-record-row" style="align-items: start">
+                                <div class="product-title product-title-anchor">
+                                    Product Title
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row col-4 no-padding mt-2">
+                        <div class="col-12 px-0 card-record-row product-price-div">
+                            <p>
+                                <span>
+                                    RM
+                                </span>
+                                <span class="product-price">
+                                    10.00
+                                </span>
+                            </p>
+                        </div>
+                        <div class="col-12 card-record-row px-0 ">
+                            <div class="product-merchant-name ellipsis">
+                                <a>
+                                    Merchant name
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row col-xl-6 col-lg-6 col-md-6 col-12 mt-2 no-padding">
+                    <div class="row col-4 no-padding">
+                        <div class="col-12 card-record-row product-category px-0 ellipsis">
+                            Sports
+                        </div>
+                        <div class="col-12 card-title-row">
+                            Category
+                        </div>
+                    </div>
+                    <div class="row col-3 no-padding">
+                        <div class="col-12 card-record-row product-createdAt">
+                            11/05/2021
+                        </div>
+                        <div class="col-12 pr-0 card-title-row">
+                            Created At
+                        </div>
+                    </div>
+                    <div class="row col-5 no-padding">
+                        <div class="col-12 card-record-row product-status pr-0 ellipsis">
+                            Draft
+                        </div>
+                        <div class="col-12 card-title-row">
+                            Status
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row col-xl-4 col-lg-4 col-md-4 col-12 card-record-row no-padding">
+                <div class="row col-4 no-padding">
+                    <div class="col-12 card-record-row product-published-merchant align-center">
+                        No
+                    </div>
+                    <div class="col-12 card-title-row px-0 text-center">
+                        Merchant Publish
+                    </div>
+                </div>
+                <div class="row col-4 no-padding">
+                    <div class="col-12 card-record-row product-published-admin align-center">
+                        No
+                    </div>
+                    <div class="col-12 card-title-row px-0 text-center">
+                        Admin Publish
+                    </div>
+                </div>
+                <div class="row col-4">
+                    <div class="col-12 px-0 card-record-row action-container product-action">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Product Category Modal -->
+<div class="modal fade" id="AddProductModal" data-id="0" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Product</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label>Merchant</label>
+                        <select class="form-control" id="EditMerchantList">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Product Title</label>
+                        <input id="EditProductTitle" type="text" class="form-control" value="">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="AddProduct">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Commission Modal -->
+<div class="modal fade" id="EditCommissionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="EditCommissionModalTitle">Commission</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Commission:</label>
+                        <input type="number" class="form-control" step="any" id="DefaultCommissionInput" value="0" min="0" max="100">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="UpdateCommission">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+        var table = null;
+        var selectedRow = null;
+        function EditCommission(btn) {
+            selectedRow = btn;
+            var productId = $(btn).attr("data-id");
+            var commission = $(btn).attr("commission");
+            $("#EditCommissionModal").attr("data-id", productId);
+            $("#DefaultCommissionInput").val(commission);
+            $("#EditCommissionModalTitle").html("Commission [" + productId + "]");
+            $("#EditCommissionModal").modal("show");
+        }
+        $(document).ready(function () {
+            $("#product-search-btn").on("click", function () {
+                $(".pagination").remove();
+                GetProductList();
+            });
+
+            $("#product-search-input").on("search", function () {
+                $(".pagination").remove();
+                GetProductList();
+            });
+
+            GetProductList();
+
+            $(".product-sorting").first().addClass("selected");
+
+            $("#UpdateCommission").click(function () {
+                var productId = $("#EditCommissionModal").attr("data-id");
+                var commission = $("#DefaultCommissionInput").val();
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    data: {
+                        ProductId: productId, DefaultCommission: commission
+                    },
+                    url: '/Admin/Products/UpdateProductDefaultCommission',
+                    success: function (response) {
+                        if (response.successful) {
+                            $(selectedRow).closest("tr").find(".commission").html(parseFloat(commission).toFixed(2));
+                            $(selectedRow).attr("commission", parseFloat(commission).toFixed(2));
+                            toastr.success(response.message);
+                        }
+                        else
+                            toastr.error(response.message);
+                    },
+                    error: function (error) {
+                        toastr.error(error);
+                    }
+                });
+                $("#EditCommissionModal").modal("hide");
+            });
+
+            $('#btnProductImgConvertTemp').click(function () {
+                $.ajax({
+                    url: "/Admin/Products/UploadProductImagesForOldImagesTemp",
+                    type: "POST",
+                    async: false,
+                    //data: formData,
+                    //enctype: 'multipart/form-data',
+                    processData: false, // tell jQuery not to process the data
+                    contentType: false // tell jQuery not to set contentType
+                }).done(function (response) {
+                    if (response.successful) {
+                        imagefilesname = response.data;
+                        toastr.success(response.message);
+                        filesList = [];
+                    }
+                    else
+                        toastr.error(response.message);
+                    // $("#merchantLogo").attr("src", response.data);
+                });
+            });
+            $('#btnProductDeleteResizedImages').click(function () {
+                $.ajax({
+                    url: "/Admin/Products/DeleteResizedImagesAndKeepOriginal",
+                    type: "POST",
+                    async: false,
+                    //data: formData,
+                    //enctype: 'multipart/form-data',
+                    processData: false, // tell jQuery not to process the data
+                    contentType: false // tell jQuery not to set contentType
+                }).done(function (response) {
+                    if (response.successful) {
+                        imagefilesname = response.data;
+                        toastr.success(response.message);
+                        filesList = [];
+                    }
+                    else
+                        toastr.error(response.message);
+                    // $("#merchantLogo").attr("src", response.data);
+                });
+            });
+
+            $('#btnAddProduct').click(function () {
+                $('#EditProductTitle').val("");
+                GetMerchantList();
+                $('#AddProductModal').modal('show');
+            });
+
+            $('#shoHideDeletedProducts').click(function () {
+                if ($(this).html() == "Show deleted Products") {
+                    $(this).html("Hide deleted Products");
+                    $(".deleted-product").each(function () {
+                        $(this).css('display', 'table-row');
+                    });
+                }
+                else if ($(this).html() == "Hide deleted Products") {
+                    $(this).html("Show deleted Products");
+                    $(".deleted-product").each(function () {
+                        $(this).css('display', 'none');
+                    });
+                }
+
+            });
+
+
+            $('#AddProduct').click(function () {
+                if ($('#EditMerchantList').val() == 0) {
+                    alert('Please choose merchant');
+                    $('#EditMerchantList').focus();
+                    return;
+                }
+
+                if ($('#EditProductTitle').val() == "") {
+                    alert('Please enter product title');
+                    $('#EditProductTitle').focus();
+                    return;
+                }
+                AddProduct($('#EditMerchantList').val(), $('#EditProductTitle').val());
+                $('#AddProductModal').modal('hide');
+            });
+
+            $('.btn-edit').click(function () {
+                // console.log(this);
+                // RedirectToEdit(this);
+                //var productId = $(this).attr("data-id");
+                //window.location.href = "/Admin/Products/Edit/" + productId;
+            });
+
+            $(".activatedStatus").change(function () {
+                //var productId = $(this).attr("data-id");
+                //var status = $(this).is(":checked");
+                //UpdateProductPublishedStatus(productId, status);
+            });
+            $("#selectpageSize").change(function () {
+                $(".pagination").remove();
+                GetProductList();
+            });
+        });
+
+        function UpdateProductMerchantStatus(input) {
+            var productId = $(input).attr("data-id");
+            var status = $(input).is(":checked");
+            UpdateProductActivatedStatus(productId, status);
+
+            if ($(input).is(":checked")) {
+                $(input).parent().find('.publish-status-merchant').html('Published');
+            } else {
+                $(input).parent().find('.publish-status-merchant').html('Unpublished');
+            }
+        }
+        function UpdateProductStatus(input) {
+            var productId = $(input).attr("data-id");
+            var status = $(input).is(":checked");
+            UpdateProductPublishedStatus(productId, status);
+
+            if ($(input).is(":checked")) {
+                $(input).parent().find('.publish-status-admin').html('Published');
+            } else {
+                $(input).parent().find('.publish-status-admin').html('Unpublished');
+            }
+        }
+        function RedirectToEdit(btn) {
+            var productId = $(btn).attr("data-id");
+            window.location.href = "/Admin/Products/Edit/" + productId;
+        }
+        function GetMerchantList() {
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/Admin/Products/GetMerchantList',
+                success: function (response) {
+                    $("#EditMerchantList").html("");
+                    if (response.successful) {
+                        if (response.data != null) {
+                            var options = "<option value='0'>Choose Merchant</option>";
+                            $(response.data).each(function (index, item) {
+                                options += "<option value=" + item.id + ">" + item.code + " - " + item.displayName + "</option>";
+                            });
+                            $("#EditMerchantList").html(options);
+                        }
+                    } else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function GetProductList() {
+            var length = $("#pageSize").find(":selected").attr("value");
+            var start = "0"
+            if ($(".nav-order-page.active").length > 0)
+                start = parseInt($(".nav-order-page.active").attr("order")) * parseInt(length);
+            var sortColumn = $(".product-sorting.selected").attr("value");
+            var sortColumnDirection = $(".product-sorting.selected").attr("order");
+            var searchValue = $("#product-search-input").val().toLowerCase();
+
+
+
+            $.ajax({
+                type: "Post",
+                async: false,
+                data: { start: start, length: length, sortColumn: sortColumn, sortColumnDirection: sortColumnDirection, searchValue: searchValue },
+                dataType: 'json',
+                url: '/Admin/Products/GetProducts',
+
+
+                success: function (response) {
+
+
+
+                    if (table != null)
+                        table.destroy();
+                    if (response.successful) {
+                        if (response.data != null) {
+                            $(".products-table-card").html("");
+                            $(response.data.data).each(function (index, item) {
+                                var statushtml = "";
+                                if (item.statusTypeId == 1) {
+                                    statushtml = "<span class='badge badge-light'>" + item.statusType;
+                                }
+                                else if (item.statusTypeId == 2) {
+                                    statushtml = "<span class='badge badge-warning'>" + item.statusType;
+                                }
+                                else if (item.statusTypeId == 3) {
+                                    statushtml = "<span class='badge badge-warning'>" + item.statusType;
+                                }
+                                else if (item.statusTypeId == 4) {
+                                    statushtml = "<span class='badge badge-success'>" + item.statusType;
+                                }
+                                else {
+                                    statushtml = "<span class='badge badge-danger'>" + item.statusType;
+                                }
+
+                                var template = $(".card-table-template");
+                                template.find(".product-title").html("<a class='btn-edit' data-id='" + item.id + "'href='/Admin/Products/Edit/" + item.id + "' >" + item.title + "</a>");
+                                template.find(".product-order").html(item.id);
+
+                                template.find(".product-price").html(item.discountedPrice);
+                                template.find(".product-createdAt").html(moment(item.createdAt).format("DD/MM/YYYY"));
+                                template.find(".product-status").html(statushtml);
+
+                                template.find(".product-subategory").html(item.productSubCategory);
+                                template.find(".product-category").html(item.productCategory);
+
+                                template.find(".product-merchant-name").html('<a data-id="' + item.merchantId + '" href="/Admin/Merchants/Details/' + item.merchantId + '">' + item.merchantName + '</a>');
+                                template.find(".product-published-admin").html(item.isPublished.toString());
+
+                                if (item.isPublished) {
+                                    template.find(".product-published-admin").html("<div class='switch-button switch-button-success'>" +
+                                        "<input class='activatedStatus' onchange='UpdateProductStatus(this);' type='checkbox' checked='' name='switch_" + item.id + "' data-id='" + item.id + "' id='switchMobile_" + item.id + "'><span>" +
+                                        " <label for='switchMobile_" + item.id + "'></label> " +
+                                        "</span><span class='d-none publish-status-admin'>Published</span> </div>");
+                                }
+                                else {
+                                    template.find(".product-published-admin").html("<div class='switch-button switch-button-success'>" +
+                                        "<input class='activatedStatus' onchange='UpdateProductStatus(this);' type='checkbox'  name='switch_" + item.id + "' data-id='" + item.id + "' id='switchMobile_" + item.id + "'><span>" +
+                                        " <label for='switchMobile_" + item.id + "'></label> " +
+                                        "</span><span class='d-none publish-status-admin'>Unpublished</span> </div>");
+                                }
+                                template.find(".product-published-merchant").html(item.isActivated.toString());
+
+                                if (item.isActivated) {
+                                    template.find(".product-published-merchant").html("<div class='switch-button switch-button-success'>" +
+                                        "<input class='activatedStatusMerchant' onchange='UpdateProductMerchantStatus(this);' type='checkbox' checked='' name='switchMobileMerchant_" + item.id + "' data-id='" + item.id + "' id='switchMobileMerchant_" + item.id + "'><span>" +
+                                        " <label for='switchMobileMerchant_" + item.id + "'></label> " +
+                                        "</span><span class='d-none publish-status-merchant'>Published</span> </div>");
+                                }
+                                else {
+                                    template.find(".product-published-merchant").html("<div class='switch-button switch-button-success'>" +
+                                        "<input class='activatedStatusMerchant' onchange='UpdateProductMerchantStatus(this);' type='checkbox'  name='switchMobileMerchant_" + item.id + "' data-id='" + item.id + "' id='switchMobileMerchant_" + item.id + "'><span>" +
+                                        " <label for='switchMobileMerchant_" + item.id + "'></label> " +
+                                        "</span><span class='d-none publish-status-merchant'>Unpublished</span> </div>");
+                                }
+
+                                template.find(".product-title-anchor").attr('data-id', item.id);
+                                template.find(".product-action").html("<a class='btn-edit w-100' data-id='" + item.id + "' href='/Admin/Products/Edit/" + item.id + "' >Edit</a>" +
+                                    " <a class='btn-editcommission mt-1 w-100' data-id='" + item.id + "' commission='" + parseFloat(item.defaultCommission).toFixed(2) + "' href='#' onclick='EditCommission(this);return false;'>Commission</a>");
+
+                                $(".products-table-card").append(template.html());
+                            });
+                            if ($(".pagination").length == 0) {
+                                var pagingHtml = '<div class="pagination"><a class="prev-order-page" href="#">&laquo;</a> <a class="nav-order-page active" order="0" href="#" class="active">1</a>';
+                                var pagingNumber = 1;
+                                var recordsPerPage = parseInt($("#pageSize").find(":selected").attr("value"));
+                                for (index = 0; index < response.data.recordsTotal; index++) {
+                                    if (index % recordsPerPage == 0 && index != 0)
+                                        pagingHtml += ' <a class="nav-order-page" order="' + pagingNumber++ + '" href="#">' + parseInt(index / recordsPerPage + 1) + '</a>';
+                                }
+                                pagingHtml += '<a class="next-order-page" href="#">&raquo;</a></div>';
+                                $(".products-card-row").append(pagingHtml);
+                                createPagingActions();
+                            }
+
+                            $(".pagination-details").remove();
+                            var from = parseInt($(".nav-order-page.active").attr("order")) * parseInt($("#pageSize").find(":selected").attr("value")) + 1;
+                            var to = from + response.data.recordsFiltered - 1;
+                            var pageDetails = '<div class="pagination-details">Showing ' + from + ' to ' + to + ' of ' + response.data.recordsTotal + ' entries</div>';
+                            $(".products-card-row").append(pageDetails);
+                        }
+                    } else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        $(".product-sorting").click(function () {
+            $(".product-sorting").removeClass("selected");
+            $(this).addClass("selected");
+            GetProductList();
+            $(".sort-div > button > p > span").html($(this).html());
+        });
+
+
+
+        function createPagingActions() {
+            $(".next-order-page").click(function () {
+                if ($(".nav-order-page.active").next().hasClass("nav-order-page"))
+                    $(".nav-order-page.active").removeClass("active").next().click().addClass("active");
+            });
+            $(".prev-order-page").click(function () {
+                if ($(".nav-order-page.active").prev().hasClass("nav-order-page"))
+                    $(".nav-order-page.active").removeClass("active").prev().click().addClass("active");
+            });
+
+            $(".nav-order-page").click(function () {
+                if (!$(this).hasClass("active")) {
+                    $(".nav-order-page.active").removeClass("active");
+                    $(this).addClass("active");
+                    var pageNumber = $(this).prevAll().length;
+                    GetProductList();
+                }
+            });
+
+        }
+
+        function AddProduct(merchantId, title) {
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                async: false,
+                data: {
+                    MerchantId: merchantId, Title: title
+                },
+                url: '/Admin/Products/AddProduct',
+                success: function (response) {
+                    if (response.data != null) {
+                        window.location.href = "/Admin/Products/Edit/" + response.data;
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
+                    alert(thrownError);
+                }
+
+            });
+        }
+
+        function UpdateProductPublishedStatus(productId, status) {
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    ProductId: productId, Status: status
+                },
+                url: '/Admin/Products/UpdateProductPublishedStatus',
+                success: function (response) {
+                    if (response.successful)
+                        toastr.success(response.message);
+                    else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+        function UpdateProductActivatedStatus(productId, status) {
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    ProductId: productId, Status: status
+                },
+                url: '/Admin/Products/UpdateProductActivatedStatus',
+                success: function (response) {
+                    if (response.successful)
+                        toastr.success(response.message);
+                    else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+    </script>
+}
+

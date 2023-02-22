@@ -1,0 +1,584 @@
+@model List<Voupon.Merchant.WebApp.Areas.Admin.ViewModels.Users.UserProfileListViewModel>;
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="dashboard-main-wrapper">
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content ">
+            <div class="row">
+                <div class="page-header-container col-lg-12 d-flex justify-content-between align-items-center mb-2">
+                    <h1>Members</h1>
+                    <button type="button" class="btn btn-primary pull-right" id="btnAddUserModal" style="float:right;margin-left:10px;"><span class="fa fa-plus"></span>Add User</button>
+                </div>
+            </div>
+
+            <div class="row admin-users-table-card col-lg-12 col-md-12" style="display:none">
+                <div class="col-12 row search-row">
+                    <div class="input-group col-md-10 col-xl-10 col-lg-10 col-sm-12 col-12">
+                        <input class="form-control py-2 border-right-0 border" type="search" value="" placeholder="search..." id="user-search-input">
+                        <span class="input-group-append">
+                            <button class="btn btn-outline-secondary border-left-0 border" type="button" id="user-search-btn">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+                @{
+                    int index = 1;
+                    foreach (var item in Model.OrderBy(x => x.CreatedAt))
+                    {
+                        if (index > 1)
+                        {
+                            <hr />
+                        }
+                        //<div class="row card-table-row card-table-tamplate">
+                        //    <div class="mobile-card-row row col-12 col-md-8 col-sm-12">
+                        //        <div class="row col-12">
+                        //            <div class="col-6 card-title-row">
+                        //                No:
+                        //            </div>
+                        //            <div class="col-6 card-record-row user-order">
+                        //                @index
+                        //            </div>
+                        //        </div>
+                        //        <div class="row col-12">
+                        //            <div class="col-6 card-title-row">
+                        //                Merchant:
+                        //            </div>
+                        //            <div class="col-6 card-record-row user-order">
+                        //                @(item.UserClaims.FirstOrDefault(x => x.ClaimType == "MerchantId") != null ? item.UserClaims.FirstOrDefault(x => x.ClaimType == "MerchantId").ClaimValue : "-")
+                        //            </div>
+                        //        </div>
+                        //        <div class="row col-12">
+                        //            <div class="col-6 card-title-row">
+                        //                Email:
+                        //            </div>
+                        //            <div class="col-6 card-record-row user-email">
+                        //                @item.UserName
+                        //            </div>
+                        //        </div>
+                        //        <div class="row col-12">
+                        //            <div class="col-6 card-title-row">
+                        //                Role:
+                        //            </div>
+                        //            <div class="col-6 card-record-row user-role">
+                        //                @{
+                        //                    @(item.UserRoles != null ? (item.UserRoles.FirstOrDefault() != null ? item.UserRoles.FirstOrDefault().Role.Name : "-") : "-")
+                        //                }
+                        //            </div>
+                        //        </div>
+                        //        <div class="row col-12">
+                        //            <div class="col-6 card-title-row">
+                        //                Created At:
+                        //            </div>
+                        //            <div class="col-6 card-record-row user-createdAt">
+                        //                @item.CreatedAt.ToString("dd/MM/yyyy")
+                        //            </div>
+                        //        </div>
+                        //        <div class="row col-12">
+                        //            <div class="col-6 card-title-row">
+                        //                Action:
+                        //            </div>
+                        //            <div class="col-6 card-record-row user-action">
+                        //                <a class="btn-edit" user-id="@item.Id" href="javascript:return false;">Edit</a>
+                        //                @*<br />*@
+                        //                @*<a class="btn-change-password" user-id="@item.Id" href="javascript:return false;">Change Password</a>*@
+                        //            </div>
+                        //        </div>
+
+                        //    </div>
+                        //</div>
+                        index++;
+                    }
+                }
+            </div>
+
+            <div class="table-responsive-lg admin-users-table" style="display:none">
+                <table id="dtUsers" class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col" style="text-align: center;">No</th>
+                            <th scope="col" style="text-align: center;">Email</th>
+                            <th scope="col" style="text-align: center;">Name</th>
+                            <th scope="col" style="text-align: center;">Address</th>
+                            <th scope="col" style="text-align: center;">DateOfBirth</th>
+                            <th scope="col" style="text-align: center;">Mobile Phone</th>
+                            <th scope="col" style="text-align: center;">Created At</th>
+                            <th scope="col" style="text-align: center;">V Points</th>
+                            <th scope="col" style="text-align: center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int i = 1;
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <th scope="row">@i</th>
+                                    <td>@item.Email</td>
+                                    <td>@item.Name</td>
+                                    <td>@item.Address</td>
+                                    <td>@item.Dob</td>
+                                    <td>@item.MobilePhone</td>
+                                    <td>@item.CreatedAt?.ToString("dd/MM/yyyy")</td>
+                                    <td>@item.VPoints</td>
+                                    <td><a class="btn-edit" user-id="@item.Id" href="javascript:return false;">View</a></td>
+                                </tr>
+                                i++;
+                            }
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="modal fade" id="EditUser" user-id="0" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Member Details</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group row">
+                                <table>
+                                    <tr>
+                                        <td style="padding-right: 50px;">Email : </td>
+                                        <td id="modal_email"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Name : </td>
+                                        <td id="modal_name"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Address : </td>
+                                        <td id="modal_address"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mobile Phone : </td>
+                                        <td id="modal_mob"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>User Token : </td>
+                                        <td id="modal_user_token"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>User ID : </td>
+                                        <td id="modal_user_id"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>V Points : </td>
+                                        <td id="modal_vpoints"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Join Date : </td>
+                                        <td id="modal_join_date">Data</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Date Of Birth : </td>
+                                        <td id="modal_dob"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Gender : </td>
+                                        <td id="modal_gender"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Ethincity : </td>
+                                        <td id="modal_ethinicity">Dta</td>
+                                    </tr>
+                                    <tr>
+                                        <td>State : </td>
+                                        <td id="modal_state"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Age : </td>
+                                        <td id="modal_age"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Education : </td>
+                                        <td id="modal_edu"></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="AddUser" user-id="0" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Add User</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group row">
+                                <div class="col-12">
+                                    <label for="UserId" class="col-form-label">Email</label>
+                                    <input type="email" class="form-control" id="addEmail">
+                                </div>
+                                <div class="col-12">
+                                    <label for="Passowrd" class="col-form-label">Password</label>
+                                    <input type="text" class="form-control" id="addPassword" value="Password!234##" disabled readonly>
+                                </div>
+                                 <div class="col-12">
+                                    <label for="UserId" class="col-form-label">Phone Number</label>
+                                    <input type="text" class="form-control" id="phone">
+                                </div>
+                                 <div class="col-12">
+                                    <label for="UserId" class="col-form-label">Address</label>
+                                    <input type="text" class="form-control" id="address">
+                                </div>
+                                 <div class="col-12">
+                                    <label for="UserId" class="col-form-label">Date Of Birth</label>
+                                    <input type="date" value="select date" class="form-control" id="dob">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="btnAddUser">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+        var table = null;
+        $(document).ready(function () {
+            if ($(window).width() < 1030) {
+                $(".admin-users-table-card").show();
+                $(".admin-users-table").remove();
+            }
+            else {
+                $(".admin-users-table").show();
+                $(".admin-users-table-card").remove();
+            }
+            $("#user-search-btn").on("click", function () {
+                var execludedList = [];
+                var value = $("#user-search-input").val().toLowerCase();
+                if (value == "") {
+                    $(".admin-users-table-card").children().each(function () {
+                        $(this).show();
+                    })
+                    return false;
+                }
+                $(".card-table-tamplate").find(".user-email").filter(function () {
+                    var textToFilter = $(this).text() /*+ " " + $(this).siblings().eq(1).text()*/ /*+ " " + $(this).siblings().eq(1).text()*/;
+                    if (textToFilter.toLowerCase().indexOf(value) == -1) {
+                        $(this).parent().parent().parent().hide();
+                    }
+                    else {
+                        $(this).parent().parent().parent().show();
+                    }
+                });
+            });
+
+            $("#user-search-input").on("search", function () {
+                var execludedList = [];
+                var value = $("#user-search-input").val().toLowerCase();
+                if (value == "") {
+                    $(".admin-users-table-card").children().each(function () {
+                        $(this).show();
+                    })
+                    return false;
+                }
+                $(".card-table-tamplate").find(".user-email").filter(function () {
+                    var textToFilter = $(this).text() /*+ " " + $(this).siblings().eq(1).text()*/ /*+ " " + $(this).siblings().eq(1).text()*/;
+                    if (textToFilter.toLowerCase().indexOf(value) == -1) {
+                        $(this).parent().parent().parent().hide();
+                    }
+                    else {
+                        $(this).parent().parent().parent().show();
+                    }
+                });
+            });
+
+
+
+            var eventFired = function (type) {
+                //alert('t')
+                $(".btn-edit").unbind().click(function () {
+                    //var userId = $(this).attr("user-id");
+                    //alert(userId)
+
+
+
+                    var userId = $(this).attr("user-id");
+                    //$("#editUserId").val(userId);
+                    var user = GetUserProfile(userId);
+                    console.log(user);
+                    if (user != null) {
+                        //
+                        $("#modal_email").html(user.email);
+                        $("#modal_name").html(user.name);
+                        $("#modal_address").html(user.address);
+                        $("#modal_phone").html(user.address);
+                        $("#modal_dob").html(user.address);
+                        $("#modal_mob").html(user.mobilePhone);
+                        $("#modal_user_token").html(user.userToken);
+                        $("#modal_user_id").html(user.userId);
+                        $("#modal_vpoints").html(user.vPoints);
+                        $("#modal_join_date").html(new Date(user.joinDate).toDateString());
+                        $("#modal_dob").html(new Date(user.dateOfBirth).toDateString());
+                        $("#modal_gender").html(user.gender);
+                        $("#modal_ethinicity").html(user.ethinicity);
+                        $("#modal_state").html(user.state);
+                        $("#modal_age").html(user.age);
+                        $("#modal_edu").html(user.education);
+
+                        $("#EditUser").modal("show");
+                    }
+
+
+
+
+
+                    //$("#editUserId").val(userId);
+                    //  $("#EditUser").attr("user-id", userId);
+                    // GetRoleList();
+                    // GetMerchantList();
+                    //var user = GetUserProfile(userId);
+                    //console.log(user);
+
+                    //if (user != null) {
+                    //    $("#modal_").val(user.userName);
+                    //    $("#editRole").val(user.roleId);
+                    //    $("#editMerchantId").val(user.merchantId);
+                    //    $("#EditUser").modal("show");
+                    //}
+                });
+            }
+
+
+
+
+
+
+            $('#dtUsers').on('order.dt', function () { eventFired('Order'); })
+                .on('search.dt', function () { eventFired('Search'); })
+                .on('page.dt', function () { eventFired('Page'); }).DataTable({ "iDisplayLength": 25 });
+
+
+
+
+
+
+            $(".btn-edit").click(function () {
+
+
+                var userId = $(this).attr("user-id");
+                $("#editUserId").val(userId);
+                var user = GetUserProfile(userId);
+                console.log(user);
+                if (user != null) 
+                {
+                    //
+                    $("#modal_email").html(user.email);
+                    $("#modal_name").html(user.name);
+                    $("#modal_address").html(user.address);
+                    $("#modal_mob").html(user.mobilePhone);
+                    $("#modal_user_token").html(user.userToken);
+                    $("#modal_user_id").html(user.userId);
+                    $("#modal_vpoints").html(user.vPoints);
+                    $("#modal_join_date").html(new Date(user.joinDate).toDateString());
+                    $("#modal_dob").html(user.dateOfBirth);
+                    $("#modal_gender").html(user.gender);
+                    $("#modal_ethinicity").html(user.ethinicity);
+                    $("#modal_state").html(user.state);
+                    $("#modal_age").html(user.age);
+                    $("#modal_edu").html(user.education);
+
+                    $("#EditUser").modal("show");
+                }
+
+
+            });
+
+
+
+
+
+
+
+
+            $("#btnUpdateUser").click(function () {
+                UpdateUser($("#editUserId").val());
+
+            });
+            $("#btnAddUserModal").click(function () {
+                $("#addEmail").val("");
+                $("#AddUser").modal("show");
+            });
+            $("#btnAddUser").click(function () {
+                AddUser($("#addEmail").val(), $("#addPassword").val(),$("#phone").val(),$("#address").val(),$("#dob").val());
+            }
+            );
+
+        });
+
+        function GetRoleList() {
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/Admin/Users/GetRoleList',
+                success: function (response) {
+                    var options = "<option value=''>Choose Role</option>";
+                    $("#editRole").html();
+                    if (response.successful) {
+                        if (response.data != null) {
+                            $(response.data).each(function (index, item) {
+                                options += "<option value=" + item.id + ">" + item.name + "</option>";
+                            });
+                            $("#editRole").html(options);
+                        }
+                    } else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function GetMerchantList() {
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/Admin/Users/GetMerchantList',
+                success: function (response) {
+                    var options = "<option value=''>Choose Merchant</option>";
+                    $("#editMerchantId").html();
+                    if (response.successful) {
+                        if (response.data != null) {
+                            $(response.data).each(function (index, item) {
+                                options += "<option value=" + item.id + ">" + item.code + "</option>";
+                            });
+                            $("#editMerchantId").html(options);
+                        }
+                    } else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function GetUserProfile(userId) {
+            var user = null;
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/Admin/Members/GetUserProfile/' + userId,
+                success: function (response) {
+                    if (response.successful) {
+                        if (response.data != null) {
+
+                            user = response.data;
+                        }
+                        else {
+                            toastr.error("Invalid UserId");
+                        }
+                    } else
+                    alert()
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+            return user;
+        }
+
+        function UpdateUser(userId) {
+            var merchantId = $("#editMerchantId").val();
+            var roleId = $("#editRole").val();
+            if (roleId == "") {
+                toastr.error("Please Choose Role");
+                $("#editRole").focus();
+                return;
+            }
+            if (merchantId == "") {
+                toastr.error("Please Choose Merchant");
+                $("#editMerchantId").focus();
+                return;
+            }
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    UserId: userId, MerchantId: merchantId, RoleId: roleId
+                },
+                url: '/Admin/Users/UpdateUser',
+                success: function (response) {
+                    if (response.successful) {
+                        toastr.success(response.message);
+                        $("#EditUser").modal("hide");
+                        location.reload();
+                    }
+                    else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function AddUser(email, password,phone,address,dob) {
+            if (email == "") {
+                toastr.error("Please enter email");
+                $("#addEmail").focus();
+                return;
+            }
+            if (password == "") {
+                toastr.error("Please enter password");
+                $("#addPassword").focus();
+                return;
+            }
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    Email: email, Password: password,Phone:phone,Address:address,Dob:dob
+                },
+                url: '/Admin/Users/AddUser',
+                success: function (response) {
+                    if (response.successful) {
+                        toastr.success(response.message);
+                        $("#AddUser").modal("hide");
+                        location.reload();
+                    }
+                    else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+    </script>
+
+}
+
+

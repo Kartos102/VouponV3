@@ -1,0 +1,117 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <UserSecretsId>f269ba39-0cb6-409c-9b0f-d8624076f986</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\lib\elegant-icons\fonts\ElegantIcons.svg" />
+    <Content Remove="wwwroot\lib\elegant-icons\fonts\ElegantIcons.zip" />
+    <Content Remove="wwwroot\lib\elegant-icons\lte-ie7.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Areas\App\Services\ValidationAttributesExtension\ValidationAttributesExtentions.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.13" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.7.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
+    <PackageReference Include="Rotativa.AspNetCore" Version="1.2.0-beta" />
+    <PackageReference Include="SendGrid" Version="9.20.0" />
+    <PackageReference Include="SendGrid.CSharp.HTTP.Client" Version="3.4.7" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.2" />
+    <PackageReference Include="StackExchange.Redis" Version="2.1.58" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.0" />
+    <PackageReference Include="System.IO.FileSystem.Primitives" Version="4.3.0" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.10" />
+    <PackageReference Include="System.Runtime.Handles" Version="4.3.0" />
+    <PackageReference Include="Wkhtmltopdf.NetCore" Version="3.0.2" />
+    <PackageReference Include="OfficeOpenXml.Core.ExcelPackage" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Admin\Services\Dashboard\Queries\List\" />
+    <Folder Include="Areas\Admin\Services\Locations\Commands\Delete\" />
+    <Folder Include="Areas\Admin\Services\Locations\Commands\Update\" />
+    <Folder Include="Areas\Admin\Services\Locations\Models\" />
+    <Folder Include="Areas\Admin\Services\Locations\Queries\List\" />
+    <Folder Include="Areas\Admin\Services\Locations\ViewModels\" />
+    <Folder Include="Areas\Admin\Services\Merchants\Commands\Create\" />
+    <Folder Include="Areas\Admin\Services\Merchants\Commands\Delete\" />
+    <Folder Include="Areas\Admin\Services\Merchants\Commands\Update\" />
+    <Folder Include="Areas\Admin\Services\Merchants\Models\" />
+    <Folder Include="Areas\Admin\Services\Merchants\Queries\List\" />
+    <Folder Include="Areas\Admin\Services\Merchants\Queries\Single\" />
+    <Folder Include="Areas\Admin\Services\Products\Commands\Create\" />
+    <Folder Include="Areas\Admin\Services\Products\Commands\Delete\" />
+    <Folder Include="Areas\Admin\Services\Products\Commands\Update\" />
+    <Folder Include="Areas\Admin\Services\Products\Models\" />
+    <Folder Include="Areas\Admin\Services\Products\Queries\List\" />
+    <Folder Include="Areas\Admin\Services\Products\Queries\Single\" />
+    <Folder Include="Areas\Admin\Services\Products\ViewModels\" />
+    <Folder Include="Areas\App\Services\Banks\Commands\Create\" />
+    <Folder Include="Areas\App\Services\Banks\Commands\Delete\" />
+    <Folder Include="Areas\App\Services\Banks\Commands\Update\" />
+    <Folder Include="Areas\App\Services\Banks\Queries\Single\" />
+    <Folder Include="Areas\App\Services\Banks\ViewModels\" />
+    <Folder Include="Areas\App\Services\Business\Models\" />
+    <Folder Include="Areas\App\Services\Business\Queries\List\" />
+    <Folder Include="Areas\App\Services\Business\Queries\Single\" />
+    <Folder Include="Areas\App\Services\Locations\Commands\Create\" />
+    <Folder Include="Areas\App\Services\Locations\Commands\Delete\" />
+    <Folder Include="Areas\App\Services\Locations\Commands\Update\" />
+    <Folder Include="Areas\App\Services\Locations\Models\" />
+    <Folder Include="Areas\App\Services\Locations\Queries\List\" />
+    <Folder Include="Areas\App\Services\Locations\ViewModels\" />
+    <Folder Include="Areas\App\Services\Business\Commands\Update\" />
+    <Folder Include="Areas\App\Services\Outlets\Commands\Create\" />
+    <Folder Include="Areas\App\Services\Outlets\Commands\Delete\" />
+    <Folder Include="Areas\App\Services\Outlets\Commands\Update\" />
+    <Folder Include="Areas\App\Services\Outlets\Models\" />
+    <Folder Include="Areas\App\Services\Outlets\Queries\List\" />
+    <Folder Include="Areas\App\Services\Outlets\Queries\Single\" />
+    <Folder Include="Common\Services\ProductOutlets\Models\" />
+    <Folder Include="Common\Services\SalesHistoryRedemptionTokens\Commands\" />
+    <Folder Include="Common\Services\Utility\Commands\" />
+    <Folder Include="Services\Identity\Commands\Delete\" />
+    <Folder Include="Services\Identity\Queries\List\" />
+    <Folder Include="Areas\App\Services\Business\Commands\Delete\" />
+    <Folder Include="Services\Login\Commands\Create\" />
+    <Folder Include="Services\Login\Commands\Update\" />
+    <Folder Include="Services\Login\Queries\Single\" />
+    <Folder Include="Services\Sample\Delete\" />
+    <Folder Include="Services\Sample\Update\" />
+    <Folder Include="Services\Sample\Commands\" />
+    <Folder Include="wwwroot\admin\EditProfile\js\" />
+    <Folder Include="wwwroot\admin\Dashboard\js\" />
+    <Folder Include="Services\Sample\Commands\Delete\" />
+    <Folder Include="Services\Sample\Commands\Update\" />
+    <Folder Include="wwwroot\lib\moment\js\" />
+    <Folder Include="Views\Resources\" />
+    <Folder Include="Services\Resources\" />
+    <Folder Include="Services\Resources\Page\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="OfficeOpenXml.Core.ExcelPackage" />
+    <None Remove="Views\Blog\" />
+    <None Remove="Services\Resources\" />
+    <None Remove="Services\Resources\Page\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="wwwroot\lib\elegant-icons\fonts\ElegantIcons.svg" />
+    <None Include="wwwroot\lib\elegant-icons\fonts\ElegantIcons.zip" />
+    <None Include="wwwroot\lib\elegant-icons\lte-ie7.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Database\Voupon.Database.Postgres\Voupon.Database.Postgres.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Voupon.Common\Voupon.Common.csproj" />
+  </ItemGroup>
+
+</Project>

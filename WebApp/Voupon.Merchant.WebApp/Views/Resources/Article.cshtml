@@ -1,0 +1,62 @@
+﻿@model Voupon.Merchant.WebApp.Services.Resources.Page.BlogPost.BlogPostViewModel
+@{
+    ViewBag.Title = Model.Blog.Title;
+    ViewBag.OGTitle = Model.Blog.Title;
+    ViewBag.OGImageUrl = Model.Blog.FeaturedImage;
+}
+@section Head
+{
+        <link rel="stylesheet" href="/css/resources.css" asp-append-version="true" />
+}
+
+<div class="top-bar-text">
+    <p><b class="mr-2">LEARNING CENTRE:</b><i>Everything you need to know to be a successful Online Seller</i></p>
+</div>
+
+@if (Model.Blog != null && Model.Blog.Id != 0)
+{
+    <div class="article-container row">
+        <div class="article-body col-lg-8">
+            <div class="article-head">
+                <span class="date">@Model.Blog.Date.ToString("dd MMMM yyyy")</span>
+                <h1>@Model.Blog.Title</h1>
+                <div class="article-banner" style="background-image:url(@Model.Blog.FeaturedImage)">
+                </div>
+            </div>
+            <div class="article">
+                @Html.Raw(Model.Blog.Content)
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="related-article-container">
+                <div class="title">
+                    <h2>Related Article</h2>
+                </div>
+                <div class="related-article-item-div">
+                    @if (Model.Related != null && Model.Related.Any())
+                    {
+                        foreach (var related in Model.Related)
+                        {
+                            if (string.IsNullOrEmpty(related.FeaturedImage))
+                            {
+                                continue;
+                            }
+                            <a href="/resources/@related.Id/@related.Slug" class="related-article-item">
+                                <div class="related-article-img">
+                                    <img src="@related.FeaturedImage" />
+                                </div>
+                                <div class="related-article-content">
+                                    <span class="date">@related.Date.ToString("dd MMMM yyyy")</span>
+                                    <h4>
+                                        @related.Title
+                                    </h4>
+                                </div>
+                            </a>
+                        }
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+}

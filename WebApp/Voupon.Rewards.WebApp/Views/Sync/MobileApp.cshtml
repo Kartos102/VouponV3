@@ -1,0 +1,79 @@
+﻿@{
+    ViewBag.Title = "Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="mt-5 container justify-content-center row">
+    <div>
+        <div>
+            If you have not been automatically redirected, click on the following link:
+        </div>
+
+        <div id="android" class="p-2" stytle="hidden">
+            <a href="https://play.google.com/store/apps/details?id=com.instagram.android">
+                Open Android app
+            </a>
+        </div>
+
+        <div id="ios" class="p-2" style="hidden">
+            <a href="https://apps.apple.com/us/app/instagram/id389801252">
+                Open iOS app
+            </a>
+            </div>
+        </div>
+    </div>
+
+@section styles{
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css">
+}
+
+@section scripts{
+    <script>
+        function getMobileOS() {
+            var ua = navigator.userAgent
+            if (/android/i.test(ua)) {
+                return "android"
+            }
+            else if ((/iPad|iPhone|iPod/.test(ua)) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)){
+                return "iOS"
+            }
+            return "other"
+        }
+
+        $(function () {
+            var os = getMobileOS();
+
+            if (os == "android") {
+                const url =
+                    "intent://instagram.com/#Intent;scheme=https;package=com.instagram.android;end";
+
+                window.location.replace(url);
+            } else if (os == "ios") {
+                window.location.replace("instagram://");
+
+                setTimeout(() => {
+                    window.location.replace(
+                        "https://apps.apple.com/us/app/instagram/id389801252"
+                    );
+                }, 10000);
+            } else {
+                window.location.replace("https://instagram.com");
+            }
+
+            if (os == "android") {
+                $("#android").show();
+                $("#ios").hide();
+            }
+            else if (os == "ios") {
+                $("#android").hide();
+                $("#ios").show();
+            }
+
+        })
+
+        function closeMe() {
+            window.opener = self;
+            window.close();
+        }
+    </script>
+}

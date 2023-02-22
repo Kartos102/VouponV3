@@ -1,0 +1,195 @@
+﻿.logoUpload {
+}
+
+.logo-container {
+    position: relative;
+    cursor: pointer;
+    text-align: center;
+}
+
+.picture {
+    width: 106px;
+    height: 106px;
+    background-color: #999999;
+    border: 4px solid #CCCCCC;
+    color: #FFFFFF;
+    border-radius: 50%;
+    margin: 0px auto;
+    overflow: hidden;
+    transition: all 0.2s;
+    -webkit-transition: all 0.2s;
+}
+
+    .picture:hover {
+        border-color: #2ca8ff;
+    }
+
+.content.ct-wizard-green .picture:hover {
+    border-color: #05ae0e;
+}
+
+.content.ct-wizard-blue .picture:hover {
+    border-color: #3472f7;
+}
+
+.content.ct-wizard-orange .picture:hover {
+    border-color: #ff9500;
+}
+
+.content.ct-wizard-red .picture:hover {
+    border-color: #ff3b30;
+}
+
+.picture input[type="file"] {
+    cursor: pointer;
+    display: block;
+    height: 100%;
+    left: 0;
+    opacity: 0 !important;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+.logo-src {
+    width: 100%;
+}
+
+.save-div {
+    justify-content: center;
+}
+
+#ReviewBusinessInfo #reviewMerchantDescription img, #merchantDescription img {
+    max-width: 100%;
+}
+
+
+.product-img-preview {
+    border: 2px solid;
+    padding: 1px;
+    cursor: pointer;
+    height: 150px;
+}
+
+.remove-img {
+    display: block;
+    background: #444;
+    border: 1px solid black;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+}
+
+    .remove-img:hover {
+        background: white;
+        color: black;
+    }
+
+.remove-img-url {
+    display: block;
+    background: #444;
+    border: 1px solid black;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+}
+
+    .remove-img-url:hover {
+        background: white;
+        color: black;
+    }
+
+.product-img-preview-container {
+    display: inline-block;
+    margin: 10px 10px 0 0;
+}
+
+.btn-file {
+    cursor: pointer;
+}
+
+#EditImage {
+    display: none;
+}
+
+.btn_apply_all {
+    font-size: smaller;
+    padding: 6px 6px;
+    height: fit-content;
+}
+
+.add-working-day, .remove-working-day {
+    font-size: 25px;
+    cursor: pointer
+}
+
+.card-working-hours input,
+.card-working-hours select {
+    padding: 2px 6px;
+    border: none;
+    border-bottom: 1px solid #fff;
+    border-radius: none;
+    box-sizing: border-box;
+    background-color: transparent;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-align: center !important
+}
+
+input:focus,
+select:focus {
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    border-bottom: 1px solid #00C853;
+    outline-width: 0
+}
+
+select option:focus {
+    background-color: #00C853 !important
+}
+
+button:focus {
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    outline-width: 0
+}
+
+.exit {
+    border: 1px solid #9E9E9E;
+    color: #9E9E9E;
+    background-color: transparent
+}
+
+    .exit:hover {
+        border: 1px solid #9E9E9E;
+        color: #000 !important;
+        background-color: #9E9E9E
+    }
+
+.open-day {
+    font-size: 14px;
+    letter-spacing: 1px;
+    min-width: 33px;
+}
+
+.from-date {
+    margin-right: 30px;
+}
+
+.disabled-day {
+    color: #cdcdd6;
+}
+#reviewMerchantStatusRemarks, #reviewPersonInChargeRemarks, #reviewBankAccountRemarks {
+    width: auto;
+    height: auto;
+    max-height: 200px;
+    border: 1px solid #ccc;
+    padding: 5px;
+    overflow: auto
+}
+
+    #reviewMerchantStatusRemarks .meesage-time, #reviewPersonInChargeRemarks .meesage-time, #reviewBankAccountRemarks .meesage-time, #merchantStatusRemarks .meesage-time, #personInChargeRemarks .meesage-time, #bankAccountRemarks .meesage-time {
+        float: right
+    }

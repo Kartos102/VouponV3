@@ -1,0 +1,79 @@
+﻿
+@{
+    ViewData["Title"] = "Contact Us";
+    Layout = "~/Areas/App/Views/Shared/_Layout.cshtml";
+}
+
+<div class="dashboard-main-wrapper">
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content ">
+            <div class="row">
+                <div class="col-xl-7 col-lg-6 col-md-6 col-12 mt-0 section-block">
+                    <h3 class="page-header">Contact Us</h3>
+                </div>
+            </div>
+            <div class="row p-3 white-bg col-md-6">
+                <div class="col-lg-12 p-0">
+                    <form role="form" method="post" class="support-form">
+                        <div class="form-group">
+                            <div class="col p-0">
+                                <textarea type="text" class="form-control" id="inputMessage" rows="3" placeholder="What can we help you with?" required></textarea>
+                                <div class="form-underline"></div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div id="errorMessage"></div>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-secondary btn-lg" id="submitSupportRequest" name="submitSupportRequest">Send Message</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+@section scripts{
+
+    <script>
+        $("#submitSupportRequest").click(function (event) {
+            event.preventDefault();
+            if ($("#inputMessage").val().length == 0) {
+                toastr.error("Please enter your message above to submit your request.");
+                return false;
+            }
+            $("#submitSupportRequest").addClass('disabled').prop('disabled', true);
+            $("#submitSupportRequest").text('Submitting...');
+
+            $.ajax({
+                type: "POST",
+                url: "/App/Support/SendSupportRequest",
+                data: {
+                    message: $("#inputMessage").val()
+                },
+                success: function (response) {
+                    if (response.successful) {
+                        toastr.success(response.message);
+                        $("#submitSupportRequest").addClass('disabled').prop('disabled', true);
+                        $("#submitSupportRequest").text('Submitted ');
+                    } else {
+                        toastr.error(response.message);
+                        $("#submitSupportRequest").addClass('disabled').prop('disabled', false);
+                        $("#submitSupportRequest").text('Send Message ');
+                    }
+                },
+                error: function () {
+                    $("#submitSupportRequest").addClass('disabled').prop('disabled', true);
+                    $("#submitSupportRequest").text('Send Message');
+                    toastr.error("Something is not right. Please try again later.");
+                    return false;
+                }
+            });
+        });
+    </script>
+}
+

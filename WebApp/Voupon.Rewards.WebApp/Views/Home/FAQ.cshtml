@@ -1,0 +1,143 @@
+﻿
+@{
+    ViewData["Title"] = "FAQ";
+    ViewBag.Description = "Find the Answers to the Most Popular Questions Asked in our FAQ Section. From Delivery Times to Payment Options, We’ve Got it All Covered. ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row mt-4" style="max-width:1200px;">
+    <h1 class="col-12">
+            <b>Frequently Asked Questions (FAQ)</b>
+    </h1>
+
+    <br />
+
+    <div class="col-lg-7 faq-container">
+        <h2>
+            Delivery
+        </h2>
+        <div class="faq-item">
+            <h3>
+                1. When will I receive my item?
+            </h3>
+            <p>
+                All orders are processed within 2-3 business days. Orders are not shipped or delivered on weekends or holidays.
+                <br /><br />
+                Estimated order delivery times are 4 to 14 days from the date of purchase.
+            </p>
+        </div>
+        <div class="faq-item">
+            <h3>
+                2. How can I track my item?
+            </h3>
+            <p style="margin-bottom:0;">
+                You may track your item by doing the following process:
+            </p>
+            <ol>
+                <li>
+                    Login to your account on Vodus.
+                </li>
+                <li>
+                    Go to <a href="/order/history">My Purchases</a> to view your orders.
+                </li>
+                <li>
+                    Find your order and click on the down arrow button.
+                </li>
+                <li>
+                    You will find your tracking number on the pop-up modal if the merchant has shipped your item.
+                </li>
+            </ol>
+        </div>
+
+        <div class="faq-item">
+            <h3>
+                3. What can I do if the merchant have not shipped my items after 3 days?
+            </h3>
+            <p>
+                If the merchant did not update the delivery status or input any the tracking number for your order after 3 days, you may contact Vodus to request for refund for your order.
+            </p>
+        </div>
+        <div class="faq-item">
+            <h3>
+                4. What can I do if I have not received your order after 14 days?
+            </h3>
+            <p>
+                If you have not received an order after 14 days,
+                you should track your product using the tracking number provided by the merchant or contact your merchant about the delivery.
+            </p>
+        </div>
+    </div>
+
+    <div class="col-lg-5 contact-form-faq">
+        <div class="contact-form">
+            <h2>
+                Can’t find what you are looking for? <br />
+                Submit a request.
+            </h2>
+            <br />
+            <div class="row placeholder-white">
+                <div class="col-12"> <input id="txtContactName" type="text" class="form-control" placeholder="Your Name"></div>
+            </div>
+            <div class="row placeholder-white">
+                <div class="col-12"> <input id="txtContactEmailAddress" type="text" class="form-control" placeholder="Email Address"></div>
+            </div>
+            <div class="row">
+                <div class="col-12 placeholder-white"> <input id="txtContactSubject" type="text" class="form-control" placeholder="Subject"></div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <textarea class="form-control" id="txtContactSMessage" rows="6" placeholder="Your Message"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12" style="text-align:right;">
+                    <btn class="btn btn-primary" id="btnSubmitMessage">Submit</btn>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#btnSubmitMessage").click(function () {
+            if ($("#txtContactName").val() == "" || $("#txtContactEmailAddress").val() == "" || $("#txtContactSubject").val() == "" || $("#txtContactSMessage").val()=="") {
+                 toastr.error("Please enter all your details above to submit your request.");
+                return;
+            }
+            $("#btnSubmitMessage").css("pointer-events", "none");
+            $("#btnSubmitMessage").html("Submitting");
+            $.ajax({
+                global: false,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    "name": $("#txtContactName").val(),
+                    "email": $("#txtContactEmailAddress").val(),
+                    "subject": $("#txtContactSubject").val(),
+                    "message": $("#txtContactSMessage").val()
+                },
+                url: "/SubmitNewRequestNoRec",
+                success: function (response) {
+                    if (response.successful) {
+                        toastr.success(response.message);
+                        $("#btnSubmitMessage").html("Submitted");
+                    }
+                    else {
+                        toastr.clear();
+                        toastr.error(response.message);
+                        $("#btnSubmitMessage").css("pointer-events", "auto");
+                        $("#btnSubmitMessage").html("Submit");
+                    }
+                    $(".toast-warning").remove();
+                },
+                error: function () {
+                    toastr.clear();
+                    toastr.error("Something went wrong.");
+                    $("#btnSubmitMessage").css("pointer-events", "auto");
+                    $("#btnSubmitMessage").html("Submit");
+                }
+            });
+        });
+    });
+</script>

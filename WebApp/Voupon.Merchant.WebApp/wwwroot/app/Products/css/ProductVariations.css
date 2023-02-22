@@ -1,0 +1,194 @@
+﻿.flex {
+    display: flex;
+}
+
+.list-group-item {
+    display: flex;
+}
+
+.btn-group .btn.variationOptionsSort {
+    cursor: move;
+    cursor: -webkit-grab;
+    cursor: grab;
+}
+
+.input-group-text {
+    height: calc(1.5em + .75rem + 2px);
+}
+
+.variation-Name-field, .variation-option-add-div {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+}
+
+.variation-Name-label {
+    min-width: 10%;
+}
+
+.variation-option-add-btn, .variation2-add-btn, #btnProductVariationEnabled {
+    max-width: 520px;
+    height: 40px;
+    color: #1791f2;
+    border: 1px dashed #1791f2;
+    background-color: #fafafa;
+    margin-top: 5px;
+}
+.variation2-add-btn {
+    max-width: 541px;
+}
+.close-Variation-icon {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    width: 14px;
+    height: 14px;
+}
+
+.variation-card {
+    max-width: 600px;
+}
+
+.variation-parent-div {
+    display: flex;
+    display: none;
+}
+    .variation-parent-div .col-lg-2 {
+        padding-top: 15px;
+    }
+    .variation-parent-div h4 {
+        margin-bottom: 10px;
+    }
+.fast-input {
+    background: linear-gradient( 90deg, #8C37F6,#5147FE);
+    color: #fff;
+    margin: 0 -30px;
+}
+    .fast-input h4 {
+        color: #fff;
+    }
+.variation-applyall-info-div {
+    display: flex;
+}
+
+.variation-applyall-info-div input {
+    min-width: 100px;
+    max-width: 200px;
+}
+.variation-applyall-container {
+    padding: 0;
+}
+.variation-applyall-container > div {
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.variation-input-div {
+    width: 100%;
+    display: flex;
+}
+.variation-input-container {
+    width: 92px;
+}
+#btnVariationApplyToAll {
+    margin-left: 10px;
+    white-space: nowrap;
+}
+
+.table-header {
+    background-color: #fafafa;
+    padding: 12px;
+}
+
+.variation-table-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #999;
+    border: 1px solid #ebebeb;
+    border-bottom-width: 0;
+    -webkit-box-flex: 3;
+    -ms-flex: 3;
+    flex: 3;
+}
+
+    .variation-table-cell .switch-button {
+        text-align: initial;
+    }
+
+    .variation-table-cell.flex-expand {
+        flex: 2;
+    }
+
+.variation-table .table-row {
+    display: flex;
+    border: 1px solid #ebebeb;
+}
+
+.variation-table-cell.input-cell {
+}
+
+.input-cell .variation-price-input-div .input-group-text {
+    background-color: white;
+    color: #999999;
+}
+
+.variation-stock-input {
+    text-align: center;
+}
+
+.variation2-group {
+    flex: 15 1 0%;
+    display: flow-root;
+}
+
+.close-Variation-icon {
+    cursor: pointer;
+}
+
+.add-variation-disabled {
+    color: black;
+    border-color: black;
+    cursor: no-drop;
+}
+
+.variation-image-name {
+    display: block;
+    background: white;
+    border: 1px solid black;
+    color: black;
+    text-align: center;
+    cursor: pointer;
+}
+
+.variation-images-text {
+    margin: 8px;
+    font-size: initial;
+}
+
+.variation-option-delete-btn .fa {
+    margin: auto
+}
+@media (max-width: 769px) {
+    .fast-input {
+        margin: 0 -15px;
+    }
+        .fast-input .variation-applyall-info-div {
+            padding-bottom: 15px;
+        }
+}
+@media (max-width: 480px) {
+    .variation-parent-div > .row > div {
+        padding: 0;
+        flex-wrap: wrap;
+    }
+    .variation-Name-field,
+    .variation-Name-label,
+    .variation-option-add-div,
+    .variation-parent-div .list-group li {
+        flex-wrap: wrap;
+        padding: 5px 10px;
+    }
+}

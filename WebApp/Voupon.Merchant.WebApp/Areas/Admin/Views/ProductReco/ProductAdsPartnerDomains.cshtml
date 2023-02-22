@@ -1,0 +1,237 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="dashboard-main-wrapper">
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content ">
+            <div class="row">
+                <div class="col-lg-12 mb-2 section-block" style="justify-content:space-between;">
+                    <h3 class="page-header">Product Ad Partner Domain</h3>
+                    <div class="row search-row">
+                        <div class="input-group col-md-10 col-xl-10 col-lg-10 col-sm-12 col-12">
+                            <input class="form-control py-2 border-right-0 border" type="search" value="" placeholder="search..." id="product-search-input">
+                            <span class="input-group-append">
+                                <button class="btn btn-outline-secondary border-left-0 border" type="button" id="product-search-btn">
+                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row users-table-card col-lg-12 col-md-12">
+
+                <div class="row products-table-card col-lg-12 col-md-12 px-0">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="row card-table-row card-table-template" style="display:none;">
+    <div class="mobile-card-row row col-12">
+        <div class="row col-xl-5 col-lg-5 col-md-5 col-12 no-padding">
+            <div class="row col-5 no-padding">
+                <div class="row col-12 no-padding">
+                    <a class="product-title-anchor col-12 card-record-row search-variable subgroup-name" onclick='RedirectToView(this);' data-id='1' href='javascript:return false;'>
+                        NST
+                    </a>
+                    <div class="col-12 card-title-row">
+                        Domain
+                    </div>
+                </div>
+            </div>
+            <div class="row col-4 no-padding">
+                <div class="row col-12 no-padding">
+                    <div class="col-12 card-record-row subgroup-parent">
+                        Media Prima
+                    </div>
+                    <div class="col-12 card-title-row">
+                        Parent
+                    </div>
+                </div>
+            </div>
+            <div class="row col-3 no-padding">
+                <div class="row col-12 no-padding">
+                    <div class="col-12 card-record-row subgroup-is-parent">
+                        Yes
+                    </div>
+                    <div class="col-12 card-title-row">
+                        Parent Partner
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row col-xl-7 col-lg-7 col-md-7 col-7 no-padding">
+            <div class="row col-3 card-record-row no-padding">
+                <div class="row col-12 no-padding">
+                    <div class="col-12 card-record-row subgroup-adImpressionCount">
+                        20
+                    </div>
+                    <div class="col-12 card-title-row">
+                        Impressions
+                    </div>
+                </div>
+            </div>
+            <div class="row col-3 card-record-row no-padding">
+                <div class="row col-12 no-padding">
+                    <div class="col-12 card-record-row subgroup-adClickCount">
+                        2
+                    </div>
+                    <div class="col-12 card-title-row">
+                        Clicks
+                    </div>
+                </div>
+            </div>
+            <div class="row col-3 no-padding">
+                <div class="col-12 card-record-row subgroup-cTR">
+                    2
+                </div>
+                <div class="col-12 card-title-row">
+                    CTR
+                </div>
+            </div>
+            <div class="row col-3 no-padding">
+                <div class="col-12 card-record-row subgroup-createdAt">
+                    23/02/2021
+                </div>
+                <div class="col-12 card-title-row">
+                    Created at
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+
+    <script>
+        var table = null;
+        var selectedRow = null;
+        function EditCommission(btn) {
+            selectedRow = btn;
+            var productId = $(btn).attr("data-id");
+            var commission = $(btn).attr("commission");
+            $("#EditCommissionModal").attr("data-id", productId);
+            $("#DefaultCommissionInput").val(commission);
+            $("#EditCommissionModalTitle").html("Commission [" + productId + "]");
+            $("#EditCommissionModal").modal("show");
+        }
+        $(document).ready(function () {
+            $("#product-search-btn").on("click", function () {
+
+                var execludedList = [];
+                var value = $("#product-search-input").val().toLowerCase();
+
+                if (value == "") {
+                    $(".products-table-card").children().each(function () {
+                        $(this).show();
+                    })
+                    return false;
+                }
+                $(".products-table-card").find(".search-variable").filter(function () {
+                    var textToFilter = $(this).text();
+
+                    if (textToFilter.toLowerCase().indexOf(value) == -1) {
+
+                        $(this).parent().parent().parent().parent().hide();
+                    }
+                    else {
+
+                        $(this).parent().parent().parent().parent().show();
+                    }
+                });
+            });
+
+            $("#product-search-input").on("search", function () {
+                var execludedList = [];
+                var value = $("#product-search-input").val().toLowerCase();
+                if (value == "") {
+                    $(".products-table-card").children().each(function () {
+                        $(this).show();
+                    })
+                    return false;
+                }
+                $(".products-table-card").find(".search-variable").filter(function () {
+                    var textToFilter = $(this).text();
+                    if (textToFilter.toLowerCase().indexOf(value) == -1) {
+                        $(this).parent().parent().parent().parent().hide();
+                    }
+                    else {
+                        $(this).parent().parent().parent().parent().show();
+                    }
+                });
+            });
+
+            var url = window.location.pathname;
+            var id = url.substring(url.lastIndexOf('/') + 1);
+            GetAdsubgroupsList(id);
+
+        });
+
+        function GetAdsubgroupsList(id) {
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/Admin/ProductReco/GetProductRecoPartnerDomainsList',
+                data: {
+                    id: id
+                },
+                success: function (response) {
+                    if (table != null)
+                        table.destroy();
+                    $(".products-table-card").html("");
+                    if (response.successful) {
+                        if (response.data.length > 0) {
+                            $(response.data).each(function (index, parentItem) {
+                                var template = $(".card-table-template");
+
+                                template.find(".subgroup-parent").html(parentItem.partner.name);
+                                template.find(".subgroup-is-parent").html("Yes");
+
+                                template.find(".subgroup-createdAt").html(moment(parentItem.createdAt).format("DD/MM/YYYY"));
+                                template.find(".subgroup-name").html(parentItem.partner.name);
+
+                                template.find(".subgroup-adImpressionCount").html(parentItem.adImpressionCount);
+                                template.find(".subgroup-adClickCount").html(parentItem.adClickCount);
+                                template.find(".subgroup-cTR").html((parentItem.ctr * 100).toFixed(2) + "%");
+                                $(".products-table-card").append(template.html());
+                                $(parentItem.productAdPartnersDomainWebsites).each(function (index, item) {
+
+                                    var template = $(".card-table-template");
+
+                                    template.find(".subgroup-parent").html(item.partnerWebsite.name);
+                                    template.find(".subgroup-is-parent").html("No");
+
+                                    template.find(".subgroup-createdAt").html(moment(item.createdAt).format("DD/MM/YYYY"));
+                                    template.find(".subgroup-url").html(item.partnerWebsite.url);
+
+                                    template.find(".subgroup-adImpressionCount").html(item.adImpressionCount);
+                                    template.find(".subgroup-adClickCount").html(item.adClickCount);
+                                    template.find(".subgroup-cTR").html((parentItem.ctr * 100).toFixed(2) + "%");
+
+                                    $(".products-table-card").append(template.html());
+                                });
+
+                            });
+                        }
+                    } else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+
+    </script>
+}

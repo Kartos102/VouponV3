@@ -1,0 +1,459 @@
+﻿@using Voupon.Merchant.WebApp.Infrastructure.Extensions
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="@(ViewBag.Description != null && !string.IsNullOrEmpty(ViewBag.Description) ? ViewBag.Description :  "Become a Merchant Seller on Vodus and Sell to Millions of Malaysians. Free, Fast and Easy to Set Up Your Store. ")" />
+    <meta name="title" content="@ViewBag.Title" />
+    <meta name="keywords" content="@ViewBag.Keywords" />
+
+    <title>@ViewData["Title"] - Vodus Merchant</title>
+    <meta property="og:title" content="@(ViewBag.OGTitle != null && !string.IsNullOrEmpty(ViewBag.OGTitle) ? ViewBag.OGTitle : "Vodus Merchant")">
+    <meta property="og:type" content="Website">
+    <meta property="og:description" content="@(ViewBag.Description != null && !string.IsNullOrEmpty(ViewBag.Description) ? ViewBag.Description :  "Become a Merchant Seller on Vodus and Sell to Millions of Malaysians. Free, Fast and Easy to Set Up Your Store. ")">
+    <meta property="og:url" content="https://merchant.vodus.my">
+    <meta property="og:image" content="@(ViewBag.OGImageUrl != null && !string.IsNullOrEmpty(ViewBag.OGImageUrl) ? ViewBag.OGImageUrl : "https://merchant.vodus.my/Images/Vodus%20V3%20Merchant%20Logo%20Small.svg")">
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/site.min.css" />
+    <link rel="shortcut icon" type="image/svg" href="~/Images/Vodus V3 Logo Favicon.svg">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    @*<link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/glacial-indifference" type="text/css" />*@
+    <link rel="preload" media="screen" href="https://fontlibrary.org/face/glacial-indifference" as="style" onload="this.rel='stylesheet'">
+
+    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.1.1/css/all.css">
+    <link rel="stylesheet" href="~/lib/plugins/toastr/toastr.min.css" />
+    <link rel="stylesheet" href="~/lib/owlcarousel2/owl.carousel.min.css">
+    <link rel="stylesheet" href="/lib/elegant-icons/style.min.css">
+
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @RenderSection("Head", required: false)
+</head>
+<body class="fixed-sidebar pace-done mini-navbar">
+    @*<header >
+            <nav  class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3" >
+                <div class="container" >
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/Images/Vodus-small-colored-logo.png"></a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                        <ul class="navbar-nav flex-grow-1">5
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>*@
+    <div id="page-wrapper" class="gray-bg">
+        <div class="row border-bottom navbar-default reward-top-bar">
+            <nav class="navbar" role="navigation" style="width:100%">
+                <div class="navbar-header col-lg-2 col py-1">
+                    <a href="/" class="pull-left">
+                        <img src="~/images/Vodus V3 Merchant Logo Horizontal.svg" class="logo-img logo-horizontal" />
+                    </a>
+                </div>
+                <div class="navbar-menu col-lg-10 col" style="padding:0;">
+                    <a href="javascript:void(0);" class="hamburger-icon" onclick="toggleHamburgerFunction()">
+                        <i class="fa fa-bars"></i>
+                    </a>
+                    <ul class="nav navbar-top-links navbar-right navbar-right-hide" id="navbar-right">
+                        <li>
+                            <a href="https://vodus.com">
+                                <span class="i18next" data-i18n="common.register">Market Research</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://vodus.my">
+                                <span class="i18next" data-i18n="common.register">Rewards</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/resources">
+                                <span class="i18next">Learning Centre</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/about">
+                                <span class="i18next" data-i18n="common.register">About Us</span>
+                            </a>
+                        </li>
+                        <li class="reward-login-top-menu">
+                            <a id="navLogin" href="/login">
+                                <span class="i18next" data-i18n="common.login">Sign Up | Login</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+        <div class="merchant-body" onclick="closeHamburgerFunction()">
+            @*<div class="row text-right prod-type-nav" style="max-width:1500px;">
+                    <div class="prod-type-btn-div" style="width:100%">
+                        <div hidden class="sort-menu">
+                            <div class="sort-text">
+                                <span class="i18next" data-i18n="common.sort">Sort:</span>
+                            </div>
+                            <div class="sort-dropdown">
+                                <select id="orderSorting" class="form-control">
+                                    <option value="1" class="i18next" data-i18n="common.points-low-to-high">Prices: Low to high</option>
+                                    <option value="2" class="i18next" data-i18n="common.points-high-to-low">Prices: High to low</option>
+                                    <option value="3" class="i18next" data-i18n="common.name-a-to-z">Name: A - Z</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+            @RenderBody()
+        </div>
+    </div>
+
+    @*<div class="container page-container">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>*@
+
+    @*<footer class="border-top footer text-muted">
+            <div class="container">
+                Copyright © 2022 Vodus Research Sdn Bhd. All rights reserved.
+            </div>
+        </footer>*@
+    <footer id="footer">
+        <div class="footer-row-1">
+            <div class="footer-content col-sm-12 row">
+                <div class="col-md-5 col-lg-6 row footer-nav">
+                    <div class="col-md-12">
+                        <div class="footer-logo">
+                            <img src="/images/Vodus V3 Logo White Small.svg" class="ls-is-cached lazyloaded">
+                        </div>
+                        <div class="footer-company-description">
+                            <p>
+                                Vodus e-commerce is the first online shopping platform in Malaysia that allows shoppers the opportunity to earn reward points by answering simple survey questions. These points can then be converted directly into discounts anytime and redeemed against a wide variety of in-store products and vouchers.
+                            </p>
+                            <p>
+                                We bring you the best of online shopping in Malaysia by partnering with merchants of all sizes, from well-known brands to value-for-money local products, to help you compare and find most suitable products at the best price.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7 col-lg-6 row footer-nav" style="z-index:2;">
+                    <div class="col-6">
+                        <div>
+                            <h4>Quick links</h4>
+                        </div>
+                        <div>
+                            <div>
+                                <a href="https://vodus.my">Vodus Ecommerce</a>
+                            </div>
+                            <div>
+                                <a href="/about">About us</a>
+                            </div>
+                            <div>
+                                <a href="/contact">Contact us</a>
+                            </div>
+                            <div>
+                                <a href="/FAQ">FAQ</a>
+                            </div>
+                            <div>
+                                <a href="/TermsAndConditions">Terms and Conditions</a>
+                            </div>
+                            <div>
+                                <a href="/return-policy">Return Policy</a>
+                            </div>
+                            <div>
+                                <a href="/privacy">Privacy Policy</a>
+                            </div>
+                            <div>
+                                <a href="https://vodus.com/Careers">Careers</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div>
+                            <h4>
+                                OUR SOLUTIONS FOR BUSINESSES
+                            </h4>
+                        </div>
+                        <div>
+                            <div>
+                                <h6>Vodus Merchant</h6>
+                            </div>
+                            <div>
+                                <a href="https://merchant.vodus.my">
+                                    Sell on Vodus
+                                </a>
+                            </div>
+
+                            <div style="margin-top:15px;">
+                                <h6>Vodus Market Research</h6>
+                            </div>
+                            <div>
+                                <a href="https://vodus.com">Consumer Insights</a>
+                            </div>
+                            <div>
+                                <a href="https://vodus.com/solutions/brand-health">
+                                    Brand Health Tracker
+                                </a>
+                            </div>
+                            <div>
+                                <a href="https://vodus.com/solutions/product-test">
+                                    Product Test
+                                </a>
+                            </div>
+                            <div>
+                                <a href="https://vodus.com/solutions/marketing-research">
+                                    Marketing Research
+                                </a>
+                            </div>
+                            <div>
+                                <a href="https://vodus.com/solutions/marketing-impact">
+                                    Advertising Research
+                                </a>
+                            </div>
+                            <div>
+                                <a href="https://vodus.com/Solutions/customer-satisfaction">
+                                    User Experience Research
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-row-2">
+            <div class="footer-content col-sm-12 row">
+                <div class="row">
+                    <div class="col-md-6 row footer-nav">
+                        <div>
+                            <h4>Payment Methods</h4>
+                            <div class="partner-logo-container-footer">
+                                <div>
+                                    <img src="~/images/Footer_payment_07_GrabPay.png" class="lazyload" />
+                                </div>
+                                <div>
+                                    <img src="~/images/Footer_payment_04_Touch_n_Go.png" class="lazyload" />
+                                </div>
+                                <div>
+                                    <img src="~/images/Footer_payment_06_Boost.png" class="lazyload" />
+                                </div>
+                                <div>
+                                    <img src="~/images/Footer_payment_01_Visa.png" class="lazyload" />
+                                </div>
+                                <div>
+                                    <img src="~/images/Footer_payment_02_MasterCard.png" class="lazyload" />
+                                </div>
+                                <div>
+                                    <img src="~/images/Footer_payment_05_FPX.png" class="lazyload" />
+                                </div>
+                                <div>
+                                    <img src="~/images/Footer_payment_09_MAE_Maybank_Light.png" class="lazyload" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row col-12">
+                            <div>
+                                <h4 class="partner-title-container-footer">Our media partners</h4>
+                                <div class="partner-logo-container-footer">
+                                    <div>
+                                        <img src="~/images/Footer_partner_Astro.png" class="lazyload" />
+                                    </div>
+                                    <div>
+                                        <img src="~/images/Footer_partner_MediaPrima.png" class="lazyload" />
+                                    </div>
+                                    <div>
+                                        <img src="~/images/Footer_partner_TheStar.png" class="lazyload" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-100 d-flex" style="margin-top: 10px;">
+                            <div class="col-6 contact-item">
+                                <h5>
+                                    Email
+                                </h5>
+                                <p>
+                                    support@vodus.my
+                                </p>
+                            </div>
+                            <div class="col-6 contact-item">
+                                <h5>
+                                    Tel
+                                </h5>
+                                <p>
+                                    (+60)1154168816
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 row footer-nav">
+                        <div class="col-12 row" style="margin-top: 10px;">
+                            <div class="col-12 px-0">
+                                <h5>
+                                    Our office
+                                </h5>
+                            </div>
+                            <div class="col-6 pl-0 pr-1">
+                                <h6>
+                                    <i>Kuala Lumpur</i>
+                                </h6>
+                                <p>
+                                    A-10-01, Tower A, Pinnacle PJ, Lorong Utara C, PJS 52, 46200 Petaling Jaya <br />
+                                    Selangor, Malaysia
+                                </p>
+                            </div>
+                            <div class="col-6 pr-0 pl-1">
+                                <h6>
+                                    <i>Penang</i>
+                                </h6>
+                                <p>
+                                    Plot 96, IV, Solok Bayan Lepas, 11900 Bayan Lepas, <br />
+                                    Penang, Malaysia
+                                </p>
+                                <p>
+                                    312-E, Jalan Perak, 11600 George Town, <br />
+                                    Penang, Malaysia
+                                </p>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="col-12 px-0">
+                                <h4>Follow us</h4>
+                                <ul class="social-icons">
+                                    <li><a href="https://www.facebook.com/vodusrewards"><i class="fa-brands fa-facebook-f"></i></a></li>
+                                    <li><a href="https://www.instagram.com/vodusrewards/"><i class="fa-brands fa-instagram"></i></a></li>
+                                    <li><a href="https://www.linkedin.com/company/vodus-insights/"><i class="fa-brands fa-linkedin"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-copyright col-sm-12">
+                    Copyright &copy; 2022 Vodus Research Sdn Bhd. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/owlcarousel2/owl.carousel.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/plugins/toastr/toastr.min.js"></script>
+    @RenderSection("Scripts", required: false)
+    <script>
+        function toggleHamburgerFunction() {
+            if ($('.navbar-right').hasClass('navbar-right-hide')) {
+                $('.navbar-right').removeClass('navbar-right-hide');
+                $('.navbar-right > li').addClass('loaded');
+            } else {
+                $('.navbar-right').addClass('navbar-right-hide');
+                $('.navbar-right > li').removeClass('loaded');
+            }
+        }
+        function closeHamburgerFunction() {
+            $(".navbar-right").addClass('navbar-right-hide');
+            $('.navbar-right > li').removeClass('loaded');
+
+        }
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            var owl = $('.owl-carousel');
+
+            owl.owlCarousel({
+                items: 1,
+                margin: 30,
+                responsive: {
+                    0: {
+                        stagePadding: 5,
+                        margin: 10
+                    },
+                    600: {
+                        stagePadding: 150,
+                        margin: 20
+                    },
+                    800: {
+                        stagePadding: 250,
+                    },
+                    900: {
+                        stagePadding: 300,
+                    },
+                    1100: {
+                        stagePadding: 350,
+                    },
+                    1200: {
+                        stagePadding: 450,
+                    },
+                    1300: {
+                        stagePadding: 500,
+                    },
+                    1400: {
+                        stagePadding: 550,
+                    },
+                    1600: {
+                        stagePadding: 650,
+                    }
+                },
+                loop: false,
+                center: true,
+                autoplay: true,
+                rewind: true,
+                smartSpeed: 200,
+                autoplayTimeout: 5000,
+                URLhashListener: true,
+                startPosition: '#zero'
+            })
+            $(".owl-item > div[data-hash=zero]").parent().addClass("true-active");
+
+            $(".owl-number-nav a").click(function () {
+                $(".owl-number-nav a.active").removeClass("active");
+                $(this).addClass("active");
+            })
+
+            owl.on('translated.owl.carousel', function (event) {
+                var xTranslation = parseFloat($('.owl-stage').css('transform').split(',')[4]);
+                var width = $('.owl-stage').width();
+                var positionFrac = -(xTranslation / width);
+                var totalOwlItem = $('.owl-item').length;
+
+                $(".owl-item.true-active").removeClass("true-active");
+                $(".owl-number-nav a.active").removeClass("active");
+
+                if (positionFrac < (0 / totalOwlItem) + 0.01) {
+                    $(".owl-item:nth-child(1)").addClass("true-active");
+                    $(".owl-number-nav a:nth-child(1)").addClass("active");
+                } else if (positionFrac < (1 / totalOwlItem) + 0.01) {
+                    $(".owl-item:nth-child(2)").addClass("true-active");
+                    $(".owl-number-nav a:nth-child(2)").addClass("active");
+                } else if (positionFrac < (2 / totalOwlItem) + 0.01) {
+                    $(".owl-item:nth-child(3)").addClass("true-active");
+                    $(".owl-number-nav a:nth-child(3)").addClass("active");
+                } else if (positionFrac < (3 / totalOwlItem) + 0.01) {
+                    $(".owl-item:nth-child(4)").addClass("true-active");
+                    $(".owl-number-nav a:nth-child(4)").addClass("active");
+                } else if (positionFrac < (4 / totalOwlItem) + 0.01) {
+                    $(".owl-item:nth-child(5)").addClass("true-active");
+                    $(".owl-number-nav a:nth-child(5)").addClass("active");
+                } else if (positionFrac < (5 / totalOwlItem) + 0.01) {
+                    $(".owl-item:nth-child(6)").addClass("true-active");
+                    $(".owl-number-nav a:nth-child(6)").addClass("active");
+                }
+            })
+        });
+
+    </script>
+</body>
+</html>

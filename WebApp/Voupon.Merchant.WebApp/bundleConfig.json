@@ -1,0 +1,134 @@
+﻿[
+  //  App
+  {
+    "outputFileName": "wwwroot/css/admin.min.css",
+    "inputFiles": [
+      "wwwroot/css/common.css",
+      "wwwroot/css/admin.css"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/css/site.min.css",
+    "inputFiles": [
+      "wwwroot/css/site.css"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/css/style.min.css",
+    "inputFiles": [
+      "wwwroot/css/style.css"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/lib/dashboard-assets/css/style.min.css",
+    "inputFiles": [
+      "wwwroot/lib/dashboard-assets/css/style.css",
+      "wwwroot/lib/dashboard-assets/fonts/circular-std/style.css",
+      "wwwroot/lib/dashboard-assets/fonts/fontawesome/css/fontawesome-all.css",
+      "wwwroot/lib/dashboard-assets/charts/chartist-bundle/chartist.css",
+      "wwwroot/lib/dashboard-assets/charts/morris-bundle/morris.css",
+      "wwwroot/lib/dashboard-assets/charts/c3charts/c3.css",
+      "wwwroot/lib/dashboard-assets/multi-select/css/multi-select.css"
+
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/js/main.min.js",
+    "inputFiles": [
+      "wwwroot/js/main.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/lib/dashboard-assets/multi-select/js/jquery.multi-select.min.js",
+    "inputFiles": [
+      "wwwroot/lib/dashboard-assets/multi-select/js/jquery.multi-select.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/lib/moment/js/moment-with-locales.min.js",
+    "inputFiles": [
+      "wwwroot/lib/moment/js/moment-with-locales.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/lib/dashboard-assets/js/main-js.min.js",
+    "inputFiles": [
+      "wwwroot/lib/dashboard-assets/js/main-js.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/lib/dashboard-assets/slimscroll/jquery.slimscroll.min.js",
+    "inputFiles": [
+      "wwwroot/lib/dashboard-assets/slimscroll/jquery.slimscroll.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js",
+    "inputFiles": [
+      "wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  //  Admin
+  {
+    "outputFileName": "wwwroot/admin/js/main.min.js",
+    "inputFiles": [
+      "wwwroot/admin/js/custom.js"
+
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  }
+]

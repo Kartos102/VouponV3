@@ -1,0 +1,134 @@
+﻿[
+  {
+    "outputFileName": "wwwroot/icons/elegant-icons/style.min.css",
+    "inputFiles": [
+      "wwwroot/icons/elegant-icons/style.css"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/lib/vodus/cart.min.js",
+    "inputFiles": [
+      "wwwroot/lib/vodus/cart.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/lib/vodus/user.config.min.js",
+    "inputFiles": [
+      "wwwroot/lib/vodus/user.config.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/lib/jquery-validation/jquery.validate.min.js",
+    "inputFiles": [
+      "wwwroot/lib/jquery-validation/jquery.validate.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/js/site.min.js",
+    "inputFiles": [
+      "wwwroot/js/site.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js",
+    "inputFiles": [
+      "wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/js/app.min.js",
+    "inputFiles": [
+      "wwwroot/js/app.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/lib/vodus/helper.numeric.min.js",
+    "inputFiles": [
+      "wwwroot/lib/vodus/helper.numeric.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/lib/vodus/helper.cookie.min.js",
+    "inputFiles": [
+      "wwwroot/lib/vodus/helper.cookie.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/lib/vodus/helper.datetime.min.js",
+    "inputFiles": [
+      "wwwroot/lib/vodus/helper.datetime.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/lib/vodus/helper.numeric.min.js",
+    "inputFiles": [
+      "wwwroot/lib/vodus/helper.numeric.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/lib/vodus/cart.min.js",
+    "inputFiles": [
+      "wwwroot/lib/vodus/cart.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  }
+]

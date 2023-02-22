@@ -1,0 +1,388 @@
+﻿
+@{
+    ViewData["Title"] = "GifteeVouchers";
+    Layout = "~/Areas/App/Views/Shared/_Layout.cshtml";
+}
+
+<div class="dashboard-main-wrapper">
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content ">
+            <div class="col-12 mb-2 section-block row flex-nowrap" style="justify-content:space-between;">
+                <h3 class="page-header w-100">Giftee Products</h3>
+                <div class="row ecommerce-widget table-function">
+                     <button type="button" class="btn btn-primary pull-right" id="testGiftee" style="float:right;margin-left:10px;"><span class="fa fa-plus"></span> Test APII</button>
+                    <button type="button" class="btn btn-primary pull-right" id="addGifteeProduct" style="float:right;margin-left:10px;"><span class="fa fa-plus"></span> Add Giftee Product</button>
+                </div>
+            </div>
+
+            <div class="row products-card-row col-lg-12 col-md-12">
+                <div class="col-12 row search-row">
+                    <div class="input-group col-md-10 col-xl-10 col-lg-10 col-sm-12 col-12">
+                        <input class="form-control py-2 border-right-0 border" type="search" value="" placeholder="search..." id="product-search-input">
+                        <span class="input-group-append">
+                            <button class="btn btn-outline-secondary border-left-0 border" type="button" id="product-search-btn">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+                <div class="row products-table-card col-lg-12 col-md-12">
+                    <div class="no-transaction col-12"><span colspan='4'>No Transactions</span></div>
+                </div>
+            </div>
+
+            <div class="row card-table-row card-table-template" style="display:none;">
+                <div class="mobile-card-row row col-12">
+                    <div class="row col-xl-8 col-lg-8 col-md-8 col-7 no-padding">
+                        <div class="row col-xl-6 col-lg-6 col-md-6 col-12 no-padding">
+                            <div class="row col-12 no-padding ">
+                                <div class="row col-12 no-padding">
+                                    <div class="col-12 card-record-row product-id ellipsis">
+                                        12345abc
+                                    </div>
+                                    <div class="col-12 card-title-row pr-0">
+                                        Giftee Product ID
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row col-xl-6 col-lg-6 col-md-6 col-12 no-padding">
+                            <div class="row col-4 no-padding">
+                                <div class="row col-12 no-padding">
+                                    <a class="col-12 card-record-row product-external-id">
+                                        10
+                                    </a>
+                                    <div class="col-12 card-title-row">
+                                        External ID
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row col-8 no-padding">
+                                <div class="row col-12 no-padding">
+                                    <div class="col-12 card-record-row product-name">
+                                        Tealive RM10
+                                    </div>
+                                    <div class="col-12 card-title-row">
+                                        Product Name
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row col-xl-4 col-lg-4 col-md-4 col-5 no-padding">
+                        <div class="row col-xl-4 col-lg-4 col-md-4 col-12 card-record-row no-padding">
+                            <div class="col-12 card-record-row product-status align-center">
+                            </div>
+                        </div>
+                        <div class="row col-xl-8 col-lg-8 col-md-8 col-12 card-record-row no-padding">
+                            <div class="col-12 card-record-row action justify-content-center">
+                            </div>
+                        </div>
+                        <div class="row col-xl-8 col-lg-8 col-md-8 col-12 card-record-row no-padding">
+                            <div class="col-12 card-record-row download justify-content-center">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="createGifteeProduct" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle">Create Giftee Product</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">External Id:</label>
+                        <input type="text" class="form-control" id="txtExternalIdCreate">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Product Name:</label>
+                        <input type="text" class="form-control" id="txtProductNameCreate">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnCreate">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="updateGifteeProduct" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle">Update Giftee Product</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">External Id:</label>
+                        <input type="text" class="form-control" id="txtExternalIdUpdate">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Product Name:</label>
+                        <input type="text" class="form-control" id="txtProductNameUpdate">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnUpdate">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteGifteeProduct" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle">Delete Giftee Product</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="message-text" class="col-form-label">Are you sure you want to delete this Giftee product?</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnDelete">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+       var selectedRow = null;
+       const merchantId = @Model;
+
+    $(document).ready(function () {
+        GetGifteeProducts(@Model);
+
+        $("#addGifteeProduct").click(function () {
+            $('#createGifteeProduct').attr("data-id", $(this).attr("data-id"));
+            $('#createGifteeProduct').modal("show");
+        });
+
+        $(".btn-edit").click(function () {
+            $('#updateGifteeProduct').attr("data-id", $(this).attr("data-id"));
+            $('#updateGifteeProduct').modal("show");
+            $('#txtExternalIdUpdate').val($(this).parent().parent().find(".external-id").html());
+            $('#txtProductNameUpdate').val($(this).parent().parent().find(".product-name").html());
+
+        });
+
+        $(".btn-delete").click(function () {
+            $('#deleteGifteeProduct').attr("data-id", $(this).attr("data-id"));
+            $('#deleteGifteeProduct').modal("show");
+        });
+
+        $("#btnCreate").click(function () {
+            var id = $('#createGifteeProduct').attr("data-id");
+            var externalId = $("#txtExternalIdCreate").val();
+            var productName = $("#txtProductNameCreate").val();
+
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    merchantId: merchantId,
+                    productName: productName,
+                    externalId: externalId
+                },
+                url: '/App/Sales/AddGifteeProduct',
+                success: function (response) {
+                    if (response.successful) {
+                        toastr.success(response.message);
+                        location.reload();
+                    }
+                    else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function () {
+                    toastr.error("Fail to Add");
+                }
+            });
+            $('#createGifteeProduct').modal("hide");
+
+        });
+
+        $("#testGiftee").click(function() { 
+        
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                data: { },
+                url: '/App/Sales/GetTestingAPI',
+                success: function (response) {
+                    if (response.successful) {
+                        toastr.success(response.message);
+                    }
+                    else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function () {
+                    toastr.error("Fail to Add");
+                }
+            });
+        
+        })
+
+        $("#btnDelete").click(function () {
+            var id = $('#deleteGifteeProduct').attr("data-id");
+
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    merchantId: merchantId,
+                    productId: id,
+                },
+                url: '/App/Sales/DeleteGifteeProduct',
+                success: function (response) {
+                    if (response.successful) {
+                        toastr.success(response.message);
+                        location.reload();
+                    }
+                    else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function () {
+                    toastr.error("Fail to Add");
+                }
+            });
+            $('#deleteGifteeProduct').modal("hide");
+
+        });
+           $("#btnUpdate").click(function () {
+            var id = $('#updateGifteeProduct').attr("data-id");
+            var externalId = $("#txtExternalIdUpdate").val();
+            var productName = $("#txtProductNameUpdate").val();
+
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    merchantId: merchantId,
+                    productId: id,
+                    productName: productName,
+                    externalId: externalId
+                },
+                url: '/App/Sales/UpdateGifteeProduct',
+                success: function (response) {
+                    if (response.successful) {
+                        toastr.success(response.message);
+                        location.reload();
+                    }
+                    else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function () {
+                    toastr.error("Fail to Add");
+                }
+            });
+            $('#updateGifteeProduct').modal("hide");
+
+        });
+
+
+    });
+
+    function UpdateGifteeProductStatus(input) {
+        var productId = $(input).attr("data-id");
+        var status = $(input).is(":checked");
+        $.ajax({
+            type: "POST",
+            async: false,
+            dataType: 'json',
+            data: {
+                merchantId: merchantId, productId: productId, Status: status
+            },
+            url: '/App/Sales/UpdateGifteeProductStatus',
+            success: function (response) {
+                if (response.successful)
+                    toastr.success(response.message);
+                else
+                    toastr.error(response.message);
+            },
+            error: function (error) {
+                toastr.error(error);
+            }
+        });
+    }
+
+    function GetGifteeProducts(merchantId) {
+        var list = "";
+        $.ajax({
+            type: "GET",
+            async: false,
+            dataType: 'json',
+            url: '/App/Sales/GetGifteeProducts',
+            data: { merchantId: merchantId },
+            success: function (response) {
+                if (response.successful) {
+                    if (response.data != null) {
+                        if (response.data.length > 0) {
+                            var count = 0;
+                            $(response.data).each(function (index, item) {
+                                if (!item.isRedeemed) {
+                                    var row = $('.card-table-template');
+                                    row.find(".product-id").html(item.id);
+                                    row.find(".product-external-id").html(item.externalId);
+                                    row.find(".product-name").html(item.name);
+
+                                    if (item.status) {
+                                        row.find(".product-status").html("<div class='switch-button switch-button-success'>" +
+                                            "<input class='activatedStatus' onchange='UpdateGifteeProductStatus(this);' type='checkbox' checked='' name='switchMobile_" + item.id + "' data-id='" + item.id + "' id='switchMobile_" + item.id + "'><span>" +
+                                            " <label for='switchMobile_" + item.id + "'></label> " +
+                                            "</span> </div>");
+                                    }
+                                    else {
+                                        row.find(".product-status").html("<div class='switch-button switch-button-success'>" +
+                                            "<input class='activatedStatus' onchange='UpdateGifteeProductStatus(this);' type='checkbox'  name='switchMobile_" + item.id + "' data-id='" + item.id + "' id='switchMobile_" + item.id + "'><span>" +
+                                            " <label for='switchMobile_" + item.id + "'></label> " +
+                                            "</span> </div>");
+                                    }
+
+                                    row.find(".action").html("<a class='btn-edit' data-id='" + item.id + "' href='javascript:return false;'>Edit Product</a>&nbsp;&nbsp; <a class='btn-delete' data-id='" + item.id + "' href='javascript:return false;'>Delete</a><a target='_blank' href='/app/sales/DownloadGifteeImages/" + item.externalId + "' style='margin-left:10px;' class='btn-download' data-id='" + item.id + "' href='javascript:return false;'>Download Images</a>");
+
+                                    row.find(".download").html("<a class='btn-download' data-id='" + item.id + "' href='javascript:return false;'>Download</a>");
+
+
+                                    count = count + 1;
+
+                                    $(".products-table-card").append(row.html());
+                                }
+                            });
+                            if (count == 0)
+                                $(".no-transaction").show();
+                        }
+                        else {
+                            $(".no-transaction").show();
+                        }
+                    }
+                } else
+                    toastr.error(response.message);
+            },
+            error: function (error) {
+                toastr.error(error);
+            }
+        });
+    }
+</script>

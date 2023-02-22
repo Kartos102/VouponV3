@@ -1,0 +1,197 @@
+﻿@using System.Configuration
+@{
+    ViewData["Title"] = "About Us";
+    ViewBag.Title = "About Us";
+    ViewBag.Description = "Showcase Your Products Online to Over 17 Million Malaysians. Free to Join. Fast and Simple Registration Process.";
+    ViewBag.Keywords = "About Us";
+}
+
+<style>
+    .rewards-body > div {
+        max-width: unset;
+    }
+    .intro-video {
+        display: flex;
+        justify-content: center;
+        max-width: 900px;
+        margin: auto;
+    }
+
+        .intro-video iframe {
+            width: 100%;
+            height: 100%;
+            min-height: 400px;
+        }
+</style>
+
+<div class="col-12 main-title-about">
+    <h2>
+        OUR COMPANY
+    </h2>
+</div>
+<div class="about">
+    <section id="our-company">
+        <div class="row main-container main-container-first wide-image-right">
+            <div class="col-lg-5 col-md-6 header-img-container">
+                <img class="lazyloaded" src="~/images/OurCompany.jpg" />
+            </div>
+            <div class="col-lg-7 col-md-6 header-text-container">
+                <div class="content-container">
+                    <p class="main-paragraph">
+                        Vodus is an online marketplace that sells products and vouchers from a wide variety of merchants.
+                        <br /><br />
+                        Search for an item that you want on Vodus, compare our prices with other platforms and see it for yourself.
+                        <br /><br />
+                        We onboard merchants of all sizes, from well-known brands to value-for-money OEM products, to help you compare and find the most suitable products.
+                        <br /><br />
+                        Through our unique survey rewards program, shoppers can gain amazing discounts to guarantee the best price for all their shopping needs.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works">
+        <div class="col-12">
+            <h2 class="main-title text-center">
+                HOW IT WORKS
+            </h2>
+        </div>
+        <div class="col-lg-8 margin-auto intro-video py-4 px-2">
+            <iframe src="https://www.youtube.com/embed/63gpHDWYf-Y?rel=0&amp;modestbranding=1&amp;showinfo=0;" title="YouTube video player" frameborder="0" allow="autoplay; clipboard-write; encrypted-media;picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </section>
+
+    <section id="our-story">
+        <div class="col-12">
+            <h2 class="main-title text-center mb-lg-4">
+                OUR STORY
+            </h2>
+        </div>
+        <div class="row main-container">
+            <div class="col-12 col-lg-6 header-img-container">
+                <img class="lazyloaded" src="~/images/OurStory.jpg" />
+            </div>
+            <div class="col-12 col-lg-6 header-text-container">
+                <div class="content-container">
+                    <p class="main-paragraph">
+                        To help consumers ease their financial burden during the pandemic in 2020, Vodus created a survey rewards platform that features an array of
+                        merchants and products that helps consumers find the best quality products at the lowest price.
+                        <br /><br />
+                        Since then, we have placed a strong emphasis on our VPoints Rewards system where shoppers simply need to answer a few simple survey questions in exchange
+                        for unbelievable discounts on a huge variety of products. You will automatically recive VPoints for each response
+                        - the more you answer, the more points you gain - which can be used to exchange for discounts during checkout.
+                        <br /><br />
+                        At Vodus Rewards, we are all about subsidizing your lifestyle, leisure and shopping so you can enjoy bigger savings for things that matter.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="our-values">
+        <div class="row values-container">
+            <div class="col-12 align-center">
+                <div class="content-title">
+                    <h2>OUR MISSION</h2>
+                </div>
+                <div class="row mission-content-box">
+                    <div class="col-12 col-lg-6 content-list-item">
+                        <div class="content-list-box">
+                            <img src="~/images/Voupon_mission_value.svg" />
+                            <h3>Value</h3>
+                            <p>
+                                <i>
+                                    Our primary mission is to create value for consumers by helping them find the most suitable products according to their needs.
+                                </i>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 content-list-item">
+                        <div class="content-list-box">
+                            <img src="~/images/Voupon_mission_affordable.svg" />
+                            <h3>Affordable</h3>
+                            <p>
+                                <i>
+                                    We strive to help our users compare a wide range of product listings and give them the best vprices.
+                                </i>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 content-list-item">
+                        <div class="content-list-box">
+                            <img src="~/images/Voupon_mission_reliable.svg" />
+                            <h3>Reliable</h3>
+                            <p>
+                                <i>
+                                    We provide money back guarantee service level agreement for all our transactions to protect our consumers and merchants from fraud.
+                                </i>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 content-list-item">
+                        <div class="content-list-box">
+                            <img src="~/images/Voupon_mission_symbiosis.svg" />
+                            <h3>Symbiosis</h3>
+                            <p>
+                                <i>
+                                    We provide money back guarantee service level agreement for all our transactions to protect our consumers and merchants from fraud.
+                                </i>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="our-team">
+        <div class="container">
+            <div class="content-title">
+                <h2>OUR LEADERSHIP</h2>
+            </div>
+            <div class="content-card row">
+                <div class="content-card-item col-md-4">
+                    <div class="content-card-image">
+                        <img src="~/images/kelvin-goh.jpg" />
+                    </div>
+                    <div class="content-card-text">
+                        <h3>
+                            FOUNDER AND CEO
+                        </h3>
+                        <p>
+                            Dr. Kelvin Goh <br />
+                            <i>PhD in Physics</i>
+                        </p>
+                    </div>
+                </div>
+                <div class="content-card-item col-md-4 ">
+                    <div class="content-card-image">
+                        <img src="~/images/mc-lai.jpg" />
+                    </div>
+                    <div class="content-card-text">
+                        <h3>
+                            EXECUTIVE DIRECTOR
+                        </h3>
+                        <p>
+                            MC Lai
+                        </p>
+                    </div>
+                </div>
+                <div class="content-card-item col-md-4 ">
+                    <div class="content-card-image">
+                        <img src="~/images/kok-hong.jpg" />
+                    </div>
+                    <div class="content-card-text">
+                        <h3>
+                            CTO
+                        </h3>
+                        <p>
+                            Ung Kok Hong
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

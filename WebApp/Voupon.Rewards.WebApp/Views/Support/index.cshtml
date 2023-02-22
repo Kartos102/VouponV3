@@ -1,0 +1,136 @@
+﻿
+<div id="supportRequest" class="" style="max-width:600px;display:none;">
+    <div class="row">
+        <div class="col-4">Email</div>
+        <div class="col-8"><input type="email" id="testEmail" /></div>
+    </div>
+    <div class="row">
+        <div class="col-4">IP</div>
+        <div class="col-8"><span id="testIpResult"></span></div>
+    </div>
+    <div class="row">
+        <div class="col-4">Token</div>
+        <div class="col-8"><span id="testToken"></span></div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+
+            <button type="button" id="btnSendSupportRequest" class="btn btn-primary" style="margin-top:50px;">Send support request</button>
+        </div>
+    </div>
+</div>
+
+<div id="supportResponse" class="" style="display:none;">
+    <div class="row">
+        <div class="col-8"><span id="" style="margin:0 auto;">Thanks for sending us the support request. The team will response to you as soon as possible</span></div>
+    </div>
+</div>
+
+<script>
+
+
+    $(document).ready(function () {
+
+        var supportRequest = readCookie('vodus_support_request');
+
+        if (supportRequest == null) {
+            $("#supportRequest").show(); 
+            $("#supportResponse").hide();
+        }
+        else {
+            if (new Date().getTime() > new Date(supportRequest).getTime()) {
+                $("#supportRequest").show();
+                $("#supportResponse").hide();
+            }
+            else {
+                $("#supportRequest").hide();
+                $("#supportResponse").show();
+            }
+        }
+
+        var isAllowed = false;
+
+        const xhr = new XMLHttpRequest();
+
+        // listen for `onload` event
+        xhr.onload = () => {
+            // process response
+            if (xhr.status == 200) {
+                var rawData = xhr.response
+                    .trim()
+                    .split('\n')
+                    .reduce(function (obj, pair) {
+                        pair = pair.split('=');
+                        return (obj[pair[0]] = pair[1]), obj;
+                    }, {});
+                console.log(rawData);
+                if (rawData == null) {
+                    isAllowed = true;
+                    $("#testIpResult").html("Ip not detected");
+                }
+                else {
+                    $("#testIpResult").html(rawData.ip + " , " + rawData.loc);
+                    if (rawData.loc == "MY") {
+                        console.log("GEO passed: " + rawData.loc);
+                        isAllowed = true;
+                    }
+                    else if (rawData.loc == "US") {
+                        console.log("GEO bypass passed: " + rawData.loc);
+                        isAllowed = true;
+                    }
+                    else {
+                        console.log("GEO failed: " + rawData.loc);
+                    }
+                }
+
+            } else {
+                isAllowed = true;
+                console.error('Error!');
+
+            }
+            return isAllowed;
+        };
+
+        // create a `GET` request
+        xhr.open('GET', 'https://www.cloudflare.com/cdn-cgi/trace', false);
+
+        // send request
+        xhr.send();
+
+        var token = vodusRewardReadCookie("Vodus.Token");
+        $("#testToken").html(token);
+
+
+        $("#btnSendSupportRequest").click(function () {
+            var email = $("#testEmail").val();
+
+            if (email == null || email == "") {
+                toastr.error("Email is required");
+                return;
+            }
+
+            var data = {
+                ip: $("#testIpResult").html(),
+                token: $("#testToken").html(),
+                email: email
+
+            }
+            $.ajax({
+                type: "POST",
+                data: data,
+                url: '/api/v1/support/request',
+                success: function (response) {
+                    toastr.success("Thanks for sending us the support request. Our support team will get back to you as soon as we can.");
+                    vodusRewardCreateCookie('vodus_support_request', new Date().getTime() + (10000), 30);
+                    $("#supportRequest").hide();
+                    $("#supportResponse").show();
+                },
+                error: function (err) {
+                    console.log(err)
+                }
+            });
+        })
+    })
+
+</script>

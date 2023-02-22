@@ -1,0 +1,1694 @@
+﻿@model Voupon.Merchant.WebApp.Areas.App.Services.Outlets.ViewModels.OutletViewModel
+
+@{
+    ViewData["Title"] = "Outlets";
+}
+<div class="dashboard-main-wrapper">
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content ">
+            <div class="row">
+                <div class="col-lg-12 d-flex justify-content-between align-items-center mb-2">
+                    <h1 class="page-header">Outlets</h1>
+                    <button type="button" class="btn btn-primary pull-right" id="btnCreateNewOutlet" style="float:right;margin-left:10px;"><span class="fa fa-plus"></span> Add New Outlet</button>
+                </div>
+            </div>
+            <div class="col-xl-5 col-lg-6 col-md-6 col-12 row search-row mb-3">
+                <div class="input-group col-12 no-padding">
+                    <input class="form-control py-2 border-right-0 border" type="search" value="" placeholder="Search..." id="searchInput">
+                    <span class="input-group-append">
+                        <button class="btn btn-outline-secondary border-left-0 border" type="button">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div id="outletsList">
+                    </div>
+                </div>
+            </div>
+            <div hidden class="ecommerce-widget">
+                <div class="row" style="margin-top:30px;">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered table-hover" id="outletsTable">
+                                        <thead class="bg-light">
+                                            <tr class="border-0">
+                                                <th class="border-0">Order</th>
+                                                <th class="border-0">Name</th>
+                                                <th class="border-0">Created At</th>
+                                                <th class="border-0">Last Updated At</th>
+                                                <th class="border-0">Activated</th>
+                                                <th class="border-0">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="outletsTableBody">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="createNewOutletModal" merchant-id="@Model.MerchantId" role="dialog">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="modal-title-div">
+                                <h4 class="modal-title" id="modalTitle">Create New Outlet</h4>
+                                <button type="button" class="close" data-dismiss="modal">×</button>
+                            </div>
+                            <form id="createOutletForm" name="createOutletForm">
+                                @Html.AntiForgeryToken()
+                                <div class="form-group row">
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                        <label asp-for="Name" class="col-form-label">Name</label>
+                                        <input asp-for="Name" id="outletName" class="form-control" />
+                                        <span asp-validation-for="Name" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                        <label asp-for="StreetName" class="col-form-label">Street name</label>
+                                        <input id="streetName" asp-for="StreetName" class="form-control" />
+                                        <span asp-validation-for="StreetName" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+
+                                        <label asp-for="CountryId" class="col-form-label">Country</label>
+                                        <select asp-for="CountryId" class="form-control selectpicker" id="countrySelect">
+                                            <option value="">Choose Country</option>
+                                        </select>
+                                        <span asp-validation-for="CountryId" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                        <label asp-for="ProvinceId" class="col-form-label">Province</label>
+                                        <select asp-for="ProvinceId" class="form-control selectpicker" id="provinceSelect" data-live-search="true">
+                                            <option value="">Choose Province</option>
+                                        </select>
+                                        <span asp-validation-for="ProvinceId" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+
+                                        <label asp-for="DistrictId" class="col-form-label">District</label>
+                                        <select asp-for="DistrictId" class="form-control selectpicker" id="distritSelect" data-live-search="true">
+                                            <option value="">Choose District</option>
+                                        </select>
+                                        <span asp-validation-for="DistrictId" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                        <label asp-for="PostCodeId" class="col-form-label">Postcode</label>
+                                        <select asp-for="PostCodeId" class="form-control selectpicker" id="postCodeSelect" data-live-search="true">
+                                            <option value="">Choose Postcode</option>
+                                        </select>
+                                        <span asp-validation-for="PostCodeId" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                        <label asp-for="Address_1" class="col-form-label">Address line 1</label>
+                                        <input id="address1" asp-for="Address_1" class="form-control" />
+                                        <span asp-validation-for="Address_1" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                        <label asp-for="Address_2" class="col-form-label">Address line 2</label>
+                                        <input id="address2" asp-for="Address_2" class="form-control" />
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+
+                                        <label asp-for="Contact" class="col-form-label">Contact number</label>
+                                        <input id="outletContact" asp-for="Contact" class="form-control" />
+                                        <span asp-validation-for="Contact" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                    </div>
+                                    <div class="col-12">
+                                        <div>
+                                            <img id="imageFolderUrl" />
+                                            <label class="col-form-label">Upload your Outlet Photo</label>
+                                            <br>
+                                            <span class="btn btn-primary btn-file">
+                                                Upload your Images
+                                                <i class="fa fa-upload"></i>
+                                            </span>
+                                        </div>
+                                        <input type="file" name="files[]" id="EditImage" multiple class="form-control" value="">
+                                    </div>
+                                    <div class="col-12 gallery" id="imageGallery"></div>
+
+                                </div>
+                                <div class="container-fluid py-2 mx-auto no-padding">
+                                    <div class="row d-flex justify-content-center">
+                                        <div class="col-md-12 col-lg-12 col-xl-12 no-padding">
+                                            <div class="card-working-hours border-0">
+                                                <div class="row opening-hours-header">
+                                                    <div class="col-xl-5 col-4 row opening-hours-title-col">
+                                                        <h3 class="title-col mb-0 opening-hours">Opening Hours</h3>
+                                                    </div>
+                                                    <div class="col-xl-7 col-8 row grey-bg no-padding">
+                                                        <div class="col-4">
+                                                            <span>
+                                                                Start
+                                                            </span>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <span>
+                                                                End
+                                                            </span>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <input id="checkbox_hours_0" data-id="0" type="checkbox" name="closed" value="closed" class="closed" data-toggle="toggle" data-width="100" data-on="All Close" data-onstyle="danger" data-offstyle="success" data-off="All Open">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row col-12 list no-padding" id="Edit_Days_7">
+                                                    <div class="row col-12 opening-hours-row">
+                                                        <div class="col-xl-5 col-4 row opening-hours-title-col">
+                                                            <div class="col-5">
+                                                                <span class="open-day">
+                                                                    Sun
+                                                                </span>
+                                                            </div>
+                                                            <div class="col-7">
+                                                                <span class="btn btn-primary btn_apply_all">Apply to All</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-7 col-8 row no-padding">
+                                                            <div class="col-4 time-select">
+                                                                <input id="start_hours_7" class="timepicker timepicker-with-dropdown from-time" name="from">
+                                                            </div>
+                                                            <div class="col-4 time-select">
+                                                                <input id="end_hours_7" class="timepicker timepicker-with-dropdown end-time" name="to">
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <input id="checkbox_hours_7" data-id="7" type="checkbox" name="closed" value="closed" class="closed" data-toggle="toggle" data-width="100" data-on="Close" data-onstyle="danger" data-offstyle="success" data-off="Open">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row col-12 list no-padding" id="Edit_Days_1">
+                                                    <div class="row col-12 opening-hours-row">
+                                                        <div class="col-xl-5 col-4  row opening-hours-title-col">
+                                                            <div class="col-5">
+                                                                <span class="open-day">
+                                                                    Mon
+                                                                </span>
+                                                            </div>
+                                                            <div class="col-7">
+                                                                <span class="btn btn-primary btn_apply_all">Apply to All</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-7 col-8 grey-bg row no-padding">
+                                                            <div class="col-4 time-select">
+                                                                <input id="start_hours_1" class="timepicker timepicker-with-dropdown from-time" name="from">
+                                                            </div>
+                                                            <div class="col-4 time-select">
+                                                                <input id="end_hours_1" class="timepicker timepicker-with-dropdown end-time" name="to">
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <input id="checkbox_hours_1" data-id="1" type="checkbox" name="closed" value="closed" class="closed" data-toggle="toggle" data-width="100" data-on="Close" data-onstyle="danger" data-offstyle="success" data-off="Open">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row col-12 list no-padding" id="Edit_Days_2">
+                                                    <div class="row col-12 opening-hours-row">
+                                                        <div class="col-xl-5 col-4  row opening-hours-title-col">
+                                                            <div class="col-5">
+                                                                <span class="open-day">
+                                                                    Tue
+                                                                </span>
+                                                            </div>
+                                                            <div class="col-7">
+                                                                <span class="btn btn-primary btn_apply_all">Apply to All</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-7 col-8  row no-padding">
+                                                            <div class="col-4 time-select">
+                                                                <input id="start_hours_2" class="timepicker timepicker-with-dropdown from-time" name="from">
+                                                            </div>
+                                                            <div class="col-4 time-select">
+                                                                <input id="end_hours_2" class="timepicker timepicker-with-dropdown end-time" name="to">
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <input id="checkbox_hours_2" data-id="2" type="checkbox" name="closed" value="closed" class="closed" data-toggle="toggle" data-width="100" data-on="Close" data-onstyle="danger" data-offstyle="success" data-off="Open">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row col-12 list no-padding" id="Edit_Days_3">
+                                                    <div class="row col-12 opening-hours-row">
+                                                        <div class="col-xl-5 col-4  row opening-hours-title-col">
+                                                            <div class="col-5">
+                                                                <span class="open-day">
+                                                                    Wed
+                                                                </span>
+                                                            </div>
+                                                            <div class="col-7">
+                                                                <span class="btn btn-primary btn_apply_all">Apply to All</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-7 col-8 grey-bg  row no-padding">
+                                                            <div class="col-4 time-select">
+                                                                <input id="start_hours_3" class="timepicker timepicker-with-dropdown from-time" name="from">
+                                                            </div>
+                                                            <div class="col-4 time-select">
+                                                                <input id="end_hours_3" class="timepicker timepicker-with-dropdown end-time" name="to">
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <input id="checkbox_hours_3" data-id="3" type="checkbox" name="closed" value="closed" class="closed" data-toggle="toggle" data-width="100" data-on="Close" data-onstyle="danger" data-offstyle="success" data-off="Open">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row col-12 list no-padding" id="Edit_Days_4">
+                                                    <div class="row col-12 opening-hours-row">
+                                                        <div class="col-xl-5 col-4  row opening-hours-title-col">
+                                                            <div class="col-5">
+                                                                <span class="open-day">
+                                                                    Thu
+                                                                </span>
+                                                            </div>
+                                                            <div class="col-7">
+                                                                <span class="btn btn-primary btn_apply_all">Apply to All</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-7 col-8  row no-padding">
+                                                            <div class="col-4 time-select">
+                                                                <input id="start_hours_4" class="timepicker timepicker-with-dropdown from-time" name="from">
+                                                            </div>
+                                                            <div class="col-4 time-select">
+                                                                <input id="end_hours_4" class="timepicker timepicker-with-dropdown end-time" name="to">
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <input id="checkbox_hours_4" data-id="4" type="checkbox" name="closed" value="closed" class="closed" data-toggle="toggle" data-width="100" data-on="Close" data-onstyle="danger" data-offstyle="success" data-off="Open">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row col-12 list no-padding" id="Edit_Days_5">
+                                                    <div class="row col-12 opening-hours-row">
+                                                        <div class="col-xl-5 col-4  row opening-hours-title-col">
+                                                            <div class="col-5">
+                                                                <span class="open-day">
+                                                                    Fri
+                                                                </span>
+                                                            </div>
+                                                            <div class="col-7">
+                                                                <span class="btn btn-primary btn_apply_all">Apply to All</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-7 col-8 grey-bg  row no-padding">
+                                                            <div class="col-4 time-select">
+                                                                <input id="start_hours_5" class="timepicker timepicker-with-dropdown from-time" name="from">
+                                                            </div>
+                                                            <div class="col-4 time-select">
+                                                                <input id="end_hours_5" class="timepicker timepicker-with-dropdown end-time" name="to">
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <input id="checkbox_hours_5" data-id="5" type="checkbox" name="closed" value="closed" class="closed" data-toggle="toggle" data-width="100" data-on="Close" data-onstyle="danger" data-offstyle="success" data-off="Open">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row col-12 list no-padding" id="Edit_Days_6">
+                                                    <div class="row col-12 opening-hours-row">
+                                                        <div class="col-xl-5 col-4  row opening-hours-title-col">
+                                                            <div class="col-5">
+                                                                <span class="open-day">
+                                                                    Sat
+                                                                </span>
+                                                            </div>
+                                                            <div class="col-7">
+                                                                <span class="btn btn-primary btn_apply_all">Apply to All</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-7 col-8  row no-padding">
+                                                            <div class="col-4 time-select">
+                                                                <input id="start_hours_6" class="timepicker timepicker-with-dropdown from-time" name="from">
+                                                            </div>
+                                                            <div class="col-4 time-select">
+                                                                <input id="end_hours_6" class="timepicker timepicker-with-dropdown end-time" name="to">
+                                                            </div>                                                <div class="col-4">
+                                                                <input id="checkbox_hours_6" data-id="6" type="checkbox" name="closed" value="closed" class="closed" data-toggle="toggle" data-width="100" data-on="Close" data-onstyle="danger" data-offstyle="success" data-off="Open">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row col-12 list no-padding" id="Edit_Days_8">
+                                                    <div class="row col-12 opening-hours-row">
+                                                        <div class="col-xl-5 col-4  row opening-hours-title-col">
+                                                            <div class="col-5">
+                                                                <span class="open-day">
+                                                                    PH
+                                                                </span>
+                                                            </div>
+                                                            <div class="col-7">
+                                                                <span class="btn btn-primary btn_apply_all">Apply to All</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-7 col-8 grey-bg row no-padding">
+                                                            <div class="col-4 time-select">
+                                                                <input id="start_hours_8" class="timepicker from-time" name="from">
+                                                            </div>
+                                                            <div class="col-4 time-select">
+                                                                <input id="end_hours_8" class="timepicker end-time" name="to">
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <input id="checkbox_hours_8" data-id="8" type="checkbox" name="closed" value="closed" class="closed" data-toggle="toggle" data-width="100" data-on="Close" data-onstyle="danger" data-offstyle="success" data-off="Open">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row  mt-3 justify-content-center">
+                                                    <button id="btnAddOutlet" class="btn btn-primary">Add</button>
+                                                    <button id="btnUpdateOutlet" style="display:none;" class="btn btn-primary">Update</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div style="display:none" id="outlet-Template">
+    <div class="card col-md-6 col-lg-4 col-xl-3">
+        <div class="card-inner">
+            <div class="card-image-container">
+                <img class="card-img-top lazyload" src="" data-src="" alt="Outlet Image">
+            </div>
+            <div class="card-body">
+                <a class="btn-viewOutlet" data-id="outletId" href="javascript:return false;"><h5 class="card-title">Outlet Name</h5></a>
+                <p class="card-text">Outlet Address</p>
+            </div>
+            <div class="card-footer row justify-content-between">
+                <small class="text-muted">
+                    <div class="switch-button switch-button-success">
+                        <input class="activatedStatus" type="checkbox" name="switch_outletId" data-id="outletId" id="switch_outletId">
+                        <span> <label class="outletlabel" for="switch_outletId"></label> </span>
+                    </div>
+                </small>
+                <a style="float:right" class="btn-viewOutlet" data-id="outletId" href="javascript:return false;">View Info</a>
+                <a style="float:right" class="btn-deleteOutlet" data-id="outletId" href="javascript:return false;">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteOutletModal" outlet-id="" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle">Delete Outlet</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    Are you sure that you want to delete this outlet?
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnDeleteOutlet">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section styles{
+    <link rel="stylesheet" href="~/app/Outlets/css/Index.css" />
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+
+
+}
+
+@section scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+    <!-- Theme included stylesheets -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.2/jquery.ui.touch-punch.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+    <script src="~/lib/FilesValidations.js?v=2"></script>
+
+    <script>
+        var filesList = [];
+        var removefilesList = [];
+        function SetRemoveImageEvent() {
+            $(".remove-img").unbind().click(function () {
+                var index = $(this).parent(".product-img-preview-container").attr("index");
+                $(this).parent(".product-img-preview-container").remove();
+                filesList.splice(index, 1);
+
+                var index = 0;
+                $(".gallery").find(".product-img-preview-container").each(function () {
+                    $(this).attr("index", index++);
+                });
+            });
+        }
+
+        function SetRemoveImageUrlEvent() {
+            $(".remove-img-url").unbind().click(function () {
+                var imagesrc = $(this).parent(".product-img-preview-container").attr("image-src");
+                $(this).parent(".product-img-preview-container").remove();
+                var index = $(this).parent(".product-img-preview-container").attr("index");
+                filesList.splice(index, 1);
+                removefilesList.push(imagesrc);
+
+                var index = 0;
+                $(".gallery").find(".product-img-preview-container").each(function () {
+                    $(this).attr("index", index++);
+                });
+                $("#EditImage").val('');
+            });
+        }
+
+
+
+        var imagesPreview = function (input, placeToInsertImagePreview) {
+
+            if (input.files) {
+                var index = 0;
+                $(".product-img-preview-container").each(function () {
+                    $(this).attr("index", index);
+                    index++;
+                });
+
+                // console.log(input.files);
+                var filesAmount = input.files.length;
+                var imageNumber = 0;
+                for (i = 0; i < filesAmount; i++) {
+                    var reader = new FileReader();
+                    var validDimentions = false;
+                    reader.onload = function (event) {
+                        var image = new Image();
+                        validDimentions = false;
+                        //Set the Base64 string return from FileReader as source.
+                        image.src = event.target.result;
+
+                        //Validate the File Height and Width.
+                        image.onload = function () {
+
+                            var height = this.height;
+                            var width = this.width;
+
+                            var size = Math.round((input.files[imageNumber].size / 1024));
+                            console.log(height + "  " + width + "  " + size);
+                            if (width > imageMinwidth && width < imageMaxwidth && height > imageMinHeight && height < imageMaxHeight && size > 0 && size < imageMaxSize) {
+                                validDimentions = true;
+                            }
+
+                            if (input.files[imageNumber].type == "image/png" || input.files[imageNumber].type == "image/jpeg" || input.files[imageNumber].type == "image/jpg" || input.files[imageNumber].type == "image/jfif") {
+                                if (validDimentions) {
+                                    $($.parseHTML('<span class="product-img-preview-container" index="' + index + '"><img src="' + event.target.result + '" class="product-img-preview"/><br/><span class="remove-img">Remove image</span></span>')).appendTo(placeToInsertImagePreview);
+                                    SetRemoveImageEvent();
+                                }
+                                else {
+                                    filesList.pop();
+                                    toastr.error("Please ensure that each image file has the following dimensions and file size: Width: \n Between" + imageMinwidth + " to " + imageMaxwidth + "px \n Height: Between " + imageMinHeight + " to " + imageMaxHeight + "px \n Size: Less than " + imageMaxSize + "KB");
+                                }
+                                index++;
+                            }
+                            imageNumber++;
+
+                        }
+                    }
+
+
+                    if (input.files[i].type == "image/png" || input.files[i].type == "image/jpeg" || input.files[i].type == "image/jpg" || input.files[i].type == "image/jfif") {
+                        filesList.push(input.files[i]);
+                        reader.readAsDataURL(input.files[i]);
+
+                    }
+                    else {
+                        imageNumber++;
+                        console.log("Changed the value of imageNumber invalid file");
+                        toastr.error("Please upload files having extensions: <b>png, jpeg, jpg, jfif</b> only");
+                    }
+                }
+
+            }
+        };
+
+        $(document).ready(function () {
+            $("#imageGallery").sortable({
+                start: function (event, ui) {
+                    var start_pos = ui.item.index();
+                    ui.item.data('start_pos', start_pos);
+                },
+                change: function (event, ui) {
+                    //  var start_pos = ui.item.data('start_pos');
+                    // var index = ui.placeholder.index();
+                    //  alert(start_pos);
+                    //          alert(index);
+                },
+                update: function (event, ui) {
+
+                    var start_pos = ui.item.data('start_pos');
+                    var index = ui.item.index();
+                    var temp = filesList[start_pos];
+                    //var temp1 = filesList[index];
+
+                    filesList.splice(start_pos, 1);
+                    filesList.splice(index, 0, temp);
+
+                    var index = 0;
+                    $(".product-img-preview-container").each(function () {
+                        $(this).attr("index", index);
+                        index++;
+                    });
+
+
+                }
+            });
+
+            if ($('[type="time"]').prop('type') != 'time') {
+                $('[type="time"]').timepicker();
+            }
+
+            $(".btn-file").click(function () {
+                $('#EditImage').click();
+            });
+            $('#EditImage').on('change', function () {
+                imagesPreview(this, 'div.gallery');
+            });
+            var merchantId = $("#createNewOutletModal").attr("merchant-id");
+            GetCountryList();
+            GetMerchantOutlets(merchantId, "");
+            $('.closed').change(function () {
+                if ($(this).filter(':checked').val() == "closed") {
+                    if ($(this).attr("data-id") == "0") {
+                        var i;
+                        for (i = 1; i <= 8; i++) {
+                            $("#checkbox_hours_" + i).prop("checked", true);
+                            $("#checkbox_hours_" + i).change();
+                        }
+                    }
+                    else {
+                        $(this).parent().parent().siblings().css("pointer-events", "none");
+                        $(this).parent().parent().siblings().css("opacity", ".5");
+                    }
+                    //$(this).siblings(1).eq(1).find('input').each(function () {
+                    //    $(this).attr('disabled', true).addClass("disabled-day");
+                    //});
+                } else {
+                    if ($(this).attr("data-id") == "0") {
+                        var i;
+                        for (i = 1; i <= 8; i++) {
+                            $("#checkbox_hours_" + i).prop("checked", false);
+                            $("#checkbox_hours_" + i).change();
+                        }
+                    }
+                    else {
+                        //$("#checkbox_hours_0").prop("checked", true);
+                        $(this).parent().parent().siblings().css("pointer-events", "auto");
+                        $(this).parent().parent().siblings().css("opacity", "1");
+                    }
+                    //$(this).siblings(1).eq(1).find('input').each(function () {
+                    //    $(this).attr('disabled', false).removeClass("disabled-day");
+                    //});
+                }
+            });
+
+            $(".activatedStatus").change(function () {
+                var outletId = $(this).attr("data-id");
+                var status = $(this).is(":checked");
+                $.ajax({
+                    type: "POST",
+                    async: false,
+                    dataType: 'json',
+                    data: {
+                        OutletId: outletId, Status: status
+                    },
+                    url: '/App/Outlets/UpdateOutletStatus',
+                    success: function (response) {
+                        if (response.successful)
+                            toastr.success(response.message);
+                        else
+                            toastr.error(response.message);
+                    },
+                    error: function (error) {
+                        toastr.error(error);
+                    }
+                });
+
+            });
+            $("#btnDeleteOutlet").click(function () {
+                var outletId = $("#deleteOutletModal").attr("outlet-id");
+                $.ajax({
+                    type: "POST",
+                    async: false,
+                    dataType: 'json',
+                    data: {
+                        OutletId: outletId
+                    },
+                    url: '/App/Outlets/DeleteOutlet',
+                    success: function (response) {
+                        if (response.successful) {
+                            toastr.success(response.message);
+                            $("#deleteOutletModal").modal("hide");
+                            location.reload();
+                        }
+                        else
+                            toastr.error(response.message);
+                    },
+                    error: function (error) {
+                        toastr.error(error);
+                    }
+                });
+
+            });
+            $('#distritSelect').change(function () {
+                GetPostcodeList($(this).val());
+                $("#postCodeSelect").selectpicker('refresh');
+            });
+            $('#provinceSelect').change(function () {
+
+                GetDistrictList($(this).val());
+                $("#distritSelect").selectpicker('refresh');
+                $('#distritSelect').change();
+            });
+            $('#countrySelect').change(function () {
+
+                GetProvinceList($(this).val());
+                $("#provinceSelect").selectpicker('refresh');
+                $('#provinceSelect').change();
+            });
+            $('input.timepicker.from-time').timepicker({
+                timeFormat: 'hh:mm p',
+            });
+            $('input.timepicker.end-time').timepicker({
+                timeFormat: 'hh:mm p',
+            });
+            $("#btnAddOutlet").click(function (e) {
+                e.preventDefault();
+                if ($("#createOutletForm").valid()) {
+                    if (filesList.length == 0) {
+                        toastr.error("Please upload Outlet photo");
+                        return;
+                    }
+                    $('#btnAddOutlet').prop('disabled', true);
+                    var merchantId = $("#createNewOutletModal").attr("merchant-id");
+                    var name = $("#outletName").val();
+                    var streetname = $("#streetName").val();
+                    var countryId = $("#countrySelect").val();
+                    var districtId = $("#distritSelect").val();
+                    var provinceId = $("#provinceSelect").val();
+                    var postcodeId = $("#postCodeSelect").val();
+                    var address1 = $("#address1").val();
+                    var address2 = $("#address2").val();
+
+                    var contact = $("#outletContact").val();
+                    var openinghours_1 = "";
+                    var openinghours_2 = "";
+                    var openinghours_3 = "";
+                    var openinghours_4 = "";
+                    var openinghours_5 = "";
+                    var openinghours_6 = "";
+                    var openinghours_7 = "";
+                    var openinghours_8 = "";
+
+                    if ($("#checkbox_hours_7").prop("checked") != true) {
+                        var start_7 = $("#start_hours_7").val();
+                        if (start_7 == "") {
+                            $("#start_hours_7").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        var end_7 = $("#end_hours_7").val();
+                        if (end_7 == "") {
+                            $("#end_hours_7").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        openinghours_7 = start_7 + " - " + end_7;
+                    }
+
+                    if ($("#checkbox_hours_1").prop("checked") != true) {
+                        var start_1 = $("#start_hours_1").val();
+                        if (start_1 == "") {
+                            $("#start_hours_1").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        var end_1 = $("#end_hours_1").val();
+                        if (end_1 == "") {
+                            $("#end_hours_1").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        openinghours_1 = start_1 + " - " + end_1;
+                    }
+
+                    if ($("#checkbox_hours_2").prop("checked") != true) {
+                        var start_2 = $("#start_hours_2").val();
+                        if (start_2 == "") {
+                            $("#start_hours_2").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        var end_2 = $("#end_hours_2").val();
+                        if (end_2 == "") {
+                            $("#end_hours_2").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        openinghours_2 = start_2 + " - " + end_2;
+                    }
+
+                    if ($("#checkbox_hours_3").prop("checked") != true) {
+                        var start_3 = $("#start_hours_3").val();
+                        if (start_3 == "") {
+                            $("#start_hours_3").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        var end_3 = $("#end_hours_3").val();
+                        if (end_3 == "") {
+                            $("#end_hours_3").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        openinghours_3 = start_3 + " - " + end_3;
+                    }
+
+                    if ($("#checkbox_hours_4").prop("checked") != true) {
+                        var start_4 = $("#start_hours_4").val();
+                        if (start_4 == "") {
+                            $("#start_hours_4").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        var end_4 = $("#end_hours_4").val();
+                        if (end_4 == "") {
+                            $("#end_hours_4").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        openinghours_4 = start_4 + " - " + end_4;
+                    }
+                    if ($("#checkbox_hours_5").prop("checked") != true) {
+                        var start_5 = $("#start_hours_5").val();
+                        if (start_5 == "") {
+                            $("#start_hours_5").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        var end_5 = $("#end_hours_5").val();
+                        if (end_5 == "") {
+                            $("#end_hours_5").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        openinghours_5 = start_5 + " - " + end_5;
+                    }
+                    if ($("#checkbox_hours_6").prop("checked") != true) {
+                        var start_6 = $("#start_hours_6").val();
+                        if (start_6 == "") {
+                            $("#start_hours_6").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        var end_6 = $("#end_hours_6").val();
+                        if (end_6 == "") {
+                            $("#end_hours_6").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        openinghours_6 = start_6 + " - " + end_6;
+                    }
+                    if ($("#checkbox_hours_8").prop("checked") != true) {
+                        var start_8 = $("#start_hours_8").val();
+                        if (start_8 == "") {
+                            $("#start_hours_8").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        var end_8 = $("#end_hours_8").val();
+                        if (end_8 == "") {
+                            $("#end_hours_8").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        openinghours_8 = start_8 + " - " + end_8;
+                    }
+
+                    $.ajax({
+                        type: "POST",
+                        dataType: 'json',
+                        async: false,
+                        data: {
+                            MerchantId: merchantId, Name: name, StreetName: streetname, Address_1: address1,
+                            Address_2: address2, CountryId: countryId, ProvinceId: provinceId, DistrictId: districtId, PostCodeId: postcodeId,
+                            Contact: contact, ImgUrl: "", OpeningHour_1: openinghours_1, OpeningHour_2: openinghours_2,
+                            OpeningHour_3: openinghours_3, OpeningHour_4: openinghours_4, OpeningHour_5: openinghours_5,
+                            OpeningHour_6: openinghours_6, OpeningHour_7: openinghours_7, OpeningHour_8: openinghours_8
+                        },
+                        url: '/App/Outlets/CreateOutlet',
+                        success: function (response) {
+                            if (response.successful) {
+                                toastr.success(response.message);
+                                var outletId = response.data;
+                                var imagefilesname = "";//$("#imageFolderUrl").attr("src");
+                                // Read selected files
+                                var imagefiles = document.getElementById("EditImage").files[0];
+                                if (filesList.length != 0) {
+                                    var formData = new FormData();
+                                    var totalfiles = filesList.length;// document.getElementById('EditImage').files.length;
+                                    for (var index = 0; index < totalfiles; index++) {
+
+                                        formData.append("files[]", filesList[index]);
+                                        // formData.append("files[]", document.getElementById('EditImage').files[index]);
+                                    }
+                                    $.ajax({
+                                        url: "/App/Outlets/UploadOutletImages/" + outletId,
+                                        type: "POST",
+                                        async: false,
+                                        data: formData,
+                                        enctype: 'multipart/form-data',
+                                        processData: false, // tell jQuery not to process the data
+                                        contentType: false // tell jQuery not to set contentType
+                                    }).done(function (response) {
+                                        if (response.successful) {
+                                            imagefilesname = response.data;
+                                            toastr.success(response.message);
+                                        }
+                                        else
+                                            toastr.error(response.message);
+                                    });
+
+
+                                    $.ajax({
+                                        type: "POST",
+                                        dataType: 'json',
+                                        data: {
+                                            Id: outletId, Name: name, StreetName: streetname, Address_1: address1,
+                                            Address_2: address2, CountryId: countryId, ProvinceId: provinceId, DistrictId: districtId, PostCodeId: postcodeId,
+                                            Contact: contact, ImgUrl: imagefilesname, OpeningHour_1: openinghours_1, OpeningHour_2: openinghours_2,
+                                            OpeningHour_3: openinghours_3, OpeningHour_4: openinghours_4, OpeningHour_5: openinghours_5,
+                                            OpeningHour_6: openinghours_6, OpeningHour_7: openinghours_7, OpeningHour_8: openinghours_8
+                                        },
+                                        url: '/App/Outlets/UpdateOutlet',
+                                        success: function (response) {
+                                            if (response.successful)
+                                                toastr.success(response.message);
+                                            else
+                                                toastr.error(response.message);
+                                        },
+                                        error: function (error) {
+                                            toastr.error(error);
+                                        }
+                                    });
+                                }
+                                //else {
+                                //    toastr.error("Please upload Outlet photo");
+                                //    return;
+                                //}
+                                GetMerchantOutlets(merchantId, "");
+                                $("#createNewOutletModal").modal("hide");
+                            }
+                            else
+                                toastr.error(response.message);
+                        },
+                        error: function (error) {
+                            toastr.error(error);
+                        }
+                    });
+                }
+                else {
+                    toastr.error("Please fill in all boxes");
+                }
+                $('#btnAddOutlet').prop('disabled', false);
+            });
+            $("#btnUpdateOutlet").click(function (e) {
+                e.preventDefault();
+                if ($("#createOutletForm").valid()) {
+                    if (filesList.length == 0) {
+                        toastr.error("Please upload Outlet photo");
+                        return;
+                    }
+                    $('#btnUpdateOutlet').prop('disabled', true);
+                    var outletId = $("#createNewOutletModal").attr("data-id");
+                    var name = $("#outletName").val();
+                    var streetname = $("#streetName").val();
+                    var countryId = $("#countrySelect").val();
+                    var districtId = $("#distritSelect").val();
+                    var provinceId = $("#provinceSelect").val();
+                    var postcodeId = $("#postCodeSelect").val();
+                    var address1 = $("#address1").val();
+                    var address2 = $("#address2").val();
+
+                    var contact = $("#outletContact").val();
+                    var openinghours_1 = "";
+                    var openinghours_2 = "";
+                    var openinghours_3 = "";
+                    var openinghours_4 = "";
+                    var openinghours_5 = "";
+                    var openinghours_6 = "";
+                    var openinghours_7 = "";
+                    var openinghours_8 = "";
+
+                    if ($("#checkbox_hours_7").prop("checked") != true) {
+                        var start_7 = $("#start_hours_7").val();
+                        if (start_7 == "") {
+                            $("#start_hours_7").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        var end_7 = $("#end_hours_7").val();
+                        if (end_7 == "") {
+                            $("#end_hours_7").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        openinghours_7 = start_7 + " - " + end_7;
+                    }
+
+                    if ($("#checkbox_hours_1").prop("checked") != true) {
+                        var start_1 = $("#start_hours_1").val();
+                        if (start_1 == "") {
+                            $("#start_hours_1").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        var end_1 = $("#end_hours_1").val();
+                        if (end_1 == "") {
+                            $("#end_hours_1").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        openinghours_1 = start_1 + " - " + end_1;
+                    }
+
+                    if ($("#checkbox_hours_2").prop("checked") != true) {
+                        var start_2 = $("#start_hours_2").val();
+                        if (start_2 == "") {
+                            $("#start_hours_2").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        var end_2 = $("#end_hours_2").val();
+                        if (end_2 == "") {
+                            $("#end_hours_2").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        openinghours_2 = start_2 + " - " + end_2;
+                    }
+
+                    if ($("#checkbox_hours_3").prop("checked") != true) {
+                        var start_3 = $("#start_hours_3").val();
+                        if (start_3 == "") {
+                            $("#start_hours_3").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        var end_3 = $("#end_hours_3").val();
+                        if (end_3 == "") {
+                            $("#end_hours_3").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        openinghours_3 = start_3 + " - " + end_3;
+                    }
+
+                    if ($("#checkbox_hours_4").prop("checked") != true) {
+                        var start_4 = $("#start_hours_4").val();
+                        if (start_4 == "") {
+                            $("#start_hours_4").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        var end_4 = $("#end_hours_4").val();
+                        if (end_4 == "") {
+                            $("#end_hours_4").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        openinghours_4 = start_4 + " - " + end_4;
+                    }
+                    if ($("#checkbox_hours_5").prop("checked") != true) {
+                        var start_5 = $("#start_hours_5").val();
+                        if (start_5 == "") {
+                            $("#start_hours_5").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        var end_5 = $("#end_hours_5").val();
+                        if (end_5 == "") {
+                            $("#end_hours_5").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        openinghours_5 = start_5 + " - " + end_5;
+                    }
+                    if ($("#checkbox_hours_6").prop("checked") != true) {
+                        var start_6 = $("#start_hours_6").val();
+                        if (start_6 == "") {
+                            $("#start_hours_6").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        var end_6 = $("#end_hours_6").val();
+                        if (end_6 == "") {
+                            $("#end_hours_6").focus();
+                            $(".opening-hours-validation").html("Please choose the opening hours");
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        openinghours_6 = start_6 + " - " + end_6;
+                    }
+
+                    if ($("#checkbox_hours_8").prop("checked") != true) {
+                        var start_8 = $("#start_hours_8").val();
+                        if (start_8 == "") {
+                            $("#start_hours_8").focus();
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        var end_8 = $("#end_hours_8").val();
+                        if (end_8 == "") {
+                            $("#end_hours_8").focus();
+                            toastr.error("Please fill in all boxes");
+                            return;
+                        }
+                        openinghours_8 = start_8 + " - " + end_8;
+                    }
+
+                    var imagefilesname = "";//$("#imageFolderUrl").attr("src");
+
+                    // Read selected files
+                    var imagefiles = document.getElementById("EditImage").files[0];
+                    if (filesList.length > 0) {
+                        var formData = new FormData();
+                        var totalfiles = filesList.length;// document.getElementById('EditImage').files.length;
+                        for (var index = 0; index < totalfiles; index++) {
+                            formData.append("files[]", filesList[index]);
+                        }
+                        $.ajax({
+                            url: "/App/Outlets/UploadOutletImages/" + outletId,
+                            type: "POST",
+                            async: false,
+                            data: formData,
+                            enctype: 'multipart/form-data',
+                            processData: false, // tell jQuery not to process the data
+                            contentType: false // tell jQuery not to set contentType
+                        }).done(function (response) {
+                            if (response.successful) {
+                                imagefilesname = response.data;
+                                toastr.success(response.message);
+                            }
+                            else
+                                toastr.error(response.message);
+                        });
+                    }
+                    if (removefilesList.length > 0)
+                        DeleteOutletImages(outletId);
+                    $.ajax({
+                        type: "POST",
+                        dataType: 'json',
+                        data: {
+                            Id: outletId, Name: name, StreetName: streetname, Address_1: address1,
+                            Address_2: address2, CountryId: countryId, ProvinceId: provinceId, DistrictId: districtId, PostCodeId: postcodeId,
+                            Contact: contact, ImgUrl: imagefilesname, OpeningHour_1: openinghours_1, OpeningHour_2: openinghours_2,
+                            OpeningHour_3: openinghours_3, OpeningHour_4: openinghours_4, OpeningHour_5: openinghours_5,
+                            OpeningHour_6: openinghours_6, OpeningHour_7: openinghours_7, OpeningHour_8: openinghours_8
+                        },
+                        url: '/App/Outlets/UpdateOutlet',
+                        success: function (response) {
+                            if (response.successful) {
+                                toastr.success(response.message);
+                                GetMerchantOutlets(merchantId, "");
+                                $("#createNewOutletModal").modal("hide");
+                            }
+                            else
+                                toastr.error(response.message);
+                        },
+                        error: function (error) {
+                            toastr.error(error);
+                        }
+                    });
+                }
+                else {
+                    toastr.error("Please fill in all boxes");
+                }
+            });
+            $(".btn_apply_all").click(function () {
+                startTime = $(this).parent().parent().parent().find(".from-time").val();
+                endTime = $(this).parent().parent().parent().find(".end-time").val();
+                $(".card-working-hours").each(function () {
+                    $(this).find(".from-time").val(startTime);
+                    $(this).find(".end-time").val(endTime);
+                });
+            });
+            $("#searchInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                var merchantId = $("#createNewOutletModal").attr("merchant-id");
+                GetMerchantOutlets(merchantId, value);
+                //$("#outletsList div .card .card-title").filter(function () {
+                //    var textToFilter = $(this).text() + " " + $(this).siblings(0).text();
+                //    $(this).parent().parent().toggle(textToFilter.toLowerCase().indexOf(value) > -1)
+                //});
+            });
+        });
+        $("#provinceSelect").selectpicker('refresh');
+        $("#postCodeSelect").selectpicker('refresh');
+        $("#distritSelect").selectpicker('refresh');
+
+        function RetrieveOutlet(e) {
+            var outletId = $(e).attr("data-id");
+            filesList = [];
+            removefilesList = [];
+            $("#modalTitle").html("Edit Outlet");
+            $("#btnUpdateOutlet").show();
+            $("#btnAddOutlet").hide();
+            $("#createNewOutletModal").attr("data-id", outletId);
+            $("#outletName").val("");
+            $("#streetName").val("");
+            $("#countrySelect");
+            $("#distritSelect");
+            $("#provinceSelect");
+            $("#postCodeSelect");
+            $("#address1").val("");
+            $("#address2").val("");
+            $("#outletContact").val("");
+            $("#checkbox_hours_1").prop("checked", false);
+            $("#checkbox_hours_2").prop("checked", false);
+            $("#checkbox_hours_3").prop("checked", false);
+            $("#checkbox_hours_4").prop("checked", false);
+            $("#checkbox_hours_5").prop("checked", false);
+            $("#checkbox_hours_6").prop("checked", false);
+            $("#checkbox_hours_7").prop("checked", false);
+            $("#checkbox_hours_8").prop("checked", false);
+            $('#checkbox_hours_1').bootstrapToggle();
+            $('#checkbox_hours_2').bootstrapToggle();
+            $('#checkbox_hours_3').bootstrapToggle();
+            $('#checkbox_hours_4').bootstrapToggle();
+            $('#checkbox_hours_5').bootstrapToggle();
+            $('#checkbox_hours_6').bootstrapToggle();
+            $('#checkbox_hours_7').bootstrapToggle();
+            $('#checkbox_hours_8').bootstrapToggle();
+            $("#start_hours_1").val("");
+            $("#start_hours_2").val("");
+            $("#start_hours_3").val("");
+            $("#start_hours_4").val("");
+            $("#start_hours_5").val("");
+            $("#start_hours_6").val("");
+            $("#start_hours_7").val("");
+            $("#start_hours_8").val("");
+            $("#end_hours_1").val("");
+            $("#end_hours_2").val("");
+            $("#end_hours_3").val("");
+            $("#end_hours_4").val("");
+            $("#end_hours_5").val("");
+            $("#end_hours_6").val("");
+            $("#end_hours_7").val("");
+            $("#end_hours_8").val("");
+            $("#imageGallery").html("");
+            $("#createOutletForm").find(".field-validation-error").html("");
+            $(".opening-hours-validation").html("");
+            GetOutlet(outletId);
+            GetOutletImages(outletId);
+            $("btnAddOutlet").hide();
+            $("#btnUpdateOutlet").show();
+            $("#createNewOutletModal").modal("show");
+        }
+        $("#btnCreateNewOutlet").click(function () {
+            filesList = [];
+            removefilesList = [];
+            $("#modalTitle").html("Create New Outlet");
+            $("#btnUpdateOutlet").hide();
+            $("#btnAddOutlet").show();
+            $("#createNewOutletModal").removeAttr("data-id");
+            $("#outletName").val("");
+            $("#streetName").val("");
+            $("#countrySelect").prop("selectedIndex", 0).selectpicker("refresh");
+            $("#countrySelect").selectpicker('refresh');
+            GetProvinceList(0);
+            $("#provinceSelect");
+            $("#provinceSelect").selectpicker('refresh');
+            GetDistrictList(0);
+            $("#distritSelect");
+            $("#distritSelect").selectpicker('refresh');
+            GetPostcodeList(0);
+            $("#postCodeSelect");
+            $("#postCodeSelect").selectpicker('refresh');
+
+            $("#address1").val("");
+            $("#address2").val("");
+            $("#outletContact").val("");
+            $("#checkbox_hours_1").prop("checked", false);
+            $("#checkbox_hours_2").prop("checked", false);
+            $("#checkbox_hours_3").prop("checked", false);
+            $("#checkbox_hours_4").prop("checked", false);
+            $("#checkbox_hours_5").prop("checked", false);
+            $("#checkbox_hours_6").prop("checked", false);
+            $("#checkbox_hours_7").prop("checked", false);
+            $("#checkbox_hours_8").prop("checked", false);
+            $('.from-time').val("10:00 AM");
+            $('.end-time').val("10:00 PM");
+            $("#imageGallery").html("");
+            $("#createOutletForm").find(".field-validation-error").html("");
+            $(".opening-hours-validation").html("");
+            $("btnAddOutlet").show();
+            $("#btnUpdateOutlet").hide();
+            $("#createNewOutletModal").modal("show");
+        });
+        var table = null;
+        function dataURLtoFile(dataurl, filename) {
+            var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new File([u8arr], filename, { type: mime });
+        }
+        function GetOutletImages(outletId) {
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/App/Outlets/GetOutletImages/' + outletId,
+                success: function (response) {
+                    if (response.successful) {
+                        if (response.data != null) {
+
+                            $(response.data).each(function (index, item) {
+
+                                $($.parseHTML('<span class="product-img-preview-container" index="' + index + '" image-src="' + item + '"><img src="' + item + '" class="product-img-preview"/><br/><span class="remove-img-url">Remove image</span></span>')).appendTo('#imageGallery');
+                                SetRemoveImageUrlEvent();
+                                filesList.push(new File([""], item));
+                            });
+
+                        }
+                    } else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function GetFirstOutletImages(outletId) {
+            var url = '';
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/App/Outlets/GetOutletImages/' + outletId,
+                success: function (response) {
+                    if (response.successful) {
+                        if (response.data != null) {
+                            if (response.data[0].indexOf("big") > 0) {
+                                url = response.data[1];
+                            }
+                            else {
+                                url = response.data[0];
+                            }
+                        }
+                    } else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+            return url;
+        }
+        function GetOutlet(outletId) {
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/App/Outlets/GetOutlet/' + outletId,
+                success: function (response) {
+                    if (response.successful) {
+
+                        if (response.data != null) {
+                            console.log(response.data);
+                            $("#outletName").val(response.data.name);
+                            $("#streetName").val(response.data.streetName);
+                            $("#countrySelect").val(response.data.countryId);
+                            $("#countrySelect").selectpicker('refresh');
+                            GetProvinceList(response.data.countryId);
+                            $("#provinceSelect").val(response.data.provinceId);
+                            $("#provinceSelect").selectpicker('refresh');
+                            GetDistrictList(response.data.provinceId);
+                            $("#distritSelect").val(response.data.districtId);
+                            $("#distritSelect").selectpicker('refresh');
+                            GetPostcodeList(response.data.districtId);
+                            $("#postCodeSelect").val(response.data.postCodeId);
+                            $("#postCodeSelect").selectpicker('refresh');
+                            $("#address1").val(response.data.address_1);
+                            $("#address2").val(response.data.address_2);
+                            $("#outletContact").val(response.data.contact);
+                            if (response.data.openingHour_1 == null || response.data.openingHour_1 == "")
+                                $("#checkbox_hours_1").prop("checked", true);
+                            else {
+                                var split = response.data.openingHour_1.split("-");
+                                $("#start_hours_1").val(split[0].trim());
+                                $("#end_hours_1").val(split[1].trim());
+                                $("#checkbox_hours_1").prop("checked", false);
+                            }
+                            if (response.data.openingHour_2 == null || response.data.openingHour_2 == "")
+                                $("#checkbox_hours_2").prop("checked", true);
+                            else {
+                                var split = response.data.openingHour_2.split("-");
+                                $("#start_hours_2").val(split[0].trim());
+                                $("#end_hours_2").val(split[1].trim());
+                                $("#checkbox_hours_2").prop("checked", false);
+                            }
+                            if (response.data.openingHour_3 == null || response.data.openingHour_3 == "")
+                                $("#checkbox_hours_3").prop("checked", true);
+                            else {
+                                var split = response.data.openingHour_3.split("-");
+                                $("#start_hours_3").val(split[0].trim());
+                                $("#end_hours_3").val(split[1].trim());
+                                $("#checkbox_hours_3").prop("checked", false);
+                            }
+                            if (response.data.openingHour_4 == null || response.data.openingHour_4 == "")
+                                $("#checkbox_hours_4").prop("checked", true);
+                            else {
+                                var split = response.data.openingHour_4.split("-");
+                                $("#start_hours_4").val(split[0].trim());
+                                $("#end_hours_4").val(split[1].trim());
+                                $("#checkbox_hours_4").prop("checked", false);
+                            }
+                            if (response.data.openingHour_5 == null || response.data.openingHour_5 == "")
+                                $("#checkbox_hours_5").prop("checked", true);
+                            else {
+                                var split = response.data.openingHour_5.split("-");
+                                $("#start_hours_5").val(split[0].trim());
+                                $("#end_hours_5").val(split[1].trim());
+                                $("#checkbox_hours_5").prop("checked", false);
+                            }
+
+                            if (response.data.openingHour_6 == null || response.data.openingHour_6 == "")
+                                $("#checkbox_hours_6").prop("checked", true);
+                            else {
+                                var split = response.data.openingHour_6.split("-");
+                                $("#start_hours_6").val(split[0].trim());
+                                $("#end_hours_6").val(split[1].trim());
+                                $("#checkbox_hours_6").prop("checked", false);
+                            }
+                            if (response.data.openingHour_7 == null || response.data.openingHour_7 == "")
+                                $("#checkbox_hours_7").prop("checked", true);
+                            else {
+                                var split = response.data.openingHour_7.split("-");
+                                $("#start_hours_7").val(split[0].trim());
+                                $("#end_hours_7").val(split[1].trim());
+                                $("#checkbox_hours_7").prop("checked", false);
+                            }
+                            if (response.data.openingHour_8 == null || response.data.openingHour_8 == "")
+                                $("#checkbox_hours_8").prop("checked", true);
+                            else {
+                                var split = response.data.openingHour_8.split("-");
+                                $("#start_hours_8").val(split[0].trim());
+                                $("#end_hours_8").val(split[1].trim());
+                                $("#checkbox_hours_8").prop("checked", false);
+                            }
+                            $("#checkbox_hours_1").change();
+                            $("#checkbox_hours_2").change();
+                            $("#checkbox_hours_3").change();
+                            $("#checkbox_hours_4").change();
+                            $("#checkbox_hours_5").change();
+                            $("#checkbox_hours_6").change();
+                            $("#checkbox_hours_7").change();
+                            $("#checkbox_hours_8").change();
+                        }
+                    } else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+        function GetMerchantOutlets(merchantId, filterInput) {
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                async: false,
+                url: '/App/Outlets/GetMerchantOutlets/' + merchantId,
+                success: function (response) {
+                    var list = "";
+                    if (table != null)
+                        table.destroy();
+                    $("#outletsTableBody").html("");
+                    $("#outletsList").html("");
+
+                    if (response.successful) {
+                        if (response.data != null) {
+                            var i = 1;
+                            var count = 1;
+                            var deskcard = $("<div class='card-deck row' style='padding-bottom:1.25rem'><div>");
+                            $(response.data).each(function (index, item) {
+                                var name = item.name.toLowerCase();
+                                console.log(name);
+                                if (filterInput == "" || name.indexOf(filterInput) > -1) {
+                                    if (count > 4) {
+                                        //deskcard = deskcard + "</div>";
+                                        //console.log(deskcard);
+                                        $("#outletsList").append(deskcard);
+                                        count = 1;
+                                        deskcard = $("<div class='card-deck row' style='padding-bottom:1.25rem'><div>");
+                                    }
+                                    var template = $("#outlet-Template").children().clone();
+                                    template.find('.card-title').html(item.name);
+                                    var address = item.address_1;
+                                    if (item.address_2 != null && item.address_2 != "")
+                                        address += ", " + item.address_2;
+                                    address += ", " + item.postcode + ", " + item.district + ", " + item.province + ", " + item.country;
+                                    template.find('.card-text').html(address);
+                                    template.find('.activatedStatus').attr('name', 'switch_' + item.id);
+                                    template.find('.activatedStatus').attr('data-id', item.id);
+                                    template.find('.activatedStatus').attr('id', 'switch_' + item.id);
+                                    template.find('.outletlabel').attr('for', 'switch_' + item.id);
+                                    template.find('.btn-viewOutlet').attr('data-id', item.id);
+                                    template.find('.btn-deleteOutlet').attr('data-id', item.id);
+                                    if (item.isActivated) {
+                                        template.find('.activatedStatus').attr("checked", '');
+                                    }
+                                    var imageUrl = GetFirstOutletImages(item.id);
+                                    template.find('.card-img-top').attr('data-src', imageUrl);
+                                    //  template.find('.card-img-top').attr('src', imageUrl);
+                                    template.appendTo(deskcard);
+                                    count++;
+                                }
+                            });
+                            $("#outletsList").append(deskcard);
+
+                            $("#outletsTableBody").html(list);
+                            table = $('#outletsTable').DataTable();
+                            $(".btn-viewOutlet").click(function () {
+                                RetrieveOutlet(this);
+                            });
+                            $(".btn-deleteOutlet").click(function () {
+                                $("#deleteOutletModal").modal("show");
+                                $("#deleteOutletModal").attr("outlet-id", $(this).attr("data-id"));
+                            });
+                        }
+                    } else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+        function GetPostcodeList(districtId) {
+            if (districtId == 0) {
+                var options = "<option value=''>Choose Postcode</option>";
+                $("#postCodeSelect").html(options);
+                $("#postCodeSelect").selectpicker('refresh');
+                return;
+            }
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/App/Outlets/GetPostcodeList/' + districtId,
+                success: function (response) {
+                    var options = "<option value=''>Choose Postcode</option>";
+                    $("#postCodeSelect").html();
+                    if (response.successful) {
+                        if (response.data != null) {
+                            $(response.data).each(function (index, item) {
+                                options += "<option value=" + item.id + ">" + item.name + "</option>";
+                            });
+                            $("#postCodeSelect").html(options);
+                            $("#postCodeSelect").selectpicker('refresh');
+                        }
+                    } else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+        function GetDistrictList(provinceId) {
+            if (provinceId == 0) {
+                var options = "<option value=''>Choose District</option>";
+                $("#distritSelect").html();
+                $("#distritSelect").html(options);
+                $("#distritSelect").selectpicker('refresh');
+                return;
+            }
+
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/App/Outlets/GetDistrictList/' + provinceId,
+                success: function (response) {
+                    var options = "<option value=''>Choose District</option>";
+                    $("#distritSelect").html();
+                    if (response.successful) {
+                        if (response.data != null) {
+                            $(response.data).each(function (index, item) {
+                                options += "<option value=" + item.id + ">" + item.name + "</option>";
+                            });
+                            $("#distritSelect").html(options);
+                            $("#distritSelect").selectpicker('refresh');
+                        }
+                    } else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+        function GetProvinceList(countryId) {
+            if (countryId == 0) {
+                var options = "<option value='' selected>Choose Province</option>";
+                $("#provinceSelect").html();
+                $("#provinceSelect").html(options);
+                $("#provinceSelect").selectpicker('refresh');
+                return;
+            }
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                async: false,
+                url: '/App/Outlets/GetProvinceList/' + countryId,
+                success: function (response) {
+                    var options = "<option value=''>Choose Province</option>";
+                    $("#provinceSelect").html();
+                    if (response.successful) {
+                        if (response.data != null) {
+                            $(response.data).each(function (index, item) {
+                                options += "<option value=" + item.id + ">" + item.name + "</option>";
+                            });
+                            $("#provinceSelect").html(options);
+                            $("#provinceSelect").selectpicker('refresh');
+                        }
+                    } else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+        function GetCountryList() {
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                async: false,
+                url: '/App/Outlets/GetCountryList',
+                success: function (response) {
+                    var options = "<option value=''>Choose Country</option>";
+                    $("#countrySelect").html();
+                    if (response.successful) {
+                        if (response.data != null) {
+                            $(response.data).each(function (index, item) {
+                                options += "<option value=" + item.id + ">" + item.name + "</option>";
+                            });
+                            $("#countrySelect").html(options);
+                            $("#countrySelect").selectpicker('refresh');
+                        }
+                    } else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function DeleteOutletImages(outletId) {
+            $.ajax({
+                url: "/App/Outlets/DeleteOutletImages/" + outletId,
+                data: { removeFiles: removefilesList },
+                type: "POST",
+                async: false,
+                dataType: 'json',
+            }).done(function (response) {
+                if (response.successful) {
+                    toastr.success(response.message);
+                }
+                else
+                    toastr.error(response.message);
+            });
+
+        }
+    </script>
+}
+

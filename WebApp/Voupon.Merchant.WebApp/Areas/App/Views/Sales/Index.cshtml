@@ -1,0 +1,200 @@
+﻿@model int;
+@using System.Security.Claims
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/App/Views/Shared/_Layout.cshtml";
+    var identity = User.Identity as ClaimsIdentity;
+
+}
+
+<head>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+</head>
+
+<div class="dashboard-main-wrapper sales-summary">
+    <div class="dashboard-ecommerce">
+        <div class="dashboard-ecommerce">
+            <div class="container-fluid dashboard-content no-padding">
+                <div class="row">
+                    <div class="col-lg-12 mb-2 section-block" style="justify-content:space-between;">
+                        <h3 class="page-header">Sales Summary</h3>
+                        <div class="row ecommerce-widget table-function">
+                            <div class="row flex-nowrap">
+                                <div class="input-calendar">
+                                    <input type="text" id="salesHistoryDate" name="daterange" value="01/01/2021 - 01/15/2021" />
+                                    <i class="fal fa-calendar-alt"></i>
+                                </div>
+                                <button type="button" class="btn btn-primary btn-sm salesHistorySearch">Search</button>
+                            </div>
+                            <div style="display: none;">
+                                <button type="button" class="salesHistoryFullReport btn btn-primary btn-sm">View Full Report</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="align-center mt-3" id="noSales" style="display:none;">
+                    No transaction found
+                </div>                
+                <div class="sales-history-card" id="salesHistoryTable">
+                    <div class="row products-card-row col-lg-12 col-md-12" id="salesHistoryTableBody">
+
+                    </div>
+                </div>
+
+                <div class="row card-table-row card-table-template" style="display:none;">
+                    <div class="mobile-card-row row col-12">
+                        <div class="row col-xl-6 col-lg-6 col-md-6 col-12 no-padding">
+                            <div class="row col-6 no-padding mb-2">
+                                <div class="row col-12 no-padding">
+                                    <div class="col-12 card-record-row product">
+                                        Test Product
+                                    </div>
+                                    <div class="col-12 card-title-row">
+                                        Product
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row col-6 no-padding">
+                                <div class="row col-12 mb-2 no-padding">
+                                    <div class="col-12 card-record-row type">
+                                        Test
+                                    </div>
+                                    <div class="col-12 card-title-row">
+                                        Type
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row col-xl-6 col-lg-6 col-md-6 col-12 no-padding">
+
+                            <div class="row col-6 no-padding">
+                                <div class="row col-12 mb-2 no-padding">
+                                    <div class="col-12 card-record-row revenue">
+                                        5.00
+                                    </div>
+                                    <div class="col-12 card-title-row">
+                                        Revenue (RM)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row col-6 card-record-row no-padding">
+                                <div class="row col-12 no-padding">
+                                    <div class="col-12 card-record-row transaction">
+                                        1
+                                    </div>
+                                    <div class="col-12 card-title-row">
+                                        Transactions
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!--#endregion .............................................  OLD SUMMARY TABLE ............................................. -->
+        </div>
+    </div>
+
+
+
+
+
+@section scripts{
+
+
+
+
+
+    <!--#region .............................................  INDEX  ............................................. -->
+    <script>
+    var MerchantId=@Model;
+        $(document).ready(function () {
+            $("#navSales").addClass("show");
+            $("#navSalesControl").attr("aria-expanded", true); 
+
+            $('.collapse').on('shown.bs.collapse', function () {
+                $(this).parent().find(".fa-angle-down").removeClass("fa-angle-down").addClass("fa-angle-up");
+            }).on('hidden.bs.collapse', function () {
+                $(this).parent().find(".fa-angle-up").removeClass("fa-angle-up").addClass("fa-angle-down");
+            });
+
+            $("#salesHistoryDate").daterangepicker({
+                opens: 'left',
+                startDate: moment().subtract(14, 'days'),
+                endDate: moment(),
+                locale: {
+                    format: 'YYYY/MM/DD'
+                }
+            }, function (start, end, label) {
+                console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+            });
+
+            $(".salesHistoryFullReport").click(function () {
+                var startDate = $("#salesHistoryDate").val().split(" - ")[0];
+                var endDate = $("#salesHistoryDate").val().split(" - ")[1];
+                var url = "/App/Sales/salesHistoryRedemptionReport?startDate=" + startDate + "&endDate=" + endDate;
+                window.open(url, "_blank");
+            });
+
+      
+            $(".salesHistorySearch").click(function () {
+                var startDate = moment($("#salesHistoryDate").val().split(" - ")[0]).format("YYYY-MM-DD");
+                var endDate = moment($("#salesHistoryDate").val().split(" - ")[1]).format("YYYY-MM-DD");
+                GetsalesHistorySummary(MerchantId, startDate, endDate);
+            });
+      
+            $(".salesHistorySearch").click(); 
+        });
+        function GetsalesHistorySummary(merchantId, startDate, endDate) {
+            $("#salesHistoryTableBody").html("");
+        $.ajax({
+            type: "GET",
+            async: false,
+            dataType: 'json',
+             data: {
+                startDate: startDate, endDate: endDate
+            },
+            url: '/App/Sales/GetsalesHistoryRedemptionSummary/' + merchantId,
+            success: function (response) {
+                if (response.successful) {
+                    if (response.data != null) {
+                        if (response.data.length > 0) {
+                            $(response.data).each(function (index, item) {
+                                var row = $('.card-table-template');
+                                row.find('.product').html(item.productName);
+                                row.find('.revenue').html("RM " + item.totalRevenue.toFixed(2));
+                                row.find('.type').html(item.type);
+                                row.find('.transaction').html(item.totalTransaction);
+
+                                $("#salesHistoryTableBody").append(row.html());
+                                $("#noSales").hide();
+                                $("#salesHistoryTableBody").show();
+                           });
+                        }
+                        else {
+                            $("#salesHistoryTableBody").hide();
+                            $("#noSales").show();
+                        }
+                    }
+                }
+                else
+                    toastr.error(response.message);
+            },
+            error: function (error) {
+                toastr.error(error);
+            }
+        });
+    }
+   
+
+    </script>
+
+    <!--#endregion .............................................  INDEX END  ............................................. -->
+
+
+}

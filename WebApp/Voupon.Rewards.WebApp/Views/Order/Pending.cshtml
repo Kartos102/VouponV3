@@ -1,0 +1,543 @@
+﻿@model IEnumerable<Voupon.Rewards.WebApp.Services.Cart.Models.OrderHistoryModel>
+@using Newtonsoft.Json;
+@{
+    ViewData["Title"] = "Pending Payment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    @@media (min-width: 1024px) {
+        footer {
+            display: none;
+        }
+    }
+</style>
+<div class="user-page">
+    <div class="user-page-left-spacing">
+    </div>
+    <div class="user-page-right row order-history" id="cartAvailable">
+        <div class="row col-12">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                <h1 class="page-title">
+                    <strong>
+                        Pending Payment
+                    </strong>
+                </h1>
+            </div>
+            <div class="col-lg-3 col-md-2 col-sm-1 d-xs">
+            </div>
+            <div class="input-group col-md-4 col-xl-4 col-lg-4 col-sm-5 col-12">
+                <input class="form-control py-2 border-right-0 border" type="search" value="" placeholder="search..." id="orderHistorySearch">
+                <span class="input-group-append">
+                    <button class="btn btn-outline-secondary border-left-0 border" type="button" id="orderHistorySearchbtn">
+                        <i class="fas fa-magnifying-glass"></i>
+                    </button>
+                </span>
+            </div>
+            <div class="col-lg-1">
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="ibox product-detail">
+                <div class="ibox-content" style="overflow: auto;border: none;">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12">
+                                    <div class="table" id="cartTable">
+                                        <div id="orderHistoryItmes">
+
+                                            @if (Model != null && Model.Any())
+                                            {
+                                                foreach (var order in Model.OrderBy(x => x.SortId))
+                                                {
+                                                    var productGroup = order.OrderItems.Where(x => x.ProductId != 0).GroupBy(x => x.ProductId);
+                                                    var externalProductGroup = order.OrderItems.Where(x => x.ProductId == 0).GroupBy(x => x.ExternalItemId);
+                                                    List<int> existingProduct = new List<int>();
+                                                    <div class="cart-row row cart-item-row" id="@order.Id">
+                                                        <div class="col-lg-4 col-md-6 cart-column row">
+                                                            <div class="cart-column col-12">
+                                                                <div class="col-12 detailTable">
+                                                                    <div class="cart-column col cart-product-detail">
+                                                                        <div class="cart-row row">
+                                                                            <div class="cart-column col-5">
+                                                                                Order Date
+                                                                            </div>
+                                                                            <div class="cart-column col">
+                                                                                <span style="vertical-align: middle;">
+                                                                                    @order.CreatedAt.ToString("dd/MM/yyyy")
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="cart-row row">
+                                                                            <div class="cart-column col-5">
+                                                                                Order ID
+                                                                            </div>
+                                                                            <div class="cart-column col Vpoints-detail ellipsis">
+                                                                                <span>
+                                                                                    @(order.ShortId)
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-6 col-6 cart-column row">
+                                                            <div class="cart-column col-12 detailTable">
+                                                                <div class="cart-product-detail">
+                                                                    <div class="cart-row row">
+                                                                        <div class="cart-column col-8">Quantity</div>
+                                                                        <div class="cart-column col"><span style="vertical-align: middle;"><b>@order.TotalItems</b></span></div>
+                                                                    </div>
+                                                                    <div class="cart-row row">
+                                                                        <div class="cart-column col-6">
+                                                                            Shipping
+                                                                        </div>
+                                                                        <div class="cart-column col">
+                                                                            <span>
+                                                                                <b>RM  @order.ShippingCost.ToString("F2")</b>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-6 col-6 cart-column row">
+                                                            <div class="cart-column col-12 px-md-3 detailTable">
+                                                                <div class="cart-product-detail">
+                                                                    <div class="cart-row row">
+                                                                        <div class="cart-column col-6">VPoints</div>
+                                                                        <div class="cart-column col Vpoints-detail">
+                                                                            <span>
+                                                                                <b>@order.TotalPoints </b>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="cart-row row">
+                                                                        <div class="cart-column col-6">
+                                                                            Amount
+                                                                        </div>
+                                                                        <div class="cart-column col">
+                                                                            <span>
+                                                                                <b>RM  @((order.TotalPrice + order.ShippingCost).ToString("F2"))</b>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-2 col-md-6 cart-column row pay-column">
+                                                            <div class="cart-column align-center col-12">
+                                                                <div class="cart-product-detail col-12 px-0">
+                                                                    <div class="cart-row row justify-content-between mt-0">
+                                                                        <div class="cart-column col-lg-12 col-6 mb-lg-1">
+                                                                            <button class="btn-pay-pending btn btn-primary" order-id="@order.Id">
+                                                                                <span class="i18next" data-i18n="common.pay">Pay</span>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="cart-column col-lg-12 col-6 mb-lg-1">
+                                                                            <button class="btn-cancel-pending btn btn-warning btn-sm" data-short-id="@order.ShortId" order-id="@order.Id" style="width:100%;">
+                                                                                <span class="i18next" data-i18n="common.cancel">Cancel</span>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="col-lg-12 col-6 cart-column cartMoreDetail align-center">
+                                                                            <a class="order-detail-btn">Details</a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="hide orderItems" style="width:100%">
+                                                            @foreach (var orderItem in productGroup)
+                                                            {
+                                                                int totalQuantity = productGroup.First(x => x.Key == orderItem.First().ProductId).ToList().Count();
+                                                                <div class="row my-2" style="width:100%">
+                                                                    <div class="col-md-1">
+                                                                    </div>
+                                                                    <div class="col-md-11">
+                                                                        <div class="cart-row row">
+                                                                            <div class="col-md-8 row">
+                                                                                <div class="cart-product-img cart-column col-4">
+                                                                                    <img src="@orderItem.First().ProductImageFolderUrl" class="img-responsive">
+                                                                                </div>
+                                                                                <div class="cartTitleContainer col-8 pr-2">
+                                                                                    <a href="/product/@orderItem.First().ProductId" class="cartItemTitle product-title"><h2 class="ellipsis-2">@orderItem.First().ProductTitle</h2></a>
+                                                                                    <h6 class="card-subtitle mb-2 text-muted"></h6>
+
+                                                                                    @if (orderItem.First().Product.TypeId != 1)
+                                                                                    {
+                                                                                        <span class="cartItemOriPrice d-none">RM @orderItem.First().Product.Price.ToString("F2") </span>
+                                                                                        <span class="cartItemPrice">RM @orderItem.First().Product.DiscountedPrice.ToString("F2") </span><br>
+                                                                                        <span class="badge badge-success d-none">@orderItem.First().Product.DiscountRate % off</span>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <span class="cartItemPrice">@orderItem.First().Product.PointsRequired VPoints </span><br>
+                                                                                    }
+                                                                                    @if (orderItem.First().IsVariationProduct)
+                                                                                    {
+                                                                                        <span class="cart-Item-Variation-Text">Variations:</span>
+                                                                                        <span class="cart-item-Variation">@orderItem.First().VariationText</span>
+                                                                                    }
+
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="col-md-4 cart-column row">
+                                                                                <div class="cart-column col-12 detailTable">
+                                                                                    <div class="cart-product-detail">
+                                                                                        <div class="cart-row row">
+                                                                                            <div class="cart-column col-6">Quantity</div>
+                                                                                            <div class="cart-column col"><span style="vertical-align: middle;">@totalQuantity</span></div>
+                                                                                        </div>
+                                                                                        <div class="cart-row row">
+                                                                                            <div class="cart-column col-6">VPoints</div>
+                                                                                            <div class="cart-column col Vpoints-detail">
+                                                                                                <span>
+                                                                                                    @if (orderItem.First().Product.TypeId != 1)
+                                                                                                    {
+                                                                                                        if (orderItem.First().Product.AdditionalDiscount != null)
+                                                                                                        {
+                                                                                                            @(orderItem.First().Product.AdditionalDiscount.PointsRequired * totalQuantity)
+                                                                                                        }
+                                                                                                        else
+                                                                                                        {
+                                                                                                            @Html.Raw("0")
+                                                                                                        }
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        @(orderItem.First().Product.PointsRequired * totalQuantity)
+                                                                                                    }
+                                                                                                    VPoints
+                                                                                                </span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="cart-row row">
+                                                                                            <div class="cart-column col-6">
+                                                                                                Net Price
+                                                                                            </div>
+                                                                                            <div class="cart-column col">
+                                                                                                <span>
+                                                                                                    RM @orderItem.First().Product.TotalPrice
+
+                                                                                                </span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            }
+
+                                                            @foreach (var orderItem in externalProductGroup)
+                                                            {
+                                                                int totalQuantity = externalProductGroup.First(x => x.Key == orderItem.First().ExternalItemId).ToList().Count();
+                                                                <div class="row my-2" style="width:100%">
+                                                                    <div class="col-md-1">
+                                                                    </div>
+                                                                    <div class="col-md-11">
+                                                                        <div class="cart-row row">
+                                                                            <div class="col-md-8 row">
+                                                                                <div class="cart-product-img cart-column col-4">
+                                                                                    <img src="@orderItem.First().ProductImageFolderUrl" class="img-responsive">
+                                                                                </div>
+                                                                                <div class="cartTitleContainer col-8 pr-2">
+                                                                                    <a href="/product/@orderItem.First().ProductId?i=@orderItem.First().ExternalItemId&s=@orderItem.First().ExternalShopId&t=@orderItem.First().ExternalTypeId" class="cartItemTitle product-title"><h2 class="ellipsis-2">@orderItem.First().ProductTitle</h2></a>
+                                                                                    <h6 class="card-subtitle mb-2 text-muted"></h6>
+
+                                                                                    @if (orderItem.First().Product.TypeId != 1)
+                                                                                    {
+                                                                                        <span class="cartItemOriPrice d-none">RM @orderItem.First().Product.Price.ToString("F2") </span>
+                                                                                        <span class="cartItemPrice">RM @orderItem.First().Product.DiscountedPrice.ToString("F2") </span><br>
+                                                                                        <span class="badge badge-success d-none">@orderItem.First().Product.DiscountRate % off</span>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <span class="cartItemPrice">@orderItem.First().Product.PointsRequired VPoints </span><br>
+                                                                                    }
+                                                                                    @if (orderItem.First().IsVariationProduct)
+                                                                                    {
+                                                                                        <span class="cart-Item-Variation-Text">Variations:</span>
+                                                                                        <span class="cart-item-Variation">@orderItem.First().VariationText</span>
+                                                                                    }
+
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="col-md-4 cart-column row">
+                                                                                <div class="cart-column col-12 detailTable">
+                                                                                    <div class="cart-product-detail">
+                                                                                        <div class="cart-row row">
+                                                                                            <div class="cart-column col-6">Quantity</div>
+                                                                                            <div class="cart-column col"><span style="vertical-align: middle;">@totalQuantity</span></div>
+                                                                                        </div>
+                                                                                        <div class="cart-row row">
+                                                                                            <div class="cart-column col-6">VPoints</div>
+                                                                                            <div class="cart-column col Vpoints-detail">
+                                                                                                <span>
+                                                                                                    @if (orderItem.First().Product.TypeId != 1)
+                                                                                                    {
+                                                                                                        if (orderItem.First().Product.AdditionalDiscount != null)
+                                                                                                        {
+                                                                                                            @(orderItem.First().Product.AdditionalDiscount.PointsRequired * totalQuantity)
+                                                                                                        }
+                                                                                                        else
+                                                                                                        {
+                                                                                                            @Html.Raw("0")
+                                                                                                        }
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        @(orderItem.First().Product.PointsRequired * totalQuantity)
+                                                                                                    }
+                                                                                                    VPoints
+                                                                                                </span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="cart-row row">
+                                                                                            <div class="cart-column col-6">
+                                                                                                Net Price
+                                                                                            </div>
+                                                                                            <div class="cart-column col">
+                                                                                                <span>
+                                                                                                    RM @orderItem.First().Product.TotalPrice
+
+                                                                                                </span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <div style="justify-content:center;padding-top:40px;text-align:center">
+                                                    <h2 style="text-align:center;"> There is no payment pending.</h2>
+                                                </div>
+                                            }
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="shoppingCartItems"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="orderDetail" status-id="0" remarks="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header row">
+                    <h3 class="modal-title col-11" id="redemption-title">Aeon RM100 Cash Voucher (Lucky Draw)</h3>
+                    <button type="button" class="close col-1" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body order-detail-body">
+                    <div class="row">
+                        @*<div class="col-12 col-xl-4 col-lg-4 col-md-4 col-sm-12 qr-detail-image-div">
+                                <span style="font-size:16px">Aeon RM100 Cash Voucher (Lucky Draw)</span>
+                                <h6 class="card-subtitle mb-2 text-muted"></h6>
+                                <span style="text-decoration:line-through;">RM 12.00 </span>
+
+                                <span style="color:#7030a0;font-weight:600;">RM 9.00 </span><br>
+
+                                &nbsp;<span class="badge badge-success" style="background-color:#7030a0">25 % off</span><br />
+                                <img src="https://vodusdev.blob.core.windows.net/product-thumbnail-photo/2210773a-ae11-4e41-9c4a-b245f20a58a8.jpeg" class="img-responsive">
+                            </div>*@
+                        <div class="col-12 col-xl-5 col-lg-5 col-md-5 col-sm-12 text-left" style="align-self:center;">
+                            <div id="instoreRedemption">
+                                <img id="redemption-token-image" src="~/images/qr-code-sample-300x300.jpg" class="img-responsive qr-img">
+                            </div>
+                            <div id="digitalRedemption">
+                            </div>
+                            <div id="deliveryRedemption" class="mb-2">
+                                <h4>
+                                    Courier Service Provider
+                                </h4>
+                                <span id="redemption-courier-provider">
+                                    ABC1230
+                                </span>
+                            </div>
+                            <div class="mb-2">
+                                <h4>
+                                    Redemption Code
+                                </h4>
+                                <span id="redemption-token">
+                                    ABC1230
+                                </span>
+                            </div>
+                            <div class="delivery mb-2">
+                                <h4>
+                                    Shipping Address
+                                </h4>
+                                <span id="delivery-address">
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-xl-7 col-lg-7 col-md-7 col-sm-12 qr-detail-info">
+                            <div class="detailTable" id="detailTableForOrderDetail">
+                                <div class="cart-product-detail text-left">
+
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <h4>
+                                                Order Date
+                                            </h4>
+                                        </div>
+                                        <div class="col-6">
+                                            <span id="redemption-order-date">
+                                                30/05/2020
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row delivery">
+                                        <div class="col-6">
+                                            <h4>
+                                                Expected Delivery Date
+                                            </h4>
+                                        </div>
+                                        <div class="col-6">
+                                            <span id="expected-delivery-date">
+                                                01/09/2020
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row instore">
+                                        <div class="col-6">
+                                            <h4>
+                                                Valid From
+                                            </h4>
+                                        </div>
+                                        <div class="col-6">
+                                            <span id="redemption-valid-date">
+                                                01/09/2020
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row instore">
+                                        <div class="col-6">
+                                            <h4>
+                                                Valid until
+                                            </h4>
+                                        </div>
+                                        <div class="col-6">
+                                            <span id="redemption-ended-date">
+                                                30/09/2020
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row instore">
+                                        <div class="col-6">
+                                            <h4>
+                                                Redeemed At
+                                            </h4>
+                                        </div>
+                                        <div class="col-6">
+                                            <span id="redemption-redemption-date">
+                                                30/09/2020
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <h4>
+                                                Status
+                                            </h4>
+                                        </div>
+                                        <div class="col-6">
+                                            <span>
+                                                <i class="fas fa-check-circle"></i>
+                                                Successful
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2 how-to-redeem">
+                        <div class="col-12 col-xl-12 col-lg-12 col-md-12 col-sm-12" style="align-self: center;"><a id="order-detail-href" href="/product/44#redemption-instructions">How do I redeem this voucher?</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        if ($(window).width() > 1023) {
+            $("#profile-menu").addClass("widescreen-profile-menu");
+            $("#page-wrapper").css("min-height", $(".widescreen-profile-menu").css("height"));
+        }
+
+        $(".btn-pay-pending").click(function () {
+            location.replace("/checkout/payment/" + $(this).attr("order-id"));
+        });
+
+        $(".btn-cancel-pending").click(function () {
+            var orderId = $(this).attr('order-id');
+            var shortId = $(this).attr('data-short-id')
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                cache: false,
+                data: {
+                    orderId: orderId
+                },
+                url: '/Order/CancelOrder',
+                success: function (response) {
+                    if (response.successful) {
+                        toastr.success("Order " + shortId + " have been cancelled");
+                        $("#" + orderId).hide();
+                    }
+                    else {
+                        toastr.error(response.message)
+                    }
+                },
+                error: function (err) {
+                    console.log(err)
+                }
+            });
+        });
+
+        $(".order-detail-btn").click(function () {
+            if ($(this).closest("div.cart-item-row").find("div.orderItems").hasClass("hide"))
+                $(this).closest("div.cart-item-row").find("div.orderItems").removeClass("hide");
+            else
+                $(this).closest("div.cart-item-row").find("div.orderItems").addClass("hide");
+            return;
+        });
+
+        $("#orderHistorySearch").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $(".product-title").filter(function () {
+                var textToFilter = $(this).text()/* + " " + $(this).siblings(0).text()*/;
+                console.log(textToFilter);
+                $(this).parent().parent().parent().toggle(textToFilter.toLowerCase().indexOf(value) > -1)
+            });
+        });
+
+    })
+</script>

@@ -1,0 +1,503 @@
+﻿@using System.Security.Claims
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+@{
+    var identity = User.Identity as ClaimsIdentity;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta property="og:title" content="Vodus Merchant">
+    <meta property="og:type" content="Website">
+    <meta property="og:description" content="Helping businesses gain more Exposure, Sales and Insights at no upfront cost.">
+    <meta property="og:url" content="https://vodus.com">
+    <meta property="og:image" content="https://merchant.vodus.my/Images/Vodus%20V3%20Merchant%20Logo%20Small.svg">
+
+    <title>@ViewData["Title"] - Vodus Merchant</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/lib/dashboard-assets/css/style.css">
+
+    <link rel="stylesheet" href="~/lib/dashboard-assets/fonts/material-design-iconic-font/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="~/lib/plugins/toastr/toastr.min.css" />
+    
+    <link rel="shortcut icon" type="image/svg" href="~/Images/Vodus V3 Logo Favicon.svg">
+    <link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/v5.15.3/css/pro.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <!---->
+
+    @*<link rel="stylesheet" href="~/Scripts/plugins/datatables-plugins/dataTables.bootstrap.css">*@
+
+    @RenderSection("Styles", required: false)
+
+    <!-- jquery 3.3.1 -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/plugins/toastr/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js" integrity="sha256-0rguYS0qgS6L4qVzANq4kjxPLtvnp5nn2nB5G1lWRv4=" crossorigin="anonymous"></script>
+    <!-- bootstap bundle js -->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- slimscroll js -->
+    <script src="~/lib/dashboard-assets/slimscroll/jquery.slimscroll.min.js"></script>
+    <!-- main js -->
+    <script src="~/lib/dashboard-assets/js/main-js.min.js"></script>
+    <script src="~/lib/moment/js/moment-with-locales.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.21/datatables.min.css" />
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.21/datatables.min.js"></script>
+    <script src="~/lib/dashboard-assets/multi-select/js/jquery.multi-select.min.js"></script>
+</head>
+<body>
+    <div>
+        <!-- ============================================================== -->
+        <!-- navbar -->
+        <!-- ============================================================== -->
+        <div class="dashboard-header">
+            <nav class="navbar navbar-expand-lg bg-white fixed-top">
+                <button type="button" id="sidebarCollapseOpen" class="navbar-btn in-header">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <a href="/Admin/Dashboard">
+                    <img src="~/Images/Vodus V3 Merchant Logo Small.svg" class="img-responsive">
+                </a>
+                @*<a href="@Url.Action("Draft", "Survey", new { area = "Client" })"><img src="~/Content/images/Vodus-small-colored-logo.png" class="img-responsive"></a>*@
+                <div class="collapse navbar-collapse " id="navbarSupportedContent">
+                    <ul class="navbar-nav ml-auto navbar-right-top">
+
+                        <li class="nav-item dropdown nav-user">
+                            <a class="nav-link nav-user-img" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="std-font-1" aria-controls="user-options">@(identity.Name)</span></a>
+                            <div class="dropdown-menu dropdown-menu-right nav-user-dropdown" aria-labelledby="navbarDropdownMenuLink2" id="user-options">
+                                <a class="dropdown-item" href="~/Admin/EditProfile"><i class="fas fa-cog mr-2" id="EditProfile"></i> Edit Profile</a>
+                                <a class="dropdown-item" href="~/Logout"><i class="fas fa-power-off mr-2" id="SignOut"></i>Sign Out</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <!-- ============================================================== -->
+        <!-- end navbar -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- left sidebar -->
+        <!-- ============================================================== -->
+        <div class="nav-left-sidebar sidebar-dark" id="sidebar">
+            <div class="menu-list">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <a class="page-title img-container row" href="@Url.Action("Index","Dashboard")">
+                        <img class="image" src="~/Images/Vodus V3 Merchant Logo Small.svg" />
+                        <h2>Admin</h2>
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" onclick="Collapse(this, 'navbarNav')">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav flex-column">
+                            <li class="nav-divider flex-center">
+                                <a href="#">
+                                    <img class="img-responsive logo-img">
+                                </a>
+                                <p class="merchant-address"></p>
+                            </li>
+                            <li class="nav-item "> <a href="@Url.Action("Index", "Dashboard")" class="nav-link">Dashboard</a></li>
+                            <li class="nav-item "> <a href="@Url.Action("Index", "Analytics")" class="nav-link">Analytics</a></li>
+                            <li class="nav-item "> <a href="@Url.Action("AllChats","Chat")" class="nav-link" id="users-chat"><i class="fas fa-comment-alt-dots"></i><span style="float:left;">Vodus<>User</span><div id="vodusToUserChat" style="margin-bottom:20px;"></div></a></li>
+                            <li class="nav-item "> <a href="@Url.Action("Index","Chat")" class="nav-link" id="users-chat"><i class="fas fa-comment-alt-dots"></i><span style="float:left;">Merchant<>User</span><div id="aggregatorMerchantToUserChat" style="margin-bottom:20px;"></div></a></li>
+                            <li class="nav-item "> <a href="@Url.Action("MerchantChat","Chat")" class="nav-link" id="merchants-chat"><i class="fas fa-comment-alt-dots"></i><span style="float:left;">Vodus<>Merchant</span><div id="vodusToMerchantChat" style="margin-bottom:20px;"></div></a></li>
+                            <li class="nav-item"> <a href="@Url.Action("Index", "Merchants")" class="nav-link">Merchants </a> </li>
+                            <li class="nav-item"> <a href="@Url.Action("Index", "CrawlerMerchant")" class="nav-link">Crawled Merchant </a> </li>
+                            <li class="nav-item"> <a href="@Url.Action("Index", "CrawledProduct")" class="nav-link">Crawled Product </a> </li>
+                            <li class="nav-item">
+
+                                <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="true" data-target="#submenu-2" aria-controls="submenu-2">Products</a>
+                                <div id="submenu-2" class="submenu collapse" style="background-color:transparent">
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="@Url.Action("Index","Products")">Products</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="@Url.Action("DealTypes","Products")">Product Type</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="@Url.Action("ProductCategories","Products")">Categories</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="@Url.Action("ProductSubCategories","Products")">Subcategories</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="@Url.Action("ExpirationTypes","Products")">Expiration Type</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="@Url.Action("Index","ThirdParty")">Third Party Products</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+
+                                <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="true" data-target="#navSales" aria-controls="navSales" id="navSalesControl">Sales</a>
+                                <div id="navSales" class="submenu collapse" style="background-color:transparent">
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="@Url.Action("Search","Sales")">Search</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="@Url.Action("AggregatorOrders","Sales")">Aggregator Orders</a>
+                                        </li>
+
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="@Url.Action("MerchantRefunds","Sales")">Merchant Refunds</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="@Url.Action("CheckPayment","Sales")">Check Order Payment</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="nav-item"> <a href="@Url.Action("Index", "Finance")" class="nav-link">Finance</a> </li>
+                            
+                            
+                            @*new code banned user list Backlog - 1756*@
+
+                            <li class="nav-item">
+
+                                <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="true" data-target="#submenu-3" aria-controls="submenu-3">Accounts</a>
+                                <div id="submenu-3" class="submenu collapse" style="background-color:transparent">
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item"> <a href="@Url.Action("Index", "Users")" class="nav-link">Merchant Accounts </a> </li>
+@*                                        <li class="nav-item"> <a href="@Url.Action("List", "Members")" class="nav-link">Member Accounts </a> </li>
+*@                                        <li class="nav-item"> <a href="@Url.Action("BanList", "Members")" class="nav-link">Banned Member List </a> </li>
+                                    </ul>
+                                </div>
+                            </li>
+
+
+                            <li class="nav-item"> <a href="@Url.Action("Index", "EmailBlast")" class="nav-link">Email Blast </a> </li>
+                            <li class="nav-item ">
+                                <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="true" data-target="#submenu-3" aria-controls="submenu-3">Product Ads</a>
+                                <div id="submenu-3" class="submenu collapse" style="background-color:transparent">
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item">
+                                            <a href="@Url.Action("Index", "ProductReco")" class="nav-link">Product Ads</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="@Url.Action("NewProductReco", "ProductReco")" class="nav-link">Product New Ads</a>
+                                        </li>
+
+                                    </ul>
+                                </div>
+
+
+
+                            </li>
+                            <li class="nav-item ">
+                                <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="true" data-target="#aggegatorConfig" aria-controls="submenu-3" id="aggregatorConfigHeader">Config</a>
+                                <div id="aggegatorConfig" class="submenu collapse" style="background-color:transparent;text-align:left;">
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item">
+                                            <a id="appConfig" href="@Url.Action("Index", "Config")" class="nav-link" style="text-align:left;">App Config</a>
+                                        </li>
+                                        <li class="nav-item" id="additionalDiscount">
+                                            <a href="/admin/config/additionalDiscounts" class="nav-link" style="text-align:left;">Additional Discounts</a>
+                                        </li>
+                                        <li class="nav-item" id="aggregatorKeywordFilter">
+                                            <a href="/admin/config/AggregatorKeywordFilter" class="nav-link" style="text-align:left;">Aggregator Keyword Filter</a>
+                                        </li>
+                                        <li class="nav-item" id="aggregatorMerchantExcludeFilter">
+                                            <a href="/admin/config/AggregatorMerchantExcludeFilter" class="nav-link" style="text-align:left;">Aggregator Merchant Filter</a>
+                                        </li>
+                                        <li class="nav-item" id="aggregatorItemExcludeFilter">
+                                            <a href="/admin/config/AggregatorItemExcludeFilter" class="nav-link" style="text-align:left;">Aggregator Item Filter</a>
+                                        </li>
+                                        <li class="nav-item" id="aggregatorMaxOrderFilter">
+                                            <a href="/admin/config/AggregatorMaxOrderFilter" class="nav-link" style="text-align:left;">Aggregator Quantity - Shipping Cost Filter</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li class="nav-item "> <a href="@Url.Action("Index", "ErrorLog")" class="nav-link">Error Logs</a></li>
+                            <li class="nav-item "> <a href="@Url.Action("Index", "GoogleMerchant")" class="nav-link">Google Merchant</a></li>
+                            <li class="nav-item">
+
+                                <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="true" data-target="#promoCodeSubMenu" aria-controls="promoCodeSubMenu">Promo Codes</a>
+                                <div id="promoCodeSubMenu" class="submenu collapse" style="background-color:transparent">
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item">
+                                            <a id="navPromoCode" class="nav-link" href="@Url.Action("Index","PromoCode")">Promo Code</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a id="navPromoCodeMailingList" class="nav-link" href="@Url.Action("MailingList","PromoCode")">Mailing List</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
+
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- end left sidebar -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- wrapper  -->
+        <!-- ============================================================== -->
+
+        <div class="dashboard-wrapper" style="padding-bottom:100px;">
+            @RenderBody()
+
+            <div class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                            Copyright © 2022 Vodus Research Sdn Bhd. All rights reserved.
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                            <div class="text-md-right footer-links d-none d-sm-block">
+                                <a href="javascript: void(0);">About</a>
+
+                                <a href="javascript: void(0);">Contact Us</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        var appConfig = {
+            serverlessUrl : '@ViewData["ServerlessUrl"]'
+        };
+
+        function Collapse(iElement, elementId) {
+            var targetElement = $("#" + elementId);
+            if ($(iElement).hasClass("small-navbar")) {
+                if (!$(targetElement).hasClass("open")) {
+                    $(targetElement).toggleClass("open")
+                }
+                $("#sidebarCollapse").click();
+            }
+            else {
+                $(targetElement).toggleClass("show").toggleClass("open");
+                if ($(iElement).attr("aria-expanded") === "false") {
+                    $(iElement).attr("aria-expanded", "true");
+                } else {
+                    $(iElement).attr("aria-expanded", "false");
+                }
+            }
+        }
+
+        $(document).ready(function () {
+            var pathname = window.location.pathname.toLowerCase();
+            $("#navbarNav").find("a").each(function () {
+                if ($(this).attr("href").toLowerCase() == pathname) {
+                    $(this).addClass("active");
+                }
+
+            });
+            getAggregatorMerchantWithUserUnreadMessageCount();
+            getVodusWithUserUnreadMessageCount();
+            getMerchantWithVodusUnreadMessageCount();
+            //getUnreadedChatUsersMessageCount();
+            //getUnreadedChatMerchansMessageCount();
+        });
+
+        function toggleHamburgerFunction() {
+            if ($('.navbar-right').hasClass('navbar-right-hide')) {
+                $('.navbar-right').removeClass('navbar-right-hide');
+                $('.navbar-right > li').addClass('loaded');
+            } else {
+                $('.navbar-right').addClass('navbar-right-hide');
+                $('.navbar-right > li').removeClass('loaded');
+            }
+        }
+        function closeHamburgerFunction() {
+            $(".navbar-right").addClass('navbar-right-hide');
+            $('.navbar-right > li').removeClass('loaded');
+
+        }
+
+      
+        function getAggregatorMerchantWithUserUnreadMessageCount() {
+
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                url: '/admin/chat/GetAggregatorMerchantWithUserUnreadMessageCount',
+                success: function (response) {
+                    if (response.successful) {
+                        if (response.data != null) {
+                            console.log(response.data);
+                            if (response.data > 0) {
+                                if ($("#aggregatorMerchantToUserChat").find(".notification-message").length == 0) {
+                                    $("#aggregatorMerchantToUserChat").append('<span class="badge badge-primary badge-pill notification-message" id="aggregatorMerchantWithUserUnreadMessageCount" style="display:flex;align-items:center;right:0;position:absolute;" number="' + response.data + '">' + response.data + '</span>');
+                                }
+                                else {
+                                    $("#aggregatorMerchantToUserChat").find(".notification-message").attr("number", response.data);
+                                    $("#aggregatorMerchantToUserChat").find(".notification-message").html(response.data);
+                                }
+                            }
+                            else {
+                                $("#aggregatorMerchantToUserChat").find(".notification-message").remove();
+                            }
+                        }
+                    } else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function getVodusWithUserUnreadMessageCount() {
+
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                url: '/admin/chat/GetVodusWithUserUnreadMessageCount',
+                success: function (response) {
+                    if (response.successful) {
+                        if (response.data != null) {
+                            console.log(response.data);
+                            if (response.data > 0) {
+                                if ($("#vodusToUserChat").find(".notification-message").length == 0) {
+                                    $("#vodusToUserChat").append('<span class="badge badge-primary badge-pill notification-message" id="vodusWithUserUnreadMessageCount" style="display:flex;align-items:center;right:0;position:absolute;" number="' + response.data + '">' + response.data + '</span>');
+                                }
+                                else {
+                                    $("#vodusToUserChat").find(".notification-message").attr("number", response.data);
+                                    $("#vodusToUserChat").find(".notification-message").html(response.data);
+                                }
+                            }
+                            else {
+                                $("#vodusToUserChat").find(".notification-message").remove();
+                            }
+                        }
+                    } else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function getMerchantWithVodusUnreadMessageCount() {
+
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                url: '/admin/chat/GetMerchantWithVodusUnreadMessageCount',
+                success: function (response) {
+                    if (response.successful) {
+                        if (response.data != null) {
+                            console.log(response.data);
+                            if (response.data > 0) {
+                                if ($("#vodusToMerchantChat").find(".notification-message").length == 0) {
+                                    $("#vodusToMerchantChat").append('<span class="badge badge-primary badge-pill notification-message" id="merchantWithVodusUnreadMessageCount" style="display:flex;align-items:center;right:0;position:absolute;" number="' + response.data + '">' + response.data + '</span>');
+                                }
+                                else {
+                                    $("#vodusToMerchantChat").find(".notification-message").attr("number", response.data);
+                                    $("#vodusToUserChat").find(".notification-message").html(response.data);
+                                }
+                            }
+                            else {
+                                $("#vodusToMerchantChat").find(".notification-message").remove();
+                            }
+                        }
+                    } else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+        /*
+        function getUnreadedChatUsersMessageCount() {
+
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                url: '/admin/chat/GetUnreadedMessagesCountFromUsers',
+                success: function (response) {
+                    if (response.successful) {
+                        if (response.data != null) {
+                            console.log(response.data);
+                            if (response.data > 0) {
+                                if ($("#merchantToUserChat").find(".notification-message").length == 0) {
+                                    $("#merchantToUserChat").append('<span class="badge badge-primary badge-pill notification-message" id="unreadChatMessageFromUserCount" style="display:flex;align-items:center;right:0;position:absolute;" number="' + response.data + '">' + response.data + '</span>');
+                                }
+                                else {
+                                    $("#merchantToUserChat").find(".notification-message").attr("number", response.data);
+                                    $("#merchantToUserChat").find(".notification-message").html(response.data);
+                                }
+                            }
+                            else {
+                                $("#users-chat").find(".notification-message").remove();
+                            }
+                        }
+                    } else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function getUnreadedChatMerchansMessageCount() {
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                url: '/admin/chat/GetUnreadedMessagesCountFromMerchants',
+                success: function (response) {
+                    if (response.successful) {
+                        if (response.data != null) {
+                            console.log(response.data);
+                            if (response.data > 0) {
+                                if ($("#merchants-chat").find(".notification-message").length == 0) {
+                                    $("#merchants-chat").append('<span class="badge badge-primary badge-pill notification-message" style="float: right;display:block;" number="' + response.data + '">' + response.data + '</span>');
+                                }
+                                else {
+                                    $("#merchants-chat").find(".notification-message").attr("number", response.data);
+                                    $("#merchants-chat").find(".notification-message").html(response.data);
+                                }
+                            }
+                            else {
+                                $("#merchants-chat").find(".notification-message").remove();
+                            }
+                        }
+                    } else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        */
+        function scrollChat() {
+            var totalHeight = 0;
+
+            $("#messagesList").children().each(function () {
+                totalHeight = totalHeight + $(this).outerHeight(true);
+            });
+
+            $('#messagesList').scrollTop(totalHeight);
+        }
+    </script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

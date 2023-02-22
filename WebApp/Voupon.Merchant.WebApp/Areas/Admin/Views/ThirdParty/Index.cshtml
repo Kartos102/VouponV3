@@ -1,0 +1,108 @@
+﻿@{
+    ViewData["Title"] = "Deal Types";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@model List<Voupon.Merchant.WebApp.Areas.Admin.Services.ThirdParty.Pages.ThirdPartyTypeViewModel>
+
+<div class="dashboard-main-wrapper">
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content ">
+            <h1>Third Party Types</h1>
+
+            @if (Model != null && Model.Any())
+            {
+
+                <div id="accordion">
+                    @foreach (var type in Model)
+                    {
+                        <div class="card">
+                            <div class="card-header" id="headingOne">
+                                <h5 class="mb-0">
+                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_@(type.Id)" aria-expanded="true" aria-controls="#collapse_@(type.Id)">
+                                        @type.Name
+                                    </button>
+                                </h5>
+                            </div>
+
+                            <div id="collapse_@(type.Id)" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                                <div class="card-body">
+                                    <table id="d" class="collapse-table">
+                                        <thead>
+                                            <tr>
+                                                <th>External Id</th>
+                                                <th>Name</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (type.Products != null && type.Products.Any())
+                                            {
+                                                foreach (var item in type.Products)
+                                                {
+                                                    <tr>
+                                                        <td>@item.ExternalId</td>
+                                                        <td>@item.Name</td>
+                                                        <td>
+                                                            <div class='switch-button switch-button-success'>
+                                                                <input class="activatedStatus itemStatus" type="checkbox" checked="@(item.Status == 1? true:false)" name="switch_@(item.Id)" data-id="@item.Id" id="switch_@(item.Id)"><span>
+                                                                    <label for="switch_@(item.Id)"></label>
+                                                                </span>
+                                                            </div>
+
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="alert alert-warning">No third party products added yet</p>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+
+            $('.collapse-table').DataTable();
+
+            $(".itemStatus").click(function () {
+                var id = $(this).attr("data-id");
+                var isActive = $(this).prop("checked");
+                $.ajax({
+                    url: "/admin/thirdparty/update-status/",
+                    method: "POST",
+                    data: {
+                        id: id,
+                        isActive: isActive
+                    }
+                }).done(function (res) {
+                    console.log(res);
+                    toastr.clear();
+                    toastr.success("Successfully updated status");
+
+                }).fail(function (data) {
+                    if (res.status == 401) {
+                        ajaxError(res.status);
+                    }
+                    else {
+                        toastr.clear();
+                        toastr.error("Fail to update status");
+                    }
+                });
+            });
+        });
+
+    </script>
+}
+
+

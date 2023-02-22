@@ -1,0 +1,20 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@using Voupon.Common.BaseTypes
+@model ListView<string>
+<div class="text-center">
+    <h1 class="display-4">BlobList</h1>
+</div>
+
+@if (Model != null && Model.Items != null)
+{
+    <table class="table table-striped">
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td><p>@item</p></td>
+            </tr>
+        }
+    </table>
+}

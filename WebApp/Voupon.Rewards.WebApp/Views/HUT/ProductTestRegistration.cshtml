@@ -1,0 +1,488 @@
+﻿@model Voupon.Rewards.WebApp.Services.HUT.Pages.ProductTestRegistrationPage.ProductTestRegistrationViewModel
+@{
+    ViewData["Title"] = "ProductTestRegister";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section styles{
+
+    <style>
+        .btn-secondary {
+            color: #fff;
+            background-color: #ff407b;
+            border-color: #ff407b;
+        }
+
+            .btn-secondary:hover {
+                color: #fff;
+                background-color: #ff407b;
+                border-color: #ff407b;
+            }
+
+
+        .img-fluid {
+            width: auto;
+            height: 100%;
+            max-height: 300px;
+            max-width: 100%;
+        }
+
+        .btn-lg {
+            margin-top: 20px;
+        }
+
+        .container {
+            padding-top: 20px;
+            padding-bottom: 30px;
+        }
+
+        #address {
+            max-width: 500px;
+        }
+
+        .project-name-header {
+            border-bottom: groove;
+            border-color: #ad7fcd;
+            width: fit-content;
+            font-weight: 600;
+        }
+
+        .row.product-test-row {
+            align-content: flex-start;
+            max-width: 1200px;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+
+        .register-form {
+            padding: 0;
+        }
+
+            .register-form .row {
+                margin-top: 30px;
+            }
+
+        #registerBtn {
+            width: -webkit-fill-available;
+            margin-right: 25%;
+        }
+
+        .succussfulMsg-div {
+            text-align: -webkit-center;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #succussfulMsg {
+            color: green;
+            max-width: 800px;
+            margin-top: 10vh;
+        }
+
+            #succussfulMsg p {
+                font-size: 22px;
+            }
+    </style>
+}
+@*<h1>Product Test Register</h1>*@
+@if (@Model.SurveyProjectStatus)
+{
+@if (@Model.MasterMemberProfileId != 0 && @Model.IsParticipantEmail && Model.IsDifferentEmail == false)
+    {
+<div class="col-12 succussfulMsg-div">
+    @if (Model.SurveyProjectLanguageId == 1)
+    {
+        <div id="succussfulMsg">
+            <h2>You have successfully registered for the @Model.SurveyProjectName.</h2>
+            <p>
+                We will email you a link to complete the product test online survey when it is ready.
+            </p>
+        </div>
+    }
+    else if (Model.SurveyProjectLanguageId == 2)
+    {
+        <div id="succussfulMsg">
+            <h2>Anda telah berjaya mendaftar untuk @Model.SurveyProjectName.</h2>
+            <p>
+                Kami akan menghantar pautan kepada anda melalui e-mel untuk menyelesaikanTinjauan penilaian produk dalam talian apabila sudah siap.
+            </p>
+        </div>
+    }
+</div>
+<div class="row product-test-row">
+    @if (Model.SurveyProjectLanguageId == 1)
+    {
+        <div class="col-lg-6">
+            <h2 class="project-name-header">@Model.SurveyProjectName</h2>
+            Welcome to Vodus product test registration page.
+            <br /><br />
+
+
+            If you are selected to participate in our product test, we will email you to inform you that you have been qualified and will deliver our product samples to your stated delivery address so that you can test our product samples at the comfort of your own home and time.
+            <br /><br />
+
+
+            During the test, you are required to complete our online survey to tell us what you think of the product you have tested. We will then email you your reward upon the completion of our test.
+            <br /><br />
+
+
+            Complete the following form to sign up for @Model.SurveyProjectName.
+        </div>
+    }
+    else if (Model.SurveyProjectLanguageId == 2)
+    {
+        <div class="col-lg-6">
+            <h2 class="project-name-header">@Model.SurveyProjectName</h2>
+            Selamat datang ke halaman pendaftaran penilaian produk oleh Vodus.
+            <br /><br />
+
+
+            Jika anda terpilih dan layak untuk menyertai penilaian produk kami, anda akan dimaklumkan melalui emel dan sampel produk akan dihantar ke alamat anda. Cuba dan nilai produk kami dengan selesa di rumah anda mengikut kelapangan waktu anda.
+            <br /><br />
+
+
+            Anda dikehendaki untuk melengkapkan tinjauan atas talian kami untuk menilai produk yang telah anda cuba. Ganjaran untk melengkapi penilaian produk kami akan dihantar melalui emel setelah penilaian selesai.
+            <br /><br />
+
+
+            Lengkapkan maklumat berikut untuk mendaftar di dalam  @Model.SurveyProjectName.
+        </div>
+    }
+   
+    <div class="col-lg-6 register-form">
+        <div class="row">
+            <div class="col-5">
+                @if (Model.SurveyProjectLanguageId == 1)
+                {
+                    <label>Survey start date:</label>
+                }
+                else if (Model.SurveyProjectLanguageId == 2)
+                {
+                    <label>Tarikh mula tinjauan:</label>
+                }
+            </div>
+            <div class="col-7">
+                <label>@Model.SurveyProjectStartDate.ToShortDateString()</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+                @if (Model.SurveyProjectLanguageId == 1)
+                {
+                    <label>Product Test Completion Reward: </label>
+                }
+                else if (Model.SurveyProjectLanguageId == 2)
+                {
+                    <label>Ganjaran penyiapan penilaian produk:</label>
+                }
+            </div>
+            <div class="col-7">
+                <label> @Model.Reward</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+                @if (Model.SurveyProjectLanguageId == 1)
+                {
+                    <label class="i18next">Product Sample Delivery Address:</label>
+                }
+                else if (Model.SurveyProjectLanguageId == 2)
+                {
+                    <label class="i18next">Alamat penghantaran sampel produk:</label>
+                }
+            </div>
+            <div class="col-7">
+                <textarea class="form-control" id="address">@Model.MasterMemberProfileAddress</textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+                @if (Model.SurveyProjectLanguageId == 1)
+                {
+                    <label class="i18next"> Postcode:</label>
+                }
+                else if (Model.SurveyProjectLanguageId == 2)
+                {
+            <label class="i18next"> Poskod:</label>
+                }
+            </div>
+            <div class="col-7">
+                <input class="form-control" id="postCode" value="@Model.MasterMemberProfilePostcode" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+                @if (Model.SurveyProjectLanguageId == 1)
+                {
+                <label class="i18next"> City:</label>                }
+                else if (Model.SurveyProjectLanguageId == 2)
+                {
+            <label class="i18next"> Bandar:</label>
+                }
+            </div>
+            <div class="col-7">
+                <input class="form-control" id="city" value="@Model.MasterMemberProfileCity" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+                @if (Model.SurveyProjectLanguageId == 1)
+                {
+                    <label class="i18next"> State:</label>
+                }
+                else if (Model.SurveyProjectLanguageId == 2)
+                {
+            <label class="i18next"> Negeri:</label>
+                }
+            </div>
+            <div class="col-7">
+                <input class="form-control" id="state" value="@Model.MasterMemberProfileState" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+                @if (Model.SurveyProjectLanguageId == 1)
+                {
+                    <label class="i18next"> Phone Number:</label>
+                }
+                else if (Model.SurveyProjectLanguageId == 2)
+                {
+            <label class="i18next"> Nombor tel:</label>
+                }
+            </div>
+            <div class="col-7">
+                <input class="form-control" id="phoneNumber" value="@Model.MasterMemberProfilePhoneNumber" />
+            </div>
+        </div>
+
+        <div class="row align-center">
+            <div class="col-5">
+            </div>
+            <div class="col-7">
+                @if (Model.SurveyProjectLanguageId == 1)
+                {
+                    <button type="button" class="btn btn-primary" id="registerBtn"><span class="i18next" data-i18n="common.update">Register</span></button>
+                }
+                else if (Model.SurveyProjectLanguageId == 2)
+                {
+                    <button type="button" class="btn btn-primary" id="registerBtn"><span class="i18next" data-i18n="common.update">Daftar</span></button>
+                }
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+    }
+    else if (@Model.MasterMemberProfileId == 0)
+    {
+<div class="col-12 align-center">
+    <div class="row align-content-center justify-center" style="margin-top:10vh;">
+        <h2 class="col-12 text-center">Please login to your Vodus account</h2>
+        <button type="button" class="btn btn-primary col-12" style="font-size:1.5em;max-width:200px;margin-top:15px;" id="LoginBtn"><span class="i18next" data-i18n="common.update">Log in</span></button>
+    </div>
+</div>
+    }
+    else if (@Model.IsDifferentEmail && Model.IsParticipantEmail)
+    {
+<div class="col-12 align-center">
+    @if (Model.SurveyProjectLanguageId == 1)
+    {
+        <div class="row align-content-center justify-center" style="margin-top:10vh;">
+            <h2 class="col-12" style="max-width:900px">You are not signed in with @Model.SurveyProjectEmail. <br><br> Logout from your current account and sign in with @Model.SurveyProjectEmail to register for the product test.</h2>
+            <button type="button" class="btn btn-primary col-12" style="font-size:1.5em;max-width:200px;margin-top:15px;" id="LogOutBtn"><span class="i18next" data-i18n="common.update">Log out</span></button>
+        </div> }
+    else if (Model.SurveyProjectLanguageId == 2)
+    {
+        <div class="row align-content-center justify-center" style="margin-top:10vh;">
+            <h2 class="col-12" style="max-width:900px">Sila log keluar dari akaun anda dan daftar masuk menggunakan @Model.SurveyProjectEmail untuk penilaian produk.</h2>
+            <button type="button" class="btn btn-primary col-12" style="font-size:1.5em;max-width:200px;margin-top:15px;" id="LogOutBtn"><span class="i18next" data-i18n="common.update">Log out</span></button>
+        </div>          }
+
+</div>
+    }
+    else
+    {
+
+<div class="text-center">
+    <div class="container">
+        <div class="row">
+            <div class="offset-xl-2 col-xl-8 offset-lg-2 col-lg-8 col-md-12 col-sm-12 col-12">
+                <div class="error-section">
+                    <img src="/images/page404.png" alt="" class="img-fluid">
+                    <div class="error-section-content">
+                        <h1 class="display-4">Sorry</h1>
+                        @if (Model.SurveyProjectLanguageId == 1)
+                        {
+                            <h2>
+                                This email is not qualified to do this test. Go back to our home page.
+                            </h2>
+                        }
+                        else if (Model.SurveyProjectLanguageId == 2)
+                        {
+                            <h2>
+                                Emel ini tidak layak untuk meneruskan penilaian ini. Kembali ke halaman utama.
+                            </h2>
+                        }
+                        @if (Model.SurveyProjectLanguageId == 1)
+                        {
+                            <a href="/" class="btn btn-secondary btn-lg">Back to homepage</a>
+
+                        }
+                        else if (Model.SurveyProjectLanguageId == 2)
+                        {
+                    <a href="/" class="btn btn-secondary btn-lg">
+                        Kembali ke halaman utama
+                    </a>
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a hidden href="https://pngtree.com/so/cry?sce=attr">cry png from pngtree.com</a>
+
+    }
+}
+else
+{
+<div class="text-center">
+    <div class="container">
+        <div class="row">
+            <div class="offset-xl-2 col-xl-8 offset-lg-2 col-lg-8 col-md-12 col-sm-12 col-12">
+                <div class="error-section">
+                    <img src="/images/page404.png" alt="" class="img-fluid">
+                    <div class="error-section-content">
+                        <h1 class="display-3">Sorry</h1>
+                        @if (Model.SurveyProjectLanguageId == 1)
+                        {
+                            <p>
+                                This test is not available at the moment .
+                            </p>
+                        }
+                        else if (Model.SurveyProjectLanguageId == 2)
+                        {
+                            <p>
+                                Penilaian ini tidak tersedia pada masa sekarang.
+
+                            </p>
+                        }
+
+                        @if (Model.SurveyProjectLanguageId == 1)
+                        {
+                            <a href="/" class="btn btn-secondary btn-lg">Back to homepage</a>
+
+                        }
+                        else if (Model.SurveyProjectLanguageId == 2)
+                        {
+                            <a href="/" class="btn btn-secondary btn-lg">
+                                Kembali ke halaman utama
+                            </a>
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+}
+
+@section scripts{
+
+    <script>
+    $(document).ready(function () {
+        $("#reqFrom").val("hut");
+        $("#LoginBtn").click(function () {
+
+            $("#navLogin").click();
+        });
+        $("#LogOutBtn").click(function () {
+
+             $.ajax({
+                url: '/hut/LogoutForHUT',
+                type: 'GET',
+                success: function (response) {
+                    if (response.successful) {
+                        location.reload();
+                    }
+                    else {
+                        toastr.clear();
+                        toastr.error("Fail to log out");
+                    }
+                },
+                error: function () {
+                    toastr.error("Fail to log out");
+                }
+
+            });
+
+        });
+
+        $("#registerBtn").click(function () {
+            var address = $("#address").val();
+            var postCode = $("#postCode").val();
+            var city = $("#city").val();
+            var state = $("#state").val();
+            var phoneNumber = $("#phoneNumber").val();
+            if (address == "") {
+                toastr.error("please insert your address");
+                return;
+            }
+             if (postCode == "") {
+                toastr.error("please insert your postCode");
+                return;
+            }
+             if (state == "") {
+                toastr.error("please insert your state");
+                return;
+            }
+            if (city == "") {
+                toastr.error("please insert your city");
+                return;
+            }
+             if (phoneNumber == "") {
+                toastr.error("please insert your phoneNumber");
+                return;
+            }
+            var url = window.location.pathname;
+            var email = url.substring(url.lastIndexOf('/') + 1);
+            $.ajax({
+                url: '/hut/Register-Participant',
+                type: 'POST',
+                data: { projectId: @Model.SurveyProjectId, address: address, email: email, PhoneNumber: phoneNumber, City: city, State: state, postCode: postCode },
+                success: function (response) {
+                    if (response.successful) {
+                        $(".succussfulMsg-div").css("display","flex");
+                        $(".product-test-row").hide();
+                        toastr.success(response.message);
+                        console.log(response.code);
+                        if (response.data != "") {
+
+                        }
+                    }
+                    else {
+                        toastr.clear();
+                        if (response.code == -2) {
+                            location.reload();
+                        }
+                        toastr.error(response.message);
+                    }
+                },
+                error: function () {
+                    toastr.error(response.message);
+                }
+
+            });
+        });
+
+
+    });
+    </script>
+}

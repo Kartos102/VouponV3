@@ -1,0 +1,61 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">File upload test</h1>
+</div>
+
+<div class="form-group partner-super-admin">
+    <div class="col-lg-6">
+        <div class="fileinput fileinput-new thumbnail" data-provides="fileinput">
+            <div class="fileinput-new" style="width: 100%; height: auto;">
+            </div>
+            <div class="fileinput-preview fileinput-exists thumbnail"></div>
+            <div>
+                <span class="btn btn-default btn-file"><span class="fileinput-new">Select image</span><span class="fileinput-exists">Change</span><input type="file" name="newImage" id="newImage"></span>
+                <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput" id="removeUpdatedLogo">Remove</a>
+            </div>
+        </div>
+
+        <div class="">
+            <button type="button" id="btnUpload">Upload</button>
+        </div>
+    </div>
+</div>
+
+
+@section Styles{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css" />
+}
+
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
+
+    <script>
+        $(function () {
+            $("#btnUpload").click(function () {
+                var formData = new FormData();
+                var file = document.getElementById("newImage").files[0];
+                if (file == null) {
+                    alert("Please select file");
+                    return;
+                }
+
+                formData.append("newImage", file);
+
+                $.ajax({
+                    url: "/sample/fileupload",
+                    type: "POST",
+                    data: formData,
+                    enctype: 'multipart/form-data',
+                    processData: false, // tell jQuery not to process the data
+                    contentType: false // tell jQuery not to set contentType
+                }).done(function (response) {
+                    alert(response.message);
+                });
+
+            });
+        });
+    </script>
+}

@@ -1,0 +1,114 @@
+﻿@model Voupon.Database.Postgres.RewardsEntities.MerchantFinance
+@{
+    Layout = null;
+}
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Statement Of Account</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="license" href="https://www.opensource.org/licenses/mit-license/">
+    <script src="script.js"></script>
+    <link href="~/css/demo.css" rel="stylesheet" />
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        /*tr:nth-child(even) {
+            background-color: #dddddd;
+        }*/
+    </style>
+</head>
+<body>
+    <article>
+        <div style="padding-bottom:20px;">
+            <img style="float:right;width:auto;height:60px" src="~/Images/Vodus_purple_full-logo.png" />
+        </div>
+        <h1>Statement Of Account</h1>
+        <h1>@Model.FinanceSummary.StartDate.ToString("dd MMMM yyyy") - @Model.FinanceSummary.EndDate.ToString("dd MMMM yyyy")</h1>
+
+
+        <hr />
+        <br />
+        <table class="meta">
+            <tr>
+                <th><span contenteditable>Merchant</span></th>
+                <td><span contenteditable>@Model.MerchantDisplayName</span></td>
+            </tr>
+            <tr>
+                <th><span contenteditable>Merchant Code</span></th>
+                <td><span contenteditable>@Model.Merchant.Code</span></td>
+            </tr>
+            <tr>
+                <th><span contenteditable>Transaction</span></th>
+                <td><span>@Model.Merchant.Code-@Model.Id</span></td>
+            </tr>
+        </table>
+        <br />
+        <br />
+        <table class="inventory">
+            <thead>
+                <tr>
+                    @*<th><span contenteditable>TransID</span></th>*@
+                    <th><span contenteditable>Product Id</span></th>
+                    <th><span contenteditable>Product Name</span></th>
+                    <th><span contenteditable>Quantity</span></th>
+                    <th><span contenteditable>Merchant's Takeback(RM)</span></th>
+                    <th><span contenteditable>Total Merchant's Takeback(RM)</span></th>
+                    @*<th><span contenteditable>Purchased Date</span></th>
+                        <th><span contenteditable>Redeemed Date</span></th>*@
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var TransactionGroup = Model.FinanceTransaction.GroupBy(x => x.ProductId);
+                    foreach (var trans in TransactionGroup)
+                    {
+                        var list = trans.ToList();
+                        var Quantity = list.Count();
+                        var productTitle = list.First().ProductTitle;
+                        var MerchantProfit = list.First().MerchantProfit;
+                        var TotalMerchantProfit = (MerchantProfit * Quantity).ToString("0.00");
+                            <tr>
+                                    <td>@trans.Key</td>
+                                    <td>@productTitle</td>
+                                    <td>@Quantity</td>
+                                    <td>@MerchantProfit</td>
+                                    <td>@TotalMerchantProfit</td>
+                                </tr>
+
+                    }
+                    @*foreach (var trans in Model.FinanceTransaction)
+                        {
+                            <tr>
+
+                                <td>@trans.ProductId</td>
+                                <td>@trans.ProductTitle</td>
+                                <td>@trans.MerchantProfit</td>
+                            </tr>
+
+                        }*@
+            <tr>
+                <td colspan="3"></td>               
+                <td><strong>Sub Total</strong></td>
+                <td>@Model.TotalPayout</td>
+            </tr>
+
+                }
+            </tbody>
+        </table>
+
+    </article>
+
+
+</body>
+</html>  

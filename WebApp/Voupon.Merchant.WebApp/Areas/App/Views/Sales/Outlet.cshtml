@@ -1,0 +1,257 @@
+﻿@model int;
+@{
+    ViewData["Title"] = "Outlet";
+    Layout = "~/Areas/App/Views/Shared/_Layout.cshtml";
+}
+
+<div class="dashboard-main-wrapper">
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content ">
+            <div class="ecommerce-widget">
+                <div class="row justify-content-between table-function">
+
+                    <div class="row">
+                        <label class="col-form-label">Date Range : </label>
+                        <input type="date" id="outletStartDate" value="2017-06-01"> to
+                        <input type="date" id="outletEndDate" value="2017-06-01">
+                        <br />
+                        <button type="button" id="outletSearch" class="btn btn-primary btn-sm outletSearch">Search</button>
+
+                    </div>
+                    <div>
+                        <button type="button" class="outletFullReport btn btn-primary btn-sm">View Full Report</button>
+                        @*<label class="col-form-label">Send report to : </label>
+                            <input type="text" placeholder="Enter Email"> <button type="button" class="btn btn-primary btn-sm">Send</button>*@
+                    </div>
+                </div>
+                <div class="row" style="margin-top:30px;">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body p-0">
+                                <div class="table-responsive" style="overflow-x: hidden;">
+                                    <table class="table table-striped table-bordered table-hover" id="outletsTable" style="text-align: center;">
+                                        <thead class="bg-light">
+                                            <tr class="border-0">
+                                                <th class="border-0" style="text-align: center;">Outlets</th>
+                                                <th class="border-0" style="text-align: center;">Revenue (RM)</th>
+                                                <th class="border-0" style="text-align: center;">Transactions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="outletsTableBody">
+                                            <tr style="display:none">
+                                                <td>KLCC</td>
+                                                <td>859.20</td>
+                                                <td>10</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+
+    <!--#region .............................................  INDEX  ............................................. -->
+    <script>
+    var MerchantId=@Model;
+    $(document).ready(function () {
+        if ($(window).width() < 768) {
+            $(".accrodion-regular").show();
+            $(".tab-regular").remove();
+        } else {
+            $(".tab-regular").show();
+            $(".accrodion-regular").remove();
+        }
+
+        $('.collapse').on('shown.bs.collapse', function () {
+            $(this).parent().find(".fa-angle-down").removeClass("fa-angle-down").addClass("fa-angle-up");
+        }).on('hidden.bs.collapse', function () {
+            $(this).parent().find(".fa-angle-up").removeClass("fa-angle-up").addClass("fa-angle-down");
+        });
+
+
+        $("#outletStartDate").val(moment().format("YYYY-MM-DD"));
+        $("#outletEndDate").val(moment().format("YYYY-MM-DD"));
+        $("#digitalStartDate").val(moment().format("YYYY-MM-DD"));
+        $("#digitalEndDate").val(moment().format("YYYY-MM-DD"));
+        $("#deliveryStartDate").val(moment().format("YYYY-MM-DD"));
+        $("#deliveryEndDate").val(moment().format("YYYY-MM-DD"));
+
+        $(".outletFullReport").click(function () {
+            var startDate = $("#outletStartDate").val();
+            var endDate = $("#outletEndDate").val();
+            var url = "/App/Sales/OutletRedemptionReport?startDate=" + startDate + "&endDate=" + endDate;
+            window.open(url, "_blank");
+        });
+
+        $(".digitalFullReport").click(function () {
+            var startDate = $("#digitalStartDate").val();
+            var endDate = $("#digitalEndDate").val();
+            var url = "/App/Sales/DigitalRedemptionReport?startDate=" + startDate + "&endDate=" + endDate;
+            window.open(url, "_blank");
+        });
+
+         $(".deliveryFullReport").click(function () {
+            var startDate = $("#deliveryStartDate").val();
+            var endDate = $("#deliveryEndDate").val();
+            var url = "/App/Sales/DeliveryRedemptionReport?startDate=" + startDate + "&endDate=" + endDate;
+            window.open(url, "_blank");
+        });
+        $(".outletSearch").click(function () {
+            var startDate = moment($("#outletStartDate").val()).format("YYYY-MM-DD");
+            var endDate = moment($("#outletEndDate").val()).format("YYYY-MM-DD");
+            GetOutletSummary(MerchantId, startDate, endDate);
+        });
+
+        $(".digitalSearch").click(function () {
+            var startDate = moment($("#digitalStartDate").val()).format("YYYY-MM-DD");
+            var endDate = moment($("#digitalEndDate").val()).format("YYYY-MM-DD");
+            GetDigitalSummary(MerchantId, startDate, endDate);
+        });
+
+        $(".deliverySearch").click(function () {
+            var startDate = moment($("#deliveryStartDate").val()).format("YYYY-MM-DD");
+            var endDate = moment($("#deliveryEndDate").val()).format("YYYY-MM-DD");
+            GetDeliverySummary(MerchantId, startDate, endDate);
+        });
+
+        $(".outletSearch").click();
+        $(".digitalSearch").click();
+        $(".deliverySearch").click();
+    });
+
+    function GetOutletSummary(merchantId, startDate, endDate) {
+        $("#outletsTableBody").html("");
+        $.ajax({
+            type: "GET",
+            async: false,
+            dataType: 'json',
+             data: {
+                startDate: startDate, endDate: endDate
+            },
+            url: '/App/Sales/GetInStoreRedemptionSummary/' + merchantId,
+            success: function (response) {
+                if (response.successful) {
+                    if (response.data != null) {
+                        if (response.data.length > 0) {
+                            var list = "";
+                            $(response.data).each(function (index, item) {
+                                var row = "<tr>";
+                                row = row + "<td style='text-align: center;'>" + item.outletName + "</td>";
+                                row = row + "<td style='text-align: center;'>" + item.totalRevenue.toFixed(2) + "</td>";
+                                row = row + "<td style='text-align: center;'>" + item.totalTransaction + "</td>";
+                                row = row + "</tr>";
+                                list = list + row;
+                            });
+                            $("#outletsTableBody").html(list);
+                            //  table = $('#productsTable').DataTable({ "iDisplayLength": 25 });
+
+                        }
+                        else {
+                              $("#outletsTableBody").html("<tr><td colspan='7'>No Transaction</td></tr>");
+                        }
+                    }
+                }
+                else
+                    toastr.error(response.message);
+            },
+            error: function (error) {
+                toastr.error(error);
+            }
+        });
+    }
+
+    function GetDigitalSummary(merchantId, startDate, endDate) {
+        $("#digitalTableBody").html("");
+        $.ajax({
+            type: "GET",
+            async: false,
+            dataType: 'json',
+             data: {
+                startDate: startDate, endDate: endDate
+            },
+            url: '/App/Sales/GetDigitalRedemptionSummary/' + merchantId,
+            success: function (response) {
+                if (response.successful) {
+                    if (response.data != null) {
+                        if (response.data.length > 0) {
+                            var list = "";
+                            $(response.data).each(function (index, item) {
+                                var row = "<tr>";
+                                row = row + "<td style='text-align: center;'>" + item.productName + "</td>";
+                                row = row + "<td style='text-align: center;'>" + item.totalRevenue.toFixed(2) + "</td>";
+                                row = row + "<td style='text-align: center;'>" + item.totalTransaction + "</td>";
+                                row = row + "</tr>";
+                                list = list + row;
+                            });
+                            $("#digitalTableBody").html(list);
+                            //  table = $('#productsTable').DataTable({ "iDisplayLength": 25 });
+
+                        }
+                        else {
+                              $("#digitalTableBody").html("<tr><td colspan='7'>No Transaction</td></tr>");
+                        }
+                    }
+                }
+                else
+                    toastr.error(response.message);
+            },
+            error: function (error) {
+                toastr.error(error);
+            }
+        });
+    }
+
+    function GetDeliverySummary(merchantId, startDate, endDate) {
+        $("#deliveryTableBody").html("");
+        $.ajax({
+            type: "GET",
+            async: false,
+            dataType: 'json',
+             data: {
+                startDate: startDate, endDate: endDate
+            },
+            url: '/App/Sales/GetDeliveryRedemptionSummary/' + merchantId,
+            success: function (response) {
+                if (response.successful) {
+                    if (response.data != null) {
+                        if (response.data.length > 0) {
+                            var list = "";
+                            $(response.data).each(function (index, item) {
+                                var row = "<tr>";
+                                row = row + "<td style='text-align: center;'>" + item.productName + "</td>";
+                                row = row + "<td style='text-align: center;'>" + item.totalRevenue.toFixed(2) + "</td>";
+                                row = row + "<td style='text-align: center;'>" + item.totalTransaction + "</td>";
+                                row = row + "</tr>";
+                                list = list + row;
+                            });
+                            $("#deliveryTableBody").html(list);
+                            //  table = $('#productsTable').DataTable({ "iDisplayLength": 25 });
+
+                        }
+                        else {
+                              $("#deliveryTableBody").html("<tr><td colspan='9' style='text-align: center;'>No Transaction</td></tr>");
+                        }
+                    }
+                }
+                else
+                    toastr.error(response.message);
+            },
+            error: function (error) {
+                toastr.error(error);
+            }
+        });
+    }
+
+    </script>
+
+    <!--#endregion .............................................  INDEX END  ............................................. -->
+}

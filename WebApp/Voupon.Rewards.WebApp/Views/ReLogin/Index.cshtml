@@ -1,0 +1,33 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+@{
+    ViewData["Title"] = "Cart Checkout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .top-navbar {
+        margin-top: -40px;
+    }
+
+    .rewards-body {
+        padding-top: 65px;
+    }
+</style>
+
+
+@section styles{
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css">
+}
+
+@section scripts
+{
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.js"></script>
+    <script>
+        $(function () {
+            $(".loginLabel").text("Login");
+            $(".vouponLogin").click();
+        });
+    </script>
+}

@@ -1,0 +1,660 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="dashboard-main-wrapper">
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content ">
+            <div class="row">
+                <div class="col-lg-12 mb-2 section-block" style="justify-content:space-between;">
+                    <h3 class="page-header">Product New Ads</h3>
+                    <div class="row align-items-center">
+                        <h5 class="mb-0 mx-2">Ad Impression Threshold</h5>
+                        <input class="mr-2" style="max-width:50px;" type="text" value="" id="productAdsConfig" />
+                        <button id="btnUpdateProductAdsConfig" type="button" class="btn btn-primary">Update</button>
+                    </div>
+                </div>
+                <div class="col-lg-12 mb-2 section-block" style="justify-content:space-between;">
+                    <div class="col row px-0">
+                        <div class="sort-div col pl-0">
+                            <button class="dropdown-toggle" id="menu1" type="button" data-toggle="dropdown">
+                                <p>Sort by: <span>Product name (A - Z)</span></p>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu sort-list-menu" role="menu" aria-labelledby="menu1">
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#" value="product-title" order="ascending">Product name (A - Z)</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#" value="product-title" order="descending">Product name (Z - A)</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#" value="product-merchant-name" order="ascending">Merchant name (A - Z)</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#" value="product-merchant-name" order="descending">Merchant name (Z - A)</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#" value="product-adImpressionCount" order="ascending">Impression count (0 - 9)</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#" value="product-adImpressionCount" order="descending">Impression count (9 - 0)</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#" value="product-cTR" order="ascending">CTR (0 - 9)</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#" value="product-cTR" order="descending">CTR (9 - 0)</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#" value="publish-status" order="ascending">Published </a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#" value="publish-status" order="descending">Unpublished</a></li>
+                            </ul>
+                        </div>
+                        <div class="col search-row px-0 px-md-2">
+                            <div class="input-group col-12 px-0">
+                                <input class="form-control py-2 border-right-0 border" type="search" value="" placeholder="search..." id="product-search-input">
+                                <span class="input-group-append">
+                                    <button class="btn btn-outline-secondary border-left-0 border" type="button" id="product-search-btn">
+                                        <i class="fa fa-search" aria-hidden="true"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+            <div class="row users-table-card col-lg-12 col-md-12">
+                <div class="row products-table-card col-lg-12 col-md-12 px-0">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="EditProductAd" data-id="0" remarks="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Product Ad</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="divEditDiscount">
+                    <div>
+                        <div class="form-group row">
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                <label class="col-form-label">Ad Impression Count<span id=""></span></label>
+                                <input id="AdImpressionCount" type="number" class="form-control" min="0" value="0">
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                <label id="RequiredDiscountedValue" class="col-form-label">Ad Click Count</label>
+                                <input id="AdClickCount" type="number" class="form-control" min="0" value="0">
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-group row">
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                <label id="RequiredDiscountedValue" class="col-form-label">CTR</label>
+                                <input id="AdCTR" type="number" class="form-control" min="0" value="0.0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="UpdateProductAd" status-id="edit">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="productTargetModal" data-id="0" remarks="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update Demographic Targets</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="product-target-modal-body">
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnUpdateDemographicTargets" status-id="edit">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row card-table-row card-table-template" style="display:none;">
+    <div class="mobile-card-row row col-12">
+        <div class="row col-xl-4 col-lg-4 col-md-4 col-12 no-padding mt-2">
+            <div class="row col-8 no-padding align-content-between">
+                <div class="row col-12 no-padding">
+                    <div class="col-12 card-record-row product-title ellipsis bold">
+                        Product Name
+                    </div>
+                </div>
+                <div class="row col-4 no-padding">
+                    <div class="col-12 card-record-row product-id">
+                        18
+                    </div>
+                </div>
+                <div class="row col-8 no-padding">
+                    <div class="col-12 card-record-row product-merchant-name ellipsis bold">
+                        Merchant name
+                    </div>
+                </div>
+            </div>
+            <div class="row col-4 no-padding">
+                <div class="row col-12 no-padding align-content-between">
+                    <div class="col-12 card-record-row orderid">
+                        <b><span>RM</span><span class="product-price">100</span></b>
+                    </div>
+                    <div class="col-12 card-record-row orderid">
+                        <b><span class="product-pointsRequired">100</span><span> VPoints</span></b>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row col-xl-4 col-lg-4 col-md-4 col-12 no-padding mt-2">
+            <div class="row col-6 no-padding">
+                <div class="card-table-row col-12 no-padding align-content-between">
+                    <div class="row col-12 card-record-row justify-content-between">
+                        <span>Impressions </span><span><b class="product-adImpressionCount">19</b></span>
+                    </div>
+                    <div class="row col-12 card-record-row justify-content-between">
+                        <span>Click </span><span><b class="product-adClickCount">2</b></span>
+                    </div>
+                    <div class="row col-12 card-record-row justify-content-between">
+                        <span>CTR </span><span><b class="product-cTR">10%</b></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row col-6 card-record-row no-padding">
+                <div class="row col-12 no-padding">
+                    <div class="row col-12 card-record-row ellipsis-3 align-content-between">
+                        Target: <span class="product-locations">Penang</span>,
+                        <span class="product-target">All Race, All Age, Male</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row col-xl-4 col-lg-4 col-md-4 col-12 no-padding mt-2">
+            <div class="row col-4 no-padding">
+                <div class="row col-12 no-padding">
+                    <div class="col-12 card-record-row product-status">
+                    </div>
+                    <div class="col-12 card-title-row">
+                        Published
+                    </div>
+                </div>
+            </div>
+            <div class="row col-8 card-record-row no-padding product-action align-content-between" style="justify-content: space-evenly;">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts{
+
+    <script>
+        var table = null;
+        var selectedRow = null;
+        var productsDemoTargetsList = [];
+        function EditCommission(btn) {
+            selectedRow = btn;
+            var productId = $(btn).attr("data-id");
+            var commission = $(btn).attr("commission");
+            $("#EditCommissionModal").attr("data-id", productId);
+            $("#DefaultCommissionInput").val(commission);
+            $("#EditCommissionModalTitle").html("Commission [" + productId + "]");
+            $("#EditCommissionModal").modal("show");
+        }
+        $(document).ready(function () {
+            $("#product-search-btn").on("click", function () {
+                var execludedList = [];
+                var value = $("#product-search-input").val().toLowerCase();
+                if (value == "") {
+                    $(".products-table-card .mobile-card-row").each(function () {
+                        $(this).show();
+                    })
+                    return false;
+                }
+                $(".products-table-card .mobile-card-row").hide()
+                $(".card-record-row").each(function () {
+                    var textToFilter = $(this).text();
+                    if (textToFilter.toLowerCase().indexOf(value) !== -1) {
+                        $(this).closest('.mobile-card-row').show();
+                    }
+                });
+            });
+
+            $("#product-search-input").on("search", function () {
+                var execludedList = [];
+                var value = $("#product-search-input").val().toLowerCase();
+                if (value == "") {
+                    $(".products-table-card .mobile-card-row").each(function () {
+                        $(this).show();
+                    })
+                    return false;
+                }
+                $(".products-table-card .mobile-card-row").hide()
+                $(".card-record-row").each(function () {
+                    var textToFilter = $(this).text();
+                    if (textToFilter.toLowerCase().indexOf(value) !== -1) {
+                        $(this).closest('.mobile-card-row').show();
+                    }
+                });
+            });
+
+            $("#btnUpdateProductAdsConfig").click(function () {
+                UpdateProductAdsConfig($("#productAdsConfig").val())
+            });
+
+
+            $("#UpdateProductAd").click(function () {
+                var productAdImpressionCount = $("#AdImpressionCount").val();
+                var productAdClickCount = $("#AdClickCount").val();
+                var productAdCtr = $("#AdCTR").val();
+                var productAdId = $("#EditProductAd").attr("data-id");
+
+                UpdateProductAdsDetails(productAdId, productAdImpressionCount, productAdClickCount, productAdCtr);
+            });
+            $("#product-search-input").on("search", function () {
+                var execludedList = [];
+                var value = $("#product-search-input").val().toLowerCase();
+                if (value == "") {
+                    $(".products-table-card").children().each(function () {
+                        $(this).show();
+                    })
+                    return false;
+                }
+                $(".products-table-card").find(".card-title-name").filter(function () {
+                    var textToFilter = $(this).text() /*+ " " + $(this).siblings().eq(1).text()*/ /*+ " " + $(this).siblings().eq(1).text()*/;
+                    if (textToFilter.toLowerCase().indexOf(value) == -1) {
+                        $(this).parent().parent().parent().hide();
+                    }
+                    else {
+                        $(this).parent().parent().parent().show();
+                    }
+                });
+            });
+
+            GetProductList();
+            GetProductAdsImpressionIdentifier();
+            getProductDemographics();
+
+        });
+
+        function UpdateProductStatus(input) {
+            var productId = $(input).attr("data-id");
+            var status = $(input).is(":checked");
+            UpdateProductPublishedStatus(productId, status);
+
+            if ($(input).is(":checked")) {
+                $(input).parent().find('.publish-status').html('Published');
+            } else {
+                $(input).parent().find('.publish-status').html('Unpublished');
+            }
+        }
+        function RedirectToEdit(btn) {
+            var productId = $(btn).attr("data-id");
+            window.location.href = "/Admin/Products/Edit/" + productId;
+        }
+
+        function GetProductList() {
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/Admin/ProductReco/GetNewProductRecoList',
+                success: function (response) {
+                    if (table != null)
+                        table.destroy();
+                    $(".products-table-card").html("");
+                    if (response.successful) {
+                        if (response.data.length > 0) {
+                            $(response.data).each(function (index, item) {
+                                var template = $(".card-table-template");
+                                template.find(".product-title").html("<a class='btn-edit' data-id='" + item.id + "' href='/Admin/Products/Edit/" + item.productId + "'>" + item.title + "</a>");
+                                template.find(".product-id").html(item.productId);
+                                if (item.productTargetsText != "") {
+                                    template.find(".product-target").html(item.productTargetsText);
+                                }
+                                else {
+                                    template.find(".product-target").html("All Ages, Both Genders, All Races");
+                                }
+                                template.find(".product-target").attr("data-id", item.productId);
+
+                                template.find(".product-price").html(item.price);
+
+                                template.find(".product-pointsRequired").html(item.pointsRequired);
+                                template.find(".product-actualPriceForVpoints").html(item.actualPriceForVpoints);
+                                template.find(".product-adImpressionCount").html(item.adImpressionCount);
+                                template.find(".product-adClickCount").html(item.adClickCount);
+                                template.find(".product-cTR").html((item.ctr * 100).toFixed(2) + "%");
+
+                                $(item.productAdLocations).each(function (index, location) {
+                                    if (index == 0)
+                                        template.find(".product-locations").html(location);
+                                    else {
+                                        template.find(".product-locations").html(template.find(".product-locations").html() + ", " + location);
+                                    }
+
+                                });
+                                if (item.productAdLocations.length == 0) {
+                                    template.find(".product-locations").html("All locations");
+                                }
+                                template.find(".product-merchant-name").html('<a data-id="' + item.merchantId + '" href="/Admin/Merchants/Details/' + item.merchantId + '">' + item.merchantName + '</a>');
+                                template.find(".product-status").html(item.isActive.toString());
+
+                                if (item.isActive) {
+                                    template.find(".product-status").html("<div class='switch-button switch-button-success'>" +
+                                        "<input class='activatedStatus' onchange='UpdateProductStatus(this);' type='checkbox' checked='' name='switch_" + item.id + "' data-id='" + item.id + "' id='switchMobile_" + item.id + "'>" +
+                                        "<span> <label for='switchMobile_" + item.id + "'></label> " +
+                                        "</span><span class='d-none publish-status'>Published</span> </div>");
+                                }
+                                else {
+                                    template.find(".product-status").html("<div class='switch-button switch-button-success'>" +
+                                        "<input class='activatedStatus' onchange='UpdateProductStatus(this);' type='checkbox'  name='switch_" + item.id + "' data-id='" + item.id + "' id='switchMobile_" + item.id + "'>" +
+                                        "<span> <label for='switchMobile_" + item.id + "'></label> " +
+                                        "</span><span class='d-none publish-status'>Unpublished</span> </div>");
+                                }
+
+                                template.find(".product-action").html("<a class='btn-edit mr-3' data-id='" + item.id + "' href='/Admin/ProductReco/ProductSubgroupReco/" + item.id + "'>Subgroups</a>" +
+                                    "<a class='btn-edit mr-3' data-id='" + item.id + "' href='/Admin/ProductReco/ProductRecoPartnerDomains/" + item.id + "'>Partner Domain</a> " +
+                                    "<a class='btn-editProductAds mr-3' href='javascript:void(0)' data-id='" + item.id + "'>Edit</a> " +
+                                    "<a class='updateProductTargets mr-3' href='javascript:void(0)' data-id='" + item.productId + "'>Targets</a>");
+                                var productDemoTarget = { productId: item.productId, targetList: item.productDemographicTargets };
+
+                                productsDemoTargetsList.push(productDemoTarget);
+                                $(".products-table-card").append(template.html());
+                            });
+
+                            $('.btn-editProductAds').click(function () {
+                                $("#EditProductAd").modal("show");
+                                $("#EditProductAd").attr("data-id", $(this).attr("data-id"));
+                                var adImpressionCount = $(this).parent().parent().parent().find(".product-adImpressionCount").html();
+                                var adClickCount = $(this).parent().parent().parent().find(".product-adClickCount").html();
+                                var adCtr = $(this).parent().parent().parent().find(".product-cTR").html();
+                                $("#AdCTR").val(adCtr);
+                                $("#AdClickCount").val(adClickCount);
+                                $("#AdImpressionCount").val(adImpressionCount);
+
+                            });
+                            $('.updateProductTargets').click(function () {
+                                $("#productTargetModal").modal("show");
+                                $("#productTargetModal").attr("data-id", $(this).attr("data-id"));
+                                getTargetDemographicsForProduct($(this).attr("data-id"));
+                            });
+                        }
+                    } else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+
+        function UpdateProductPublishedStatus(producAdtId, status) {
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    ProductAdId: producAdtId, Status: status
+                },
+                url: '/Admin/ProductReco/UpdateProductRecoStatus',
+                success: function (response) {
+                    if (response.successful)
+                        toastr.success(response.message);
+                    else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function GetProductAdsImpressionIdentifier(producAdtId, status) {
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                url: '/Admin/ProductReco/GetProductRecoConfig',
+                success: function (response) {
+                    if (response.successful)
+                        $("#productAdsConfig").val(response.data)
+                    else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function UpdateProductAds() {
+            $.ajax({
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                url: appConfig.serverlessUrl + '/api/GenerateRewardsAdsManual',
+                success: function (response) {
+                    if (response.successful) {
+                        toastr.success("Successfully Update Product Ads");
+                        location.reload();
+                    } else {
+                        toastr.error('error');
+                    }
+                },
+                error: function (err) {
+                    toastr.error('error');
+
+                }
+            });
+        }
+
+
+        function UpdateProductAdsConfig(value) {
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                data: {
+                    ImpressionCountIdentifier: value
+                },
+                url: '/Admin/ProductReco/UpdateProductRecoConfig',
+                success: function (response) {
+                    if (response.successful) {
+                        toastr.success(response.message);
+                        location.reload();
+                    }
+                    else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function UpdateProductAdsDetails(productAdId, productAdImpressionCount, productAdClickCount, productAdCtr) {
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    ProductAdId: productAdId, AdClickCount: productAdClickCount, AdImpressionCount: productAdImpressionCount, CTR: productAdCtr
+                },
+                url: '/Admin/ProductReco/UpdateProductRecoDetailsCommand',
+                success: function (response) {
+                    if (response.successful) {
+                        toastr.success(response.message);
+                        location.reload();
+                    }
+                    else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function getProductDemographics() {
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/Admin/ProductReco/GetProductDemographics',
+                success: function (response) {
+                    if (response.successful) {
+                        if (response.data != null) {
+                            console.log(response.data);
+                            var demographicsHtml = "";
+
+                            $(response.data).each(function () {
+                                demographicsHtml += '<div class="row"><div class="col-lg-12"><div class="panel panel-default"><div class="panel-heading" style="padding-bottom:0;"><label>' + this.name + '</label></div><div class="panel-body" style=""><div class="row"><div class="col-lg-12"><input checked="checked" class="vodus-input selectAllDemographicSelector" target-id="' + this.name + 'Items" data-val="true" type="checkbox" value="true"><label >All</label></div></div><div class="row demographics-target-parent" id="' + this.name + 'Items">';
+                                var demographicName = this.name;
+                                var demographicId = this.id;
+                                var counter = 0;
+                                $(this.demographicsValues).each(function () {
+                                    demographicsHtml += '<div class="col-lg-3 checkBoxDataItem"> <input checked = "checked" class="vodus-input demographicItem" data-type="Female" data-val="true" id = "TargetPanel_' + this.name + '_' + counter + '" data-id="' + this.id + '" demographic-id="' + demographicId + '"  type = "checkbox" value = "true" > <input name="TargetPanel.GenderList[0].Selected" type="hidden" value="false"><label for="TargetPanel_' + this.name.replace(" ", "") + '_' + counter + '">' + this.name + '</label></div>';
+                                });
+                                demographicsHtml += '</div></div></div></div></div>';
+                            });
+
+                            $(".product-target-modal-body").append(demographicsHtml);
+                            if (response.data.length > 0) {
+                                $(".selectAllDemographicSelector").prop("checked", false);
+                                $(".demographicItem").prop("checked", false);
+                            }
+
+
+                            demographicsTargetBindEvents();
+                        }
+                    } else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function demographicsTargetBindEvents() {
+            $(".selectAllDemographicSelector").each(function () {
+                var demographicsParnetElement = $(this).attr("target-id");
+                $(this).click(function () {
+                    var isChecked = $(this).prop("checked");
+                    $("#" + demographicsParnetElement).find(".demographicItem").each(function () {
+                        $(this).prop("checked", isChecked);
+                    });
+                })
+            });
+
+            $("#btnUpdateDemographicTargets").click(function () {
+                var model = [];
+                $(".demographics-target-parent").each(function () {
+                    $(this).find(".demographicItem").each(function () {
+                        if ($(this).prop("checked")) {
+                            model.push({
+                                DemographicValue: parseInt($(this).attr("data-id")),
+                                DemographicTypeId: parseInt($(this).attr("demographic-id")),
+                            });
+                        }
+                    });
+                });
+
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify(model),
+                    url: '/Admin/ProductReco/UpdateProductDemographicsTargetCommand/' + $('#productTargetModal').attr("data-id"),
+                    contentType: "application/json",
+                    success: function (response) {
+                        if (response.successful) {
+                            toastr.success(response.message);
+                            $(".product-target[data-id='" + $('#productTargetModal').attr("data-id") + "']").html(response.data.productTargetsText);
+                            $("#productTargetModal").modal("hide");
+                            updateTargetDemographicsForProduct($('#productTargetModal').attr("data-id"), response.data.productDemographicTargets)
+                        }
+                        else
+                            toastr.error(response.message);
+                    },
+                    error: function (error) {
+                        toastr.error(error);
+                    }
+                });
+
+
+            });
+        }
+        function getTargetDemographicsForProduct(productId) {
+
+            $(productsDemoTargetsList).each(function () {
+                if (this.productId == productId) {
+                    if ($(this.targetList).length == 0) {
+                        $(".demographicItem").prop("checked", true);
+                        return false;
+                    }
+                    $(".demographicItem").prop("checked", false);
+                    $(this.targetList).each(function () {
+                        $(".demographicItem[demographic-id='" + this.demographicTypeId + "'][data-id='" + this.demographicValue + "']").prop("checked", true);
+                    })
+                }
+            });
+        }
+
+        function updateTargetDemographicsForProduct(productId, targetList) {
+
+            $(productsDemoTargetsList).each(function () {
+                if (this.productId == productId) {
+                    this.targetList = targetList;
+                }
+            });
+        }
+
+        $(".sort-list-menu > li > a").click(function () {
+            var variable = "." + $(this).attr("value");
+            var order = $(this).attr("order");
+            console.log(variable)
+            $(".sort-div > button > p > span").html($(this).html());
+
+            var list, i, switching, b, shouldSwitch;
+            list = $(".products-table-card");
+            switching = true;
+            /* Make a loop that will continue until
+            no switching has been done: */
+            while (switching) {
+                // Start by saying: no switching is done:
+                switching = false;
+                b = list.find(".mobile-card-row");
+                // Loop through all list items:
+                for (i = 0; i < (b.length - 1); i++) {
+                    // Start by saying there should be no switching:
+                    shouldSwitch = false;
+                    /* Check if the next item should
+                    switch place with the current item: */
+                    if (order == "descending") {
+                        if (b.eq(i).find(variable).html().toLowerCase() < b.eq(i + 1).find(variable).html().toLowerCase()) {
+                            /* If next item is alphabetically higher than current item,
+                            mark as a switch and break the loop: */
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else {
+                        if (b.eq(i).find(variable).html().toLowerCase() > b.eq(i + 1).find(variable).html().toLowerCase()) {
+                            /* If next item is alphabetically lower than current item,
+                            mark as a switch and break the loop: */
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    /* If a switch has been marked, make the switch
+                    and mark the switch as done: */
+                    b[i].parentNode.insertBefore(b[i + 1], b[i]);
+                    switching = true;
+                }
+            }
+        })
+    </script>
+}

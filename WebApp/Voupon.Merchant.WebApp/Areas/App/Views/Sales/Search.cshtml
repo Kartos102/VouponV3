@@ -1,0 +1,985 @@
+﻿@using System.Security.Claims
+
+@{
+    ViewData["Title"] = "Sales Transactions";
+    Layout = "~/Areas/App/Views/Shared/_Layout.cshtml";
+    var identity = User.Identity as ClaimsIdentity;
+
+}
+<head>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+</head>
+
+<div class="dashboard-main-wrapper sales-summary">
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content no-padding products-card-row">
+            <div class="row">
+                <div class="col-md-7 col-12 row">
+                    <div class="col-lg-12 m-lg-0 m-md-0 mt-0 mb-2 px-0 section-block" style="justify-content:space-between;">
+                        <h3 class="page-header p-0">Completed Sales</h3>
+                        <div class="row ecommerce-widget table-function col-auto ml-auto">
+                            <div class="row flex-nowrap">
+                                <div class="input-calendar">
+                                    <input type="text" id="salesHistoryDate" name="daterange" value="01/01/2021 - 01/15/2021" />
+                                    <i class="fal fa-calendar-alt"></i>
+                                </div>
+                                <button type="button" class="btn btn-primary btn-sm salesSearchByDate ml-2">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 col-12 row">
+                    <div class="sort-div col-6 pl-0">
+                        <button class="dropdown-toggle" id="menu1" type="button" data-toggle="dropdown">
+                            <p>Sort by: <span>Status (A - Z)</span></p>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu sort-list-menu" role="menu" aria-labelledby="menu1">
+                            <li role="presentation"><a class="product-sorting" role="menuitem" tabindex="-1" href="#" value="email" order="ascending">Email (A - Z)</a></li>
+                            <li role="presentation"><a class="product-sorting" role="menuitem" tabindex="-1" href="#" value="email" order="descending">Email (Z - A)</a></li>
+                            <li role="presentation"><a class="product-sorting" role="menuitem" tabindex="-1" href="#" value="badge" order="ascending">Badge (A - Z)</a></li>
+                            <li role="presentation"><a class="product-sorting" role="menuitem" tabindex="-1" href="#" value="badge" order="descending">Badge (Z - A)</a></li>
+                        </ul>
+                    </div>
+                    <div class="search-row input-group col-6 px-0">
+                        <input class="form-control py-2 border-right-0 border" type="search" value="" placeholder="Search a product" id="product-search-input">
+                        <span class="input-group-append">
+                            <button class="btn btn-outline-secondary border-left-0 border" type="button" id="product-search-btn">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mt-3 mb-2">
+                <p id="searchCriteria"></p>
+            </div>
+            <div class="align-center mt-3" style="display:none;" id="noSales">
+                No transaction found
+            </div>
+            <div class="sales-history-card products-card-row" id="salesTable">
+                <div class="row  products-table-card col-lg-12 col-md-12" id="salesTableBody">
+
+                </div>
+            </div>
+            <div style="display:none;">
+                <div class="row card-table-row card-table-template-outlet">
+                    <div class="mobile-card-row parent-row row col-12">
+                        <div class="row col-xl-3 col-lg-3 col-md-3 col-12 no-padding">
+                            <div class="row col-xl-5 col-lg-12 col-md-12 col-4 no-padding mb-2 mb-xl-0">
+                                <div class="row col-12 no-padding">
+                                    <div class="col-12 px-0 card-record-row purchased-date-outlet pl-1">
+                                        17/09/2020
+                                    </div>
+                                    <div class="col-12 px-0 card-title-row pl-1">
+                                        Order Date
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row col-xl-7 col-lg-12 col-md-12 col-8 no-padding">
+                                <div class="row col-12 no-padding">
+                                    <div class="col-12 card-record-row order-id ellipsis">
+                                        1
+                                    </div>
+                                    <div class="col-12 card-title-row ">
+                                        Order ID
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row col-xl-9 col-lg-9 col-md-9 col-12 no-padding">
+                            <div class="row col-4 col-md-4 col-lg-4 col-xl-4 no-padding">
+                                <div class="row col-xl-6 col-12 mb-2 mb-xl-0 no-padding">
+                                    <div class="col-12 px-0 card-record-row card-title-name-outlet product-title ellipsis-3 product-">
+                                        Test
+                                    </div>
+                                    <div class="col-12 px-0 card-title-row ellipsis">
+                                        Product Name
+                                    </div>
+                                </div>
+                                <div class="row col-xl-6 col-12 no-padding">
+                                    <div class="col-12 card-record-row product-email ellipsis pr-0 pl-1">
+                                        5.00
+                                    </div>
+                                    <div class="col-12 card-title-row pl-1">
+                                        Email
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row col-4 col-md-4 col-lg-4 col-xl-4 no-padding">
+                                <div class="row col-xl-4 col-12 mb-2 mb-xl-0 no-padding">
+                                    <div class="col-12 card-record-row revenue pr-0">
+                                        RM 5.00
+                                    </div>
+                                    <div class="col-12 card-title-row">
+                                        Revenue
+                                    </div>
+                                </div>
+                                <div class="row col-xl-4 col-12 no-padding">
+                                    <div class="col-12 card-record-row order-last-update">
+                                        5.00
+                                    </div>
+                                    <div class="col-12 card-title-row">
+                                        Last Update
+                                    </div>
+                                </div>
+                                 <div class="row col-xl-4 col-12 no-padding">
+                                    <div class="col-12 card-record-row order-last-update-by ellipsis">
+                                        kok.hong@vodus.com
+                                    </div>
+                                    <div class="col-12 card-title-row">
+                                        Promo discount
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row col-4 col-md-4 col-lg-4 col-xl-4 no-padding">
+                               
+                                <div class="row col-xl-6 col-lg-4 col-md-4 col-12 no-padding">
+                                    <div class="status-badge row col-12 no-padding align-center">
+                                        <p class="badge card-record-row">Success</p>
+                                    </div>
+                                </div>
+                                <div class="row col-xl-6 col-4 card-record-row order-action action-outlet p-0 justify-content-around">
+                                    <div class="action-btn-group">
+
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+  <div class="modal fade modal-list" id="showDetailsItemModal" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalTitle">Order Details</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label for="message-text" class="col-form-label">Email</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtEmailItem"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Product name</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtProductNameItem"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Variation</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtProductVariationTextItem"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Purchased Date</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtPurchasedDateItem"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">VPoints</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtVPointsItem"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Price (RM)</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtPriceItem"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row" id="divQuanDelivery">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Quantity </label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtQuanItem"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label for="message-text" class="col-form-label">Shipping Cost</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtProductShippingCostItem"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">User's full name</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtPFullNameItem"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Phone number</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="txtPhoneNumberItem"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">Address</label>
+                        </div>
+                        <div class="col-9">
+                            <label style="white-space: unset;" type="text" class="col-form-label" id="txtAddressItem"></label>
+                        </div>
+                    </div>
+
+                    <div style="border-top: 1px solid #ddd; padding: 10px 0;margin-top: 10px;">
+                        <div class="form-group row">
+                            <div class="col-3">
+                                <label for="refundPointsDelivery" class="col-form-label">Refund Points</label>
+                            </div>
+                            <div class="col-9">
+                                <p class="col-form-label" id="refundPointsItem">Refund Points</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-3">
+                                <label for="refundAmountDelivery" class="col-form-label">Refund Amount</label>
+                            </div>
+                            <div class="col-9 d-flex align-items-center">
+                                <span class="mr-1">RM </span><input type="number" id="refundAmountItem" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-3">
+                                <label for="message-text" class="col-form-label">Refund Type</label>
+                            </div>
+                            <div class="col-9 row align-items-center">
+                                <div class="w-100 row align-items-center">
+                                    <input type="radio" id="refundItemType_2" name="refundType" value="2" data-id="2" /> <label for="refundDeliveryType_2">Insufficient stock</label><br />
+                                </div>
+                                <div class="w-100 row align-items-center">
+                                    <input type="radio" id="refundItemType_3" name="refundType" value="3" data-id="3" /> <label for="refundDeliveryType_3">Others</label><br />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3">
+                                <label for="message-text" class="col-form-label">Refund Remark</label>
+                            </div>
+                            <div class="col-9 d-flex align-items-center">
+                                <textarea type="text" id="itemRefundRemark" cols="20" style="width:400px;max-width:100%"></textarea>
+                                <button type="button" class="btn btn-primary refundAction" data-type="digital">Refund</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="modal fade modal-list" id="showDetailsModal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle">Order Details</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <div class="col-3">
+                        <label for="message-text" class="col-form-label">Email:</label>
+                    </div>
+                    <div class="col-9">
+                        <label type="text" class="col-form-label" id="txtEmailDelivery"></label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+
+                        <label for="message-text" class="col-form-label">Product name:</label>
+                    </div>
+                    <div class="col-9">
+                        <label type="text" class="col-form-label" id="txtProductNameDelivery"></label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+
+                        <label for="message-text" class="col-form-label">Variation</label>
+                    </div>
+                    <div class="col-9">
+                        <label type="text" class="col-form-label" id="txtProductVariationText"></label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+
+                        <label for="message-text" class="col-form-label">Purchased Date:</label>
+                    </div>
+                    <div class="col-9">
+                        <label type="text" class="col-form-label" id="txtPurchasedDateDelivery"></label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+
+                        <label for="message-text" class="col-form-label">VPoints:</label>
+                    </div>
+                    <div class="col-9">
+                        <label type="text" class="col-form-label" id="txtVPointsDelivery"></label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+
+                        <label for="message-text" class="col-form-label">Price (RM):</label>
+                    </div>
+                    <div class="col-9">
+                        <label type="text" class="col-form-label" id="txtPriceDelivery"></label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+
+                        <label for="message-text" class="col-form-label">Shipping Cost (RM)</label>
+                    </div>
+                    <div class="col-9">
+                        <label type="text" class="col-form-label" id="txtProductShippingCost"></label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+
+                        <label for="message-text" class="col-form-label">User's Full Name:</label>
+                    </div>
+                    <div class="col-9">
+                        <label type="text" class="col-form-label" id="txtPFullNameDelivery"></label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+
+                        <label for="message-text" class="col-form-label">Phone number:</label>
+                    </div>
+                    <div class="col-9">
+                        <label type="text" class="col-form-label" id="txtPhoneNumberDelivery"></label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+                        <label for="message-text" class="col-form-label">Address:</label>
+                    </div>
+                    <div class="col-9">
+                        <label style="white-space: unset;" type="text" class="col-form-label" id="txtAddressDelivery"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $("#product-search-btn").on("click", function () {
+                var execludedList = [];
+                var value = $("#product-search-input").val().toLowerCase();
+                if (value == "") {
+                    $(".products-card-row .mobile-card-row").each(function () {
+                        $(this).show();
+                    })
+                    return false;
+                }
+                $(".products-card-row .parent-container").hide()
+                $(".collapse").removeClass("show");
+                $(".card-record-row").each(function () {
+                    var textToFilter = $(this).text();
+                    if (textToFilter.toLowerCase().indexOf(value) !== -1) {
+                        $(this).closest('.parent-container').show();
+                    }
+                });
+            });
+
+            $("#product-search-input").on("search", function () {
+                var execludedList = [];
+                var value = $("#product-search-input").val().toLowerCase();
+                if (value == "") {
+                    $(".collapse").removeClass("show");
+                    $(".parent-container").each(function () {
+                        $(this).show();
+                    })
+                    return false;
+                }
+                $(".parent-container").hide()
+                $(".collapse").removeClass("show");
+                $(".parent-container").each(function () {
+                    var parent = this;
+                    var textToFilter = $(this).next().find('.card-record-row').text();
+                    
+                    console.log(textToFilter);
+                    if (textToFilter != null && textToFilter != "") {
+                        if (textToFilter.toLowerCase().indexOf(value) > -1) {
+                            $(parent).show();
+                            $(this).next().addClass('show');
+                        }
+                    }
+                    
+                });
+            });
+
+            $(".sort-list-menu > li > a").click(function () {
+                var variable = "." + $(this).attr("value");
+                var order = $(this).attr("order");
+                console.log(variable)
+                $(".sort-div > button > p > span").html($(this).html());
+
+                var list, i, switching, b, shouldSwitch;
+                list = $(".products-card-row");
+                switching = true;
+                /* Make a loop that will continue until
+                no switching has been done: */
+                while (switching) {
+                    // Start by saying: no switching is done:
+                    switching = false;
+                    b = list.find(".mobile-card-row");
+                    // Loop through all list items:
+                    for (i = 0; i < (b.length - 1); i++) {
+                        // Start by saying there should be no switching:
+                        shouldSwitch = false;
+                        /* Check if the next item should
+                        switch place with the current item: */
+                        if (order == "descending") {
+                            if (b.eq(i).find(variable).html().toLowerCase() < b.eq(i + 1).find(variable).html().toLowerCase()) {
+                                /* If next item is alphabetically higher than current item,
+                                mark as a switch and break the loop: */
+                                shouldSwitch = true;
+                                break;
+                            }
+                        } else {
+                            if (b.eq(i).find(variable).html().toLowerCase() > b.eq(i + 1).find(variable).html().toLowerCase()) {
+                                /* If next item is alphabetically lower than current item,
+                                mark as a switch and break the loop: */
+                                shouldSwitch = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (shouldSwitch) {
+                        /* If a switch has been marked, make the switch
+                        and mark the switch as done: */
+                        b[i].parentNode.insertBefore(b[i + 1], b[i]);
+                        switching = true;
+                    }
+                }
+            })
+        });
+
+        $(function () {
+            $("#navSales").addClass("show");
+            $("#navSalesControl").attr("aria-expanded", true);
+
+            $("#salesHistoryDate").daterangepicker({
+                opens: 'left',
+                startDate: moment().subtract(14, 'days'),
+                endDate: moment(),
+                locale: {
+                    format: 'YYYY/MM/DD'
+                }
+            }, function (start, end, label) {
+                console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+            });
+
+            $(".salesSearchByDate").click(function () {
+                getSalesByDate();
+            });
+
+            getSalesByDate();
+        });
+
+        $(".refundAction").click(function () {
+            var refundButton = $(this);
+            var type = $(this).attr('data-type');
+            var remark = "";
+            var refundType = "1";
+            var refundAmount = "";
+
+            remark = $("#deliveryRefundRemark").val();
+            refundType = $("input[type='radio'][name='refundType']:checked").val();
+            refundAmount = $("#refundAmountDelivery").val();
+
+           
+
+            if (refundType == undefined) {
+                toastr.clear();
+                toastr.error("Please select a refund type");
+                return;
+            }
+
+            if (confirm('Are you sure you want to refund this order?')) {
+                $(refundButton).text("Processing...");
+                $(refundButton).attr("disabled", true);
+                $(refundButton).addClass("disabled");
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    data: {
+                        orderItemId: selectedOrderItemId,
+                        refundType: refundType,
+                        refundAmount: refundAmount,
+                        remark: remark
+                    },
+                    url: '/App/Sales/Refund',
+                    success: function (response) {
+                        if (response.successful) {
+                            toastr.success(response.message);
+
+                            if (type == "delivery") {
+                                $("#deliveryRefundRemark").val("");
+                                $("#showDetailsModalDelivery").modal('hide');
+                            }
+                            else if (type == "digital") {
+                                $("#digitalRefundRemark").val("");
+                                $("#showDetailsModalDigital").modal('hide');
+                            }
+                            else if (type == "instore") {
+                                $("#instoreRefundRemark").val("");
+                                $("#showDetailsModalOutlet").modal('hide');
+                            }
+                            $(refundButton).attr("disabled", false);
+                            $(refundButton).removeClass("disabled");
+                            $(refundButton).text("Refund");
+                            $(".order_item_id_" + selectedOrderItemShortId).hide();
+                            location.reload();
+                        }
+                        else {
+                            toastr.error(response.message);
+                            $(refundButton).attr("disabled", false);
+                            $(refundButton).removeClass("disabled");
+                            $(refundButton).text("Refund");
+                        }
+                    },
+                    error: function () {
+                        toastr.error("Something went wrong...");
+                        $(refundButton).attr("disabled", false);
+                        $(refundButton).removeClass("disabled");
+                        $(refundButton).text("Refund");
+                    }
+                });
+
+                return true;
+            } else {
+                // Do nothing!
+            }
+        });
+
+        function getSalesByDate() {
+            var from = moment($("#salesHistoryDate").val().split(" - ")[0]).format("YYYY-MM-DD");
+            var to = moment($("#salesHistoryDate").val().split(" - ")[1]).format("YYYY-MM-DD");
+
+            $("#searchCriteria").text("Search by date: " + from + " to " + to);
+
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/App/Sales/order-item-by-date/' + from + "/" + to,
+                success: function (response) {
+                    if (response.successful) {
+                        if (response.data.length !== 0) {
+                            resultView(response.data);
+
+                        } else {
+                            $("#noSales").show();
+                            $("#salesTable").hide();
+                        }
+                    }
+                    else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function getSalesByShortId() {
+            toastr.clear();
+            var shortId = $("#shortId").val();
+
+            if (shortId == null || shortId == "") {
+                toastr.error("Please enter your customer's Sales ID");
+                return;
+            }
+
+            $("#searchCriteria").text("Search by Order Item ShortId: " + shortId);
+
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/App/Sales/order-item-by-short-id/' + shortId,
+                success: function (response) {
+                    if (response.successful) {
+                        if (response.data.length !== 0) {
+                            resultView(response.data);
+                        } else {
+                            $("#noSales").show();
+                            $("#salesTable").hide();
+                        }
+                    }
+                    else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function getSalesByOrderShortId() {
+            toastr.clear();
+            
+            var shortId = $("#orderShortId").val();
+
+            if (shortId == null || shortId == "") {
+                toastr.error("Please enter your customer's Order ID");
+                return;
+            }
+
+            $("#searchCriteria").text("Search by Order ShortId: " + shortId);
+
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/App/Sales/order-item-by-order-short-id/' + shortId,
+                success: function (response) {
+                    if (response.successful) {
+                        console.log(response.data.length)
+                        if (response.data.length !== 0) {
+                            resultView(response.data);
+                        } else {
+                            $("#noSales").show();
+                            $("#salesTable").hide();
+                        }
+                    }
+                    else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function getSalesByEmail() {
+            toastr.clear();
+            var email = $("#email").val();
+
+            if (email == null || email == "") {
+                toastr.error("Please enter your customer's email");
+                return;
+            }
+
+            $("#searchCriteria").text("Search by email: " + email);
+
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/App/Sales/order-item-by-email/' + email,
+                success: function (response) {
+                    if (response.successful) {
+                        if (response.data.length !== 0) {
+                            resultView(response.data);
+                            $("#salesTable").show();
+                            $("#noSales").hide();
+                        } else {
+                            $("#noSales").show();
+                            $("#salesTable").html("");
+                        }
+                    }
+                    else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function resultView(data) {
+            $("#salesTableBody").html("");
+            
+            var orderCount = 1;
+            if (data.length > 0) {
+                $('#salesTable').show()
+                 $('#noSales').hide()
+             
+            }
+            $(data).each(function (index, order) {
+                var row = $('.card-table-template-outlet').clone();
+                row.attr("class", "order_item_id_" + order.id).addClass("w-100").addClass('parent-container');
+                row.find(".product-title").parent().remove();
+
+                row.find(".order-id").html(order.shortId);
+                row.find(".product-ItemId").parent().remove();
+                row.find(".product-email").html(order.email);
+                row.find(".product-status").html(order.status);
+
+                row.find(".purchased-date-outlet").html(moment(order.createdAt).format("DD/MM/YYYY") == "Invalid date" ? "-" : moment(order.createdAt).format("DD/MM/YYYY"));
+
+                if (order.orderItemStatus == 3) {
+                    row.find('.badge').addClass("badge-warning").html("Refunded");
+                } else {
+                    row.find('.badge').addClass("badge-success").html("Completed");
+                }
+                row.find(".order-action").append("<a class='align-center' data-toggle='collapse' data-target='#Order_" + orderCount + "'><i class='fa fa-chevron-down' aria-hidden='true'></i></a>")
+
+                if (order.promoCodeDiscount) {
+                    row.find(".revenue").html("RM " + (order.revenue - order.promoCodeDiscount).toFixed(2));
+                    row.find(".order-last-update-by").html("RM " + parseFloat(order.promoCodeDiscount));
+                }
+                else {
+                    row.find(".revenue").html("RM " + order.revenue.toFixed(2));
+                    row.find(".order-last-update-by").html("-");
+                }
+
+                if (order.lastUpdatedAt) {
+                    row.find(".order-last-update").html(moment(order.lastUpdatedAt).format("DD/MM/YYYY") == "Invalid date" ? "-" : moment(order.lastUpdatedAt).format("DD/MM/YYYY"));
+                } else 
+                { 
+                    row.find(".order-last-update").html("-")
+                }
+                
+                row.find(".action-btn-group").append("<span class='col-xl-6 btn-details-order' data-id='" + order.id + "' >Details</span>");
+
+                $("#salesTableBody").append(row);
+                var divElement = $('<div class="collapse" id="Order_' + orderCount + '">');
+                orderCount++;
+                $(order.items).each(function(index, item) 
+                {
+                    var template = $(".card-table-template-outlet").clone();
+
+                    template.attr("class", "order_item_id_" + item.id).addClass("w-100");  
+                    
+                    template.find(".product-title").html('<a href="' + item.externalUrl + '" target="_blank">' + item.productTitle + '</span>');
+                    template.find(".product-title").attr('data-name',item.productTitle);
+
+                     template.find(".product-ItemId").html(item.id);
+                     template.find(".product-email").html(item.email);
+                     template.find(".product-status").html(item.status);
+
+                     template.find(".order-last-update-by").parent().find(".card-title-row").html("Variant");
+
+                     template.find(".revenue").html("RM " + item.revenue.toFixed(2));
+
+                     if (item.variant != null)template.find(".order-last-update-by").html(item.variant);
+                     else template.find(".order-last-update-by").html("-");
+                     template.find(".order-last-update").html(item.quantity);
+                     template.find(".order-last-update").parent().find(".card-title-row").html("Quantity");
+
+                    template.find(".purchased-date-outlet").siblings(0).html("Recipient Name");
+                    template.find(".purchased-date-outlet").html(item.shippingName);
+
+
+                    template.find(".shipping-address").html(item.shippingAddress)
+                    template.find(".product-name").html(item.productTitle)
+                    
+                    template.find(".order-id").siblings(0).html("Shipping Address");
+                    template.find(".order-id").html(item.shippingAddress);
+                    switch (order.orderItemStatus) {
+                        case 1 : template.find('.badge').addClass("badge-primary").html("Pending"); break;
+                        case 2 : template.find('.badge').addClass("badge-secondary").html("Sent"); break;
+                        case 3 : template.find('.badge').addClass("badge-success").html("Done"); break;
+                        case 4 : template.find('.badge').addClass("badge-warning").html("Refund in progress"); break;
+                        case 5 : template.find('.badge').addClass("badge-success").html("Refunded"); break;
+                        case 6 : template.find('.badge').addClass("badge-success").html("Completed"); break;
+                        case 7 : template.find('.badge').addClass("badge-info").html("Pending Payment"); break;
+                        case 8 :  template.find('.badge').addClass("badge-danger").html("Pending Refund"); break;
+                        default:template.find('.badge').addClass("badge-success").html("Completed"); break;
+                    }
+
+                    if (item.type == 1) {
+                        template.find(".action-outlet").html("<span class='btn-details-item' data-id='" + item.shortOrderId + "'>Details</span>");
+                    }
+                    else if (item.type == 2) {
+                        template.find(".action-outlet").html("<span class='col-xl-6 btn-details-item' data-id='" + item.shortOrderId + "'>Update</span><span class='col-xl-6 btn-details-delivery' data-id='" + item.shortOrderItemId + "' >Details</span>");
+                    }
+                    else if (item.type == 3) {
+                        if (item.thirdPartyTypeId == 1) {
+                            template.find(".action-outlet").html("<span class='col-xl-6 btn-edit-giftee-digital'  data-id='" + item.shortOrderId + "' product-id='" + item.productId + "'>Create Giftee Token</span> <span class='col-xl-6 btn-details-digital' data-id='" + item.shortOrderItemId + "' >Details</span>");
+                        }
+                        else {
+                            template.find(".action-outlet").html("<span class='col-xl-6 btn-edit-digital' data-id='" + item.shortOrderId + "' >Update</span><span class='col-xl-6 btn-details-digital' data-id='" + item.shortOrderItemId + "' >Details</span>");
+                        }
+                    }
+                    btnItemDetailAction() 
+                    divElement.append(template)
+                })
+
+                
+
+                $("#salesTableBody").append(divElement);
+                
+
+                //"<a class='align-center' data-toggle='collapse' data-target='#Order_" + orderCount + "'><i class='fa fa-chevron-down' aria-hidden='true'></i></a>"
+                
+            });
+
+
+            btnDetailsAction()
+
+        }
+
+        function btnItemDetailAction() 
+        {
+            $(".btn-details-item").unbind().click(function() {
+                var ShortOrderItmeId = $(this).attr("data-id");
+
+                $.ajax({
+                        type: "GET",
+                        dataType: 'json',
+                        data: {
+                            shortOrderItemId: ShortOrderItmeId
+                        },
+                        url: '/App/Sales/GetOrderItemDetailsByShortOrderId/',
+                        success: function (response) {
+                            if (response.successful) {
+                                $("#divQuanDelivery").hide();
+                                //toastr.success(response.message);
+                                $(response.data.orderItem).each(function (index, item) {
+                                    selectedOrderItemId = item.id;
+                                    selectedOrderItemShortId = item.shortId;
+                                    $("#txtEmailItem").html(item.order.email);
+                                    $("#txtProductNameItem").html(item.productTitle);
+                                    $("#txtPurchasedDateItem").html(moment(item.order.createdAt).format("DD-MM-YYYY HH:mm"));
+                                    $("#txtVPointsIteml").html(item.points);
+                                    $("#txtPriceItem").html("RM " + item.price.toFixed(2));
+                                    $("#refundPointsItem").html(item.points);
+                                    $("#refundAmountItem").val(item.price);
+                                    $("#txtPFullNameItem").html(item.order.shippingPersonFirstName + " " + item.order.shippingPersonLastName);
+                                    $("#txtPhoneNumberItem").html(item.order.shippingMobileCountryCode + item.order.shippingMobileNumber);
+                                    if (item.order.shippingAddressLine2 != null) {
+                                        $("#txtAddressItem").html(item.order.shippingAddressLine1 + ", " + item.order.shippingAddressLine2 + ", " + item.order.shippingPostcode
+                                            + ", " + item.order.shippingCity + ", " + item.order.shippingState + ", " + item.order.shippingCountry);
+                                    }
+                                    else {
+                                        $("#txtAddressItem").html(item.order.shippingAddressLine1 + ", " + item.order.shippingPostcode
+                                            + ", " + item.order.shippingCity + ", " + item.order.shippingState + ", " + item.order.shippingCountry);
+                                    }
+                                });
+
+                            }
+                            else {
+                                toastr.error(response.message);
+                            }
+                        },
+                        error: function () {
+                            toastr.error("Fail to send 123");
+                        }
+                    });
+
+                    $('#showDetailsItemModal').attr("data-id", $(this).attr("data-id"));
+                    $('#showDetailsItemModal').modal("show");
+            });
+            
+            
+        }
+     
+        function btnDetailsAction() {
+            $(".btn-details-order").unbind().click(function () {
+                var ShortOrderItmeId = $(this).attr("data-id");
+
+                $.ajax({
+                    type: "GET",
+                    dataType: 'json',
+                    data: {
+                        orderId: ShortOrderItmeId
+                    },
+                    url: '/App/Sales/GetOrderDetailsByOrderId',
+                    success: function (response) {
+                        if (response.successful) {
+                            //toastr.success(response.message);
+                            $(response.data).each(function(index, item) {
+                                selectedOrderItemId = item.id;
+                                selectedOrderItemShortId = item.shortId;
+                                $("#txtEmailDelivery").html(item.order.email);
+                                $("#txtProductNameDelivery").html(item.productTitle);
+                                $("#txtPurchasedDateDelivery").html(item.order.createdAt);
+                                $("#txtVPointsDelivery").html(item.order.totalPoints || '0');
+                                var price = item.order.totalPrice ? item.order.totalPrice.toFixed(2) : 0;
+                                $("#txtPriceDelivery").html(price);
+                                var shippingCost = item.order.totalShippingCost ? item.order.totalShippingCost.toFixed(2) : 0;
+
+                                $("#txtProductShippingCost").html(shippingCost);
+                                if (item.isVariationProduct) {
+                                    $("#txtProductVariationText").html(item.variationText);
+                                    $("#txtProductVariationText").parent().parent().show();
+                                }
+                                else {
+                                    $("#txtProductVariationText").parent().parent().hide();
+                                }
+                                $("#txtPFullNameDelivery").html(item.order.shippingPersonFirstName + " " + item.order.shippingPersonLastName);
+                                $("#txtPhoneNumberDelivery").html(item.order.shippingMobileCountryCode + item.order.shippingMobileNumber);
+                                if (item.order.shippingAddressLine2 != null) {
+                                    $("#txtAddressDelivery").html(item.order.shippingAddressLine1 + ", " + item.order.shippingAddressLine2 + ", " + item.order.shippingPostcode
+                                        + ", " + item.order.shippingCity + ", " + item.order.shippingState + ", " + item.order.shippingCountry);
+                                }
+                                else {
+                                    $("#txtAddressDelivery").html(item.order.shippingAddressLine1 + ", " + item.order.shippingPostcode
+                                        + ", " + item.order.shippingCity + ", " + item.order.shippingState + ", " + item.order.shippingCountry);
+                                }
+                            });
+
+                        }
+                        else {
+                            toastr.error(response.message);
+                        }
+                    },
+                    error: function () {
+                        toastr.error("Fail to get details");
+                    }
+                });
+
+                $('#showDetailsModal').attr("data-id", $(this).attr("data-id"));
+                $('#showDetailsModal').modal("show");
+            });
+
+        }
+    </script>
+
+}

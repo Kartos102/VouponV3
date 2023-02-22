@@ -1,0 +1,796 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = Model.ShopName;
+    ViewBag.Description = Model.Description;
+    ViewBag.Keywords = Model.ShopName + ", " + Model.ShopCategories;
+    ViewBag.OGImage = (Model.ShopLogoUrl != null ? Model.ShopLogoUrl : "");
+    ViewBag.OGUrl = "https://vodus.my/shop/" + Model.Id;
+}
+
+@model Voupon.Rewards.WebApp.Services.Merchants.Page.MerchantPageViewModel;
+<script src="~/lib/momentjs/moment-with-locales.min.js"></script>
+<style>
+    .color-transparent {
+        color: transparent;
+    }
+
+    .color-rating {
+        color: #fed10e;
+    }
+
+    .checked {
+        color: orange;
+    }
+
+    p {
+        color: black;
+    }
+
+    .owl-carousel .owl-nav button.owl-next, .owl-carousel .owl-nav button.owl-prev {
+        line-height: 0.3;
+        font-size: 14px;
+        width: auto;
+        height: auto;
+    }
+
+    .owl-prev, .owl-next {
+        width: 15px;
+        height: 100px;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        display: block !important;
+        border: 0px solid black;
+    }
+
+    .owl-prev {
+        left: -20px;
+    }
+
+    .owl-next {
+        right: -20px;
+    }
+
+        .owl-prev i, .owl-next i {
+            transform: scale(2,5);
+            color: #ccc;
+        }
+
+    .owl-theme .owl-nav [class*=owl-]:hover {
+        background: unset;
+        color: black;
+        text-decoration: none
+    }
+
+    .owl-item {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+</style>
+
+
+<div class="shop row mt-1 mb-1 ">
+    <div class="col-12">
+        <div class="card no-borders align-center">
+            <div class="card-body col-md-9 pt-1 pb-2 px-0 px-sm-2">
+                <div class="col-12 product-detail-div row">
+                    <div class="col-4 col-lg-3 shop-img-container">
+                        <img src="@Model.ShopLogoUrl" />
+                    </div>
+                    <div class="shop-title row col-8 col-lg-9 px-0 px-sm-2">
+                        <h1 class="col-auto mb-sm-3 pr-0">@Model.ShopName</h1>
+                        <div class="d-flex align-content-center col-12 pr-0">
+                            @if (Model.Rating > 0)
+                            {
+                                <div class="align-center">
+                                    <span>
+                                        <i class="@(Model.Rating > 0 ? Html.Raw("color-rating") : Html.Raw("color-transparent")) @(Model.Rating >= 1 ? Html.Raw("fas fa-star") : Html.Raw("fas fa-star-half"))" name="star1"></i>
+                                        <i class="@(Model.Rating > 1 ? Html.Raw("color-rating") : Html.Raw("color-transparent")) @(Model.Rating >= 2 ? Html.Raw("fas fa-star") : Html.Raw("fas fa-star-half"))" name="star2"></i>
+                                        <i class="@(Model.Rating > 2 ? Html.Raw("color-rating") : Html.Raw("color-transparent")) @(Model.Rating >= 3 ? Html.Raw("fas fa-star") : Html.Raw("fas fa-star-half"))" name="star3"></i>
+                                        <i class="@(Model.Rating > 3 ? Html.Raw("color-rating") : Html.Raw("color-transparent")) @(Model.Rating >= 4 ? Html.Raw("fas fa-star") : Html.Raw("fas fa-star-half"))" name="star4"></i>
+                                        <i class="@(Model.Rating > 4 ? Html.Raw("color-rating") : Html.Raw("color-transparent")) @(Model.Rating >= 5 ? Html.Raw("fas fa-star") : Html.Raw("fas fa-star-half"))" name="star5"></i>
+
+                                        <span class="product-rating">@Model.Rating.ToString("0.0")</span>
+                                    </span>
+                                </div>
+                            }
+                            <span class="shop-chat ml-3 ml-lg-5 purple-box" style="font-size: 14px;">
+                                <i class="fas fa-comment-alt-dots mr-2"></i>
+                                Ask Seller
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row col-12 justify-center">
+        <div class="detail-container shop-description col-12 col-xl-10 px-0 px-sm-4">
+            @{
+
+                if (Model.MerchantCarouselList != null && Model.MerchantCarouselList.Count() > 0)
+                {
+                                <div class="row col-12">
+                                    <div class="merchant-carousel owl-carousel">
+                                        @foreach (var carousel in Model.MerchantCarouselList)
+                            {
+                                            <img src="@carousel.ImageUrl" />
+                            }
+
+                                    </div>
+                                </div>
+
+                }
+            }
+            <!--<div class="card-text">@Html.Raw(@Model.Description)</div>-->
+            <span class="expand-span" id="expand-description">View More</span>
+        </div>
+    </div>
+</div>
+<div class="row col-12 shop-products pb-3">
+    <div class="col-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 px-0">
+        <div id="productList">
+        </div>
+        <div class="col-lg-12 text-center"><button type="button" id="btnLoadMore" class="btn btn-primary mt-3"><span class="i18next" data-i18n="common.load-more">Load more</span></button></div>
+        <div class="col-lg-12 text-center"><button type="button" id="btnNoMore" class="btn btn-primary mt-3 disabled" style="display:none;"><span class="i18next" data-i18n="common.no-more">No more items</span></button></div>
+        <div id="noProduct" style="display:none;">
+            <div class="col-lg-12">
+                <div class="text-center">
+                    <h1><span class="fas fa-gift fa-4x"></span></h1>
+                    <h1><strong>Hmm...</strong></h1>
+                    <h2 style="margin-bottom:0;">No product to redeem for this category yet</h2>
+                    <h2 style="margin-top:10px;">Redeem product from other category first</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.ProductReviewList != null && Model.ProductReviewList.Count > 0)
+{
+    <div class="row col-12">
+        <div class="card col-12 mt-2 mb-2 pt-2 pb-2" id="product-review">
+            <h5 class="card-title">Review</h5>
+            <ul class="list-group list-group-flush review-group">
+                @foreach (var review in Model.ProductReviewList.Take(10))
+                {
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-12 no-padding">
+                                <span class="card-text review-name">@review.MemberName </span>
+                                <span class="pl-1">
+                                    <span class="fas fa-star @(review.Rating>0? @Html.Raw("checked"): @Html.Raw(""))"></span>
+                                    <span class="fas fa-star @(review.Rating>1? @Html.Raw("checked"): @Html.Raw(""))"></span>
+                                    <span class="fas fa-star @(review.Rating>2? @Html.Raw("checked"): @Html.Raw(""))"></span>
+                                    <span class="fas fa-star @(review.Rating>3? @Html.Raw("checked"): @Html.Raw(""))"></span>
+                                    <span class="fas fa-star @(review.Rating>4? @Html.Raw("checked"): @Html.Raw(""))"></span>
+                                    <span class="rating-score pr-1">@review.Rating.ToString("0.0")</span>
+                                    [@review.CreatedAt.ToString("dd/MM/yyyy")]
+                                    :
+                                </span>
+                            </div>
+                        </div>
+                        @*<div class="row">
+                                <div class="col-12">
+                                    <span class="fas fa-star @(review.Rating>0? @Html.Raw("checked"): @Html.Raw(""))"></span>
+                                    <span class="fas fa-star @(review.Rating>1? @Html.Raw("checked"): @Html.Raw(""))"></span>
+                                    <span class="fas fa-star @(review.Rating>2? @Html.Raw("checked"): @Html.Raw(""))"></span>
+                                    <span class="fas fa-star @(review.Rating>3? @Html.Raw("checked"): @Html.Raw(""))"></span>
+                                    <span class="fas fa-star @(review.Rating>4? @Html.Raw("checked"): @Html.Raw(""))"></span>
+                                </div>
+                            </div>*@
+
+                        <div class="row">
+                            <div class="col-12 review-comment">
+                                @review.Comment
+                            </div>
+                        </div>
+                    </li>
+                }
+            </ul>
+            @{
+                int totalPage = 1;
+                int page = Model.ProductReviewList.Count / 10;
+                if (page >= 1)
+                {
+                    if (Model.ProductReviewList.Count % 10 > 0)
+                        totalPage = page + 1;
+                    else
+                        totalPage = page;
+                }
+            }
+            @if (totalPage > 1)
+            {
+                <div class="p-0 text-center d-flex justify-content-end">
+                    <div class="card-footer-item card-footer-item-bordered">
+                        <nav aria-label="...">
+                            <ul class="pagination pagination-sm">
+                                @for (int i = 1; i <= totalPage; i++)
+                                {
+                                    if (i == 1)
+                                    {
+                                        <li class="page-item active" page-data="@i">
+                                            <a class="page-link" href="#" onclick="return false;" tabindex="-1">@i</a>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li class="page-item" page-data="@i"><a class="page-link" href="#" onclick="return false;">@i</a></li>
+                                    }
+                                }
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+
+
+<div id="productTemplate" style="display:none;">
+    <div class="listItem">
+        <div class="ibox">
+            <div class="ibox-content product-box">
+                <a href="/Product/Detail/74" class="product-link">
+                    <div class="product-imitation">
+                        <img class="product-img lazyload">
+                    </div>
+                    <div class="product-discount" style="display:none;">
+                        <span class="badge badge-danger">15 % OFF</span>
+                    </div>                    <div class="product-desc">
+                        <div class="merchant-dealtype-div">
+                            <div class="merchant-name"></div>
+                        </div>
+                        <h4 class="product-name">Aeon RM10 Cash Voucher</h4>
+                    </div>
+                    <p class="product-price">70 VPoints</p>
+                    <div class="product-metabox">
+                        <div class="d-flex justify-content-between">
+                            <p class="rating-box">
+                                <span class="fa-regular fa-star checked"></span>
+                                <span class="fa-regular fa-star checked"></span>
+                                <span class="fa-regular fa-star checked"></span>
+                                <span class="fa-regular fa-star checked"></span>
+                                <span class="fa-regular fa-star checked"></span>
+                                <span class="product-rating"></span>
+                            </p>
+                            <p class="sold-box">
+                                <span class="product-total-sold"></span> Sold
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="reviewTemplate" style="display:none">
+    <div class="list-group-item">
+        <div class="row">
+            <div class="col-7 no-padding">  <p class="card-text review-name">MemberName (dd/MM/yy)):</p></div>
+
+            <div class="col-5">
+                <div style="float:right">
+                    <span class="fas fa-star" name="star1"></span>
+                    <span class="fas fa-star" name="star2"></span>
+                    <span class="fas fa-star" name="star3"></span>
+                    <span class="fas fa-star" name="star4"></span>
+                    <span class="fas fa-star" name="star5"></span>
+                    <span class="rating-score">5.00</span>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 review-comment">
+                Comment
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section styles
+    {
+    <link href="/lib/owlcarousel2/owl.carousel.min.css" rel="stylesheet">
+    <link href="/lib/owlcarousel2/owl.theme.default.min.css" rel="stylesheet">
+}
+
+
+@section scripts
+{
+    <script src="/lib/owlcarousel2/owl.carousel.min.js"></script>
+    <script>
+        var allProductList = [];
+        var allFilteredProductList = [];
+        var externalShopId = "@Model.ExternalShopId";
+        var externalTypeId = "@Model.ExternalTypeId";
+        var shopName = externalTypeId == 1? "@Model.ExternalShopUsername": "@Model.ShopName";
+        var shopImageUrl = "@Model.ShopLogoUrl";
+        var scrollPosition = 0;
+        var scrollDirection;
+        var isLoading = false;
+        var currentPage = 0;
+        var itemsToShowPerLoad = 30;
+        var noMoreItems = false;
+
+        function genTemplateRating(template, item) {
+            var itemRating = item.rating;
+            if (itemRating == 0) {
+                if (item.id == 0) {
+                    template.find('.rating-box').hide();
+                } else {
+                    itemRating = 5.0;
+                    template.find(".product-rating").html("5.0");
+                }
+            } else {
+                var rating = Math.round(itemRating);
+                for (let i = 0; i < rating; i++) {
+                    template.find('.rating-box .fa-star').eq(i).removeClass('fa-regular').addClass('fas');
+                }
+                var decimal = itemRating - rating;
+                if (decimal > 0.25) {
+                    template.find('.rating-box .fa-star').eq(rating).attr('class', '').addClass('fas').addClass('fa-star-half').addClass('checked');
+                } else if (decimal < -0.25) {
+                    template.find('.rating-box .fa-star').eq(rating - 1).attr('class', '').addClass('fas').addClass('fa-star-half').addClass('checked');
+                }
+                template.find('.product-rating').text(itemRating.toFixed(1));
+            }
+        }
+
+        function addVPointDiscount(template, item) {
+            var VPointDiscountRate = 0;
+
+            if (item.discountedPrice < 50) {
+                VPointDiscountRate = 0.05;
+            } else if (item.discountedPrice < 100) {
+                VPointDiscountRate = 0.04;
+            } else if (item.discountedPrice < 200) {
+                VPointDiscountRate = 0.03;
+            } else if (item.discountedPrice < 300) {
+                VPointDiscountRate = 0.02;
+            } else if (item.discountedPrice < 400) {
+                VPointDiscountRate = 0.01;
+            }
+
+            var newItemdiscountPrice = item.discountedPrice * (1 - VPointDiscountRate);
+            if (item.price > 0) {
+                var originalPrice = item.price
+            } else {
+                var originalPrice = item.discountedPrice
+            }
+            var newItemdiscountRate = (100 * (originalPrice - newItemdiscountPrice) / originalPrice).toFixed(0);
+
+            if (newItemdiscountRate == 0) {
+                template.find('.product-price').html("RM" + newItemdiscountPrice.toFixed(2));
+            }
+            else {
+                template.find('.product-price').html("<del>RM" + originalPrice.toFixed(2) + "</del> RM" + newItemdiscountPrice.toFixed(2));
+                template.find('.badge').html(newItemdiscountRate + " % OFF");
+                template.find('.product-discount').show();
+            }
+        }
+
+        $(document).ready(function () {
+
+            $(".merchant-carousel").owlCarousel({
+                margin: 0,
+                nav: true,
+                autoplay:true,
+                autoplayTimeout:5000,
+                autoplayHoverPause:true,
+                items: 1,
+                responsive: {
+                    0: {
+                        stagePadding: 0,
+                        nav: false
+                    }, 
+                    600: {
+                        stagePadding: 7,
+                        nav: true
+                    },
+                    1000: {
+                        stagePadding: 7,
+                        nav: true
+                    }
+
+                },
+                lazyLoad: true,
+                lazyLoadEager: 7,
+                dots: false
+            });
+
+            $('.page-item').click(function () {
+                $('.pagination').find('.page-item').removeClass('active');
+                $(this).addClass('active');
+                $.ajax({
+                    type: "GET",
+                    dataType: 'json',
+                    data: {
+                        page: $(this).attr("page-data")
+                    },
+                    url: '/GetProductReviewByMerchant/@Model.Id',
+                    success: function (response) {
+                        if (response.successful) {
+                            if (response.data != null) {
+                                if (response.data.length > 0) {
+                                    console.log(response.data);
+                                    $(".review-group").html("");
+                                    $.each(response.data, function (i, item) {
+                                        var template = $("#reviewTemplate").children().clone();
+                                        console.log(template.html());
+                                        template.find('.review-name').html(item.memberName + " (" + moment(item.createdAt).format('DD/MM/YY') + "):");
+                                        template.find(".rating-score").html(item.rating.toFixed(1));
+                                        template.find(".review-comment").html(item.comment);
+                                        if (item.rating > 0)
+                                            template.find("span[name='star1']").addClass("checked");
+                                        if (item.rating > 1)
+                                            template.find("span[name='star2']").addClass("checked");
+                                        if (item.rating > 2)
+                                            template.find("span[name='star3']").addClass("checked");
+                                        if (item.rating > 3)
+                                            template.find("span[name='star4']").addClass("checked");
+                                        if (item.rating > 4)
+                                            template.find("span[name='star5']").addClass("checked");
+                                        $(".review-group").append(template);
+                                    });
+
+                                }
+                                else {
+                                    $(".review-group").html("");
+                                }
+                            }
+                            else {
+                                $(".review-group").html("");
+                            }
+                        } else {
+                            $(".review-group").html("");
+                        }
+                    },
+                    error: function (error) {
+                        $(".review-group").html("");
+                        toastr.error(JSON.parse(error.responseText).message);
+                    }
+                });
+
+            });
+            $('.owl-carousel').owlCarousel({
+                loop: true,
+                margin: 10,
+                nav: true,
+                //responsiveClass: true,
+                responsive: {
+                    0: {
+                        items: 1
+                    },
+                    600: {
+                        items: 1
+                    },
+                    1000: {
+                        items: 1
+                    }
+                },
+            });
+
+
+            GetProductList();
+
+            $(window).scroll(function () {
+                if (noMoreItems) {
+                    return;
+                }
+                scrollDirection = (document.body.getBoundingClientRect()).top > scrollPosition ? 'up' : 'down';
+                scrollPosition = (document.body.getBoundingClientRect()).top;
+                if ($(window).scrollTop() + $(window).height() >= $("#productList").height()) {
+                    if (scrollDirection == "down") {
+                        $("#btnLoadMore").click();
+                    }
+                }
+            });
+
+            $("#btnLoadMore").on("click", function () {
+                var lastProductId = parseInt($('#productList').children().last().attr("product-id"));
+                var showNext10Products = false;
+                var counter = 0;
+                var itemAdded = 0;
+                var currenlyDislayedItem = $(".listItem").length;
+                $.each(allFilteredProductList.slice(currenlyDislayedItem), function (i, item) {
+                    counter++;
+                    if (counter > itemsToShowPerLoad) {
+                        return;
+                    }
+                    if (counter <= itemsToShowPerLoad) {
+                        itemAdded++;
+                        var url = "/product/" + item.id;
+                        if (item.externalItemId != null && item.externalItemId != "") {
+                            url += "?i=" + item.externalItemId + "&s=" + item.externalShopId + "&t=" + item.externalTypeId;
+                        }
+                        var template = $("#productTemplate").children().clone();
+                        genTemplateRating(template, item);
+
+                        if (item.totalSold == 0) {
+                            template.find('.sold-box').hide();
+                        } else {
+                            template.find('.product-total-sold').text(numberWithCommas(item.totalSold));
+                        }
+
+                        if (item.externalItemId != null && item.externalItemId != "") {
+                            addVPointDiscount(template, item);
+                        } else {
+                            if (item.dealTypeId == 1)
+                                template.find('.product-price').html(item.pointsRequired + " VPoints");
+                            else if (item.dealTypeId == 2) {
+                                if (item.discountRate == 0) {
+                                    template.find('.product-price').html("RM" + item.discountedPrice.toFixed(2));
+                                }
+                                else {
+                                    template.find('.product-price').html("<del>RM" + item.price.toFixed(2) + "</del> RM" + item.discountedPrice.toFixed(2));
+                                    template.find('.badge').html(item.discountRate + " % OFF");
+                                    template.find('.product-discount').show();
+                                }
+                            }
+                        }
+
+                        template.attr("product-id", item.id);
+                        template.find('.product-img').attr('data-src', item.productImage).addClass("lazyload");
+
+                        template.find('.product-name').html(item.title);
+                        template.find('.product-link').attr('href', url);
+                        template.find('.product-type-name').html(item.productSubCategory);
+                        template.find('.merchant-name').html(item.merchantName);
+
+                        //template.find('.product-description').html(item.Description);
+
+                        template.find('.addtocart-btn').attr('data-id', item.id);
+                        template.find('.addtocart-btn').attr('data-summary', item.ProductSummary);
+                        template.find('.addtocart-btn').attr('data-points', item.PointsRequired);
+                        template.find('.addtocart-btn').attr('data-name', item.Name);
+                        template.find('.addtocart-btn').attr('data-thumbnail-photo', item.ProductThumbnailImageUrl);
+                        template.find('.addtocart-btn').attr('data-type-name', item.ProductTypeName);
+                        template.find('.addtocart-btn').attr('data-type', item.ProductType);
+                        $('#productList').append(template);
+                        counter++;
+                    }
+                });
+                if (externalShopId != "") {
+                    if (counter < itemsToShowPerLoad) {
+                        if (itemAdded == 0 && !isLoading) {
+                            GetProductList();
+                        }
+                    }
+                }
+                else {
+                    $("#btnLoadMore").hide();
+                }
+
+                ResizeBasedOnMaxContentElement();
+                $(".addtocart-btn").unbind().click(function () {
+                    location.href = "/product/" + $(this).attr('data-id');
+                });
+
+            });
+
+            $(".shop-chat").click(function () {
+                if ($(".reward-login-username").html() == "") { 
+                    $("#navLogin").click();
+                } else {
+                    removeNoChatImg();
+                    var isChatExist = false;
+                    $("#usersList").find(".clearfix").each(function () {
+                        if (externalTypeId == 1) {
+                            if ($(this).attr("user-name") == externalShopId) {
+                                isChatExist = true;
+                                openChatForm();
+                                $(this).click();
+                            }
+                        }
+                        else {
+                            if ($(this).attr("user-name") == "@Model.MerchantEmailId") {
+                                isChatExist = true;
+                                openChatForm();
+                                $(this).click();
+                            }
+                        }
+                    });
+                    if (!isChatExist) {
+                        var user = $("#userTemplate").children().first().clone();
+
+                        user.addClass("new-chat");
+                        user.find(".name").html("@Model.ShopName");
+                        user.find(".user-img").attr("src", "@Model.ShopLogoUrl");
+                        user.attr("user-name", "@Model.MerchantEmailId");
+                        if (externalTypeId == 1) {
+                            user.find(".name").html("@Model.ExternalShopUsername");
+                            user.attr("user-name", "@Model.ExternalShopId");
+                        }
+                        $("#usersList").append(user);
+                        var newChat = $("#usersList").find(".clearfix.new-chat").first();
+                        newChat.click(function () {
+                            removeWelcomeToChatImg();
+                            $("#usersList").children().removeClass("active");
+                            newChat.addClass("active");
+                            newChat.find(".notification-message").remove();
+                            $("#messagesList").html("");
+                            var chatId = newChat.attr("data-id");
+                            $("#chatBody").find(".chat-about").find(".user-email").html(newChat.attr("user-name"));
+                            if (externalTypeId == 1) {
+                                $("#chatBody").find(".chat-about").find(".user-email").html("");
+                            }
+                            $("#chatBody").find(".chat-about").find(".user-name").html(newChat.find(".name").html());
+                            $(".chat-user-img").attr("src", $(this).find(".user-img").attr("src"));
+                            if (chatId != null && chatId != undefined) {
+                                getMessages(chatId);
+                            }
+                            $(".chat-open").click();
+                            $("#chatBody").show();
+                            $(".chat-expand").click();
+                            $("#txtMessage").focus();
+                            if ($(window).width() < 992) {
+                                $(".chat-list-mobile").hide();
+                            }
+                        });
+                        deleteChatAction();
+                        newChat.click();
+                        newChat.removeClass("new-chat");
+                        $("#chatBody").show();
+
+                        $(".chat-open").click();
+                    }
+                    if ($(window).width() < 992) {
+                        $(".chat-list-mobile").hide();
+                        chatMenu();
+                    }
+                }         
+            });
+        });
+
+
+        function GetProductList() {
+            currentPage++;
+            isLoading = true;
+            $("#btnLoadMore").find('span').text("Loading...");
+            $("#btnLoadMore").prop('disabled', true);
+            $("#carouselProductControls").hide();
+            $("#carouselProductList").html("");
+            $(".carousel-indicators").html("");
+            $('.carousel').carousel();
+            $.ajax({
+                global:false,
+                type: "GET",
+                dataType: 'json',
+                data: {
+                    merchantId: @Model.Id,
+                    pageNumber: currentPage
+                },
+                url: '@Url.Action("GetProductListByMerchant", "Home")' + '?s=' + externalShopId + '&t=' + externalTypeId,
+                success: function (response) {
+                    isLoading = false;
+                    if (response.successful) {
+                        if (response.data != null) {
+                            if (response.data.length > 0) {
+                                var counter = 0;
+
+                                if (response.data.length < itemsToShowPerLoad) {
+                                    noMoreItems = true;
+                                    $("#btnLoadMore").css("display", "none");
+                                }
+
+                                $.each(response.data, function (i, item) {
+                                    allFilteredProductList = response.data;
+                                    if (counter < itemsToShowPerLoad) {
+                                        var productlist = "";
+
+                                        var url = "/product/" + item.id;
+                                        if (item.externalItemId != null && item.externalItemId != "") {
+                                            url += "?i=" + item.externalItemId + "&s=" + item.externalShopId + "&t=" + item.externalTypeId;
+                                        }
+                                        var template = $("#productTemplate").children().clone();
+
+                                        template.attr("product-id", item.id);
+                                        template.find('.product-img').attr('data-src', item.productImage).addClass("lazyload");
+                                        genTemplateRating(template, item);
+
+                                        if (item.totalSold == 0) {
+                                            template.find('.sold-box').hide();
+                                        } else {
+                                            template.find('.product-total-sold').text(numberWithCommas(item.totalSold));
+                                        }
+
+                                        if (item.externalItemId != null && item.externalItemId != "") {
+                                            addVPointDiscount(template, item);
+                                        } else {
+                                            if (item.dealTypeId == 1)
+                                                template.find('.product-price').html(item.pointsRequired + " VPoints");
+                                            else if (item.dealTypeId == 2) {
+                                                if (item.discountRate == 0) {
+                                                    template.find('.product-price').html("RM" + item.discountedPrice.toFixed(2));
+                                                }
+                                                else {
+                                                    template.find('.product-price').html("<del>RM" + item.price.toFixed(2) + "</del> RM" + item.discountedPrice.toFixed(2));
+                                                    template.find('.badge').html(item.discountRate + " % OFF");
+                                                    template.find('.product-discount').show();
+                                                }
+                                            }
+                                        }
+                                        template.find('.product-name').html(item.title);
+                                        template.find('.product-link').attr('href', url);
+                                        template.find('.product-type-name').html(item.productSubCategory);
+                                        template.find('.merchant-name').html(item.merchantName);
+                                        //template.find('.product-type-name').html(item.dealType);
+                                        //template.find('.product-description').html(item.Description);
+                                        template.find('.addtocart-btn').attr('data-id', item.id);
+                                        template.find('.addtocart-btn').attr('data-summary', item.ProductSummary);
+                                        template.find('.addtocart-btn').attr('data-points', item.PointsRequired);
+                                        template.find('.addtocart-btn').attr('data-name', item.Name);
+                                        template.find('.addtocart-btn').attr('data-thumbnail-photo', item.ProductThumbnailImageUrl);
+                                        template.find('.addtocart-btn').attr('data-type-name', item.ProductTypeName);
+                                        template.find('.addtocart-btn').attr('data-type', item.ProductType);
+                                        $('#productList').append(template);
+                                        counter++;
+                                    }
+                                });
+                                ResizeBasedOnMaxContentElement();
+                                $(".addtocart-btn").click(function () {
+                                    location.href = "/product/" + $(this).attr('data-id');
+                                });
+
+                                if (counter == 0) {
+                                    $("#btnLoadMore").css("display", "none");
+                                    $("#btnNoMore").css("display", "block");
+                                }
+                                else {
+                                    $("#btnLoadMore").find('span').text("Load More");
+                                    $("#btnLoadMore").prop('disabled', false);
+                                }
+                            }
+                            else {
+                                $("#productList").html("");
+                                $("#btnLoadMore").css("display", "none");
+                            }
+                        }
+                        else {
+                            $("#btnLoadMore").css("display", "none");
+                        }
+                    } else {
+                        $("#btnLoadMore").css("display", "none");
+                    }
+                },
+                error: function (error) {
+                    isLoading = false;
+                    $("#btnLoadMore").css("display", "none");
+                    toastr.error(error);
+                }
+            });
+
+        }
+
+        function ResizeBasedOnMaxContentElement() {
+            if ($("#productList").find(".ibox").length < 4) {
+                $("#productList").css("justify-content", "flex-start")
+            };
+        }
+        if ($(".shop-outlets .card-text").height() > 50) {
+            $(".shop-outlets .card-text").css("max-height", "50px");
+            $("#expand-outlets").css("display", "flex");
+        }
+        if ($(".shop-description .card-text").height() > 100) {
+            $(".shop-description .card-text").css("max-height", "100px");
+            $("#expand-description").css("display", "flex");
+        }
+
+        $("#expand-outlets").click(function () {
+            $(".shop-outlets .card-text").css("max-height", "unset");
+            $(".shop-outlets p").css("display","block");
+            $("#expand-outlets").hide();
+        });
+        $("#expand-description").click(function () {
+            $(".shop-description .card-text").css("max-height", "unset");
+            $(".shop-description p").css("display", "block");
+            $("#expand-description").hide();
+        });
+    </script>
+}

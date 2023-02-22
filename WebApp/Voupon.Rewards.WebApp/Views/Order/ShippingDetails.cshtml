@@ -1,0 +1,707 @@
+﻿@model string
+@using Newtonsoft.Json;
+@{ ViewData["Title"] = "Shipping Info";
+    Layout = "~/Views/Shared/_Layout.cshtml"; }
+<style>
+    .hide {
+        display: none;
+        visibility: hidden;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    .rate {
+        float: left;
+        height: 46px;
+    }
+
+        .rate:not(:checked) > input {
+            position: absolute;
+            top: -9999px;
+        }
+
+        .rate:not(:checked) > label {
+            float: right;
+            width: 1em;
+            overflow: hidden;
+            white-space: nowrap;
+            cursor: pointer;
+            font-size: 30px;
+            color: #ccc;
+        }
+
+            .rate:not(:checked) > label:before {
+                content: '★ ';
+            }
+
+        .rate > input:checked ~ label {
+            color: #ffc700;
+        }
+
+        .rate:not(:checked) > label:hover,
+        .rate:not(:checked) > label:hover ~ label {
+            color: #deb217;
+        }
+
+        .rate > input:checked + label:hover,
+        .rate > input:checked + label:hover ~ label,
+        .rate > input:checked ~ label:hover,
+        .rate > input:checked ~ label:hover ~ label,
+        .rate > label:hover ~ input:checked ~ label {
+            color: #c59b08;
+        }
+
+    @@media (min-width: 1024px) {
+        footer {
+            display: none;
+        }
+    }
+
+    .d-flex {
+      display: flex;
+      align-items: center;
+    }
+
+    .last {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background-color: #07B6C7;
+      border: 2px solid #07B6C7;
+      margin-right: 10px;
+      margin-bottom: 4px;
+      position: relative;
+    }
+
+    .last::before {
+      content: "";
+    }
+
+    .circle {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background-color: #E5E4E2;
+      border: 2px solid #E5E4E2;
+      margin-right: 10px;
+      margin-bottom: 4px;
+      position: relative;
+    }
+
+    .circle::before {
+      content: "";
+      width: 2px;
+      height: 100%;
+      background-color: #E5E4E2;
+      position: absolute;
+      left: 50%;
+      top: -50%;
+      transform: translate(-50%, -50%);
+    }
+
+
+</style>
+<div class="user-page pt-lg-4">
+    <div class="user-page-left-spacing">
+    </div>
+
+    <div class="user-page-right row shippingTracking order-history-items" id="showShippingDetailsModal">
+        <div class="shippingTrackingSection col-12">
+            <div class="row mb-3 align-items-center col-12">
+                <a class="back-btn align-center" href="/order/history">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+                <h2 class="w-auto mb-0 ml-3">Order Tracking</h2>
+                <span class="shop-chat ml-lg-5 ml-2 d-none" style="font-size:18px;"><i class="fas fa-comment-alt-dots ml-2 mr-2"></i>Chat Now</span>
+            </div>
+            
+            <div class="row col-12 mt-2">
+                <span class="shipping-tracking-number-container">
+                    Order Status:
+                    <b class="ml-2" id="status"></b>
+                </span>
+
+            </div>
+            <div class="row col-12" id="div_tracking">
+                <span>
+                    Tracking Number:
+                    <b class="ml-2 shipping-tracking-number" id="token"></b>
+                </span>
+
+            </div>
+            
+        </div>
+
+
+        <div class="form-group row shipping-delivery-address-section shippingTrackingSection py-lg-4 px-0" id="">
+            <div class="col-12 col-md-5 user-delivery-address mb-4 mb-md-2 mb-lg-0 px-0 px-md-2 hide" id="div_deliveryAddress">
+                <h3>Delivery Address</h3>
+                <span class="shipping-user-name w-100 my-2 font-weight-bold" id="deliveryuserName"></span>
+                <span class="shipping-user-phoneNumber w-100" id="deliveryAddress_phone"></span>
+                <span class="shipping-address w-100" id="deliveryAddress_detail"></span>
+            </div>
+            <div class="col-12 col-md-7 px-0 px-md-2" id="div_shipping">
+                <div id="deliveryRedemption" class="mb-2" style="">
+                    <h3 class="pb-2">Shipping Information</h3>
+
+                    <div class="mb-2">
+                        <span class="redemption-title"></span>
+                        <span id="courier" class="shipping-carrier"></span>
+                        <span class="shipping-tracking-number"></span>
+                    </div>
+                    <div class="shipping-tracking-container">
+                        <div class="vertical-line-container">
+                            <div class="vertical-line"></div>
+                        </div>
+                        <div class="delivery-details">
+                            <div id="divUnavailableTracking" class="w-100 d-none"><i class="fas fa-circle last" aria-hidden="true"></i><span class="delivery-info-span">Not avaliable</span></div>
+                        </div>
+                    </div>
+
+                </div>
+                <span class="product-title"></span>
+                <div id="instoreRedemption" style="display:none">
+                    <img id="redemption-token-image" src="/images/qr-code-sample-300x300.jpg" class="img-responsive qr-img">
+                    <a href="#" id="thirdPartyRedemption" target="_blank" class="btn btn-primary thirdPartyRedemption" style="display:none;">Click here to view QR</a>
+                </div>
+                <div id="digitalRedemption" style="display:none">
+                    <a href="#" id="thirdPartyRedemption" target="_blank" class="btn btn-primary thirdPartyRedemption" style="display:none;">Click here to view QR</a>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="order-item-container row cart-item-row px-0" id="c300bfcc-833d-451e-8ab2-61335082291c" style="">
+            <div class="cart-row row">
+                <div class="col-md-7 row mt-3 px-0 px-md-2">
+                    <h3 class="pb-2 w-100 ml-2">Order Items</h3>
+                    <div class="cart-product-img cart-column col-4 pl-0 pr-3">
+                        <img src="" id="productImageUrl" class="img-responsive">
+                    </div>
+                    <div class="cart-column col-8 row pr-md-3 px-0">
+                        <div class="w-100 d-flex align-items-center justify-content-between mb-2">
+                            <h3 class="cartItemMerchant mr-2" style="margin:0;" id="merchantInfo_name"> </h3>
+                            <a target="_blank" class="view-shop" id="link_view_shop" href="">View Shop</a>
+                        </div>
+                        <a target="_blank" id="link_view_product" href="" class="cartItemTitle">
+                            <h2 class="cart-item-title ellipsis-2" id="productTitle"></h2>
+                        </a>
+                        <div class="row col-12">
+                            <div class="col-12 d-flex justify-content-between px-0">
+                                <div>
+                                    <span class="cartItemOriPrice hide" id="subtotalPrice"></span>
+                                    <span class="cartItemPrice" id="price"></span>
+                                </div>
+                                <div class="cart-quantity-div align-center">
+                                    <span>x</span><span id="quantity" class="cart-quantity"></span>
+                                </div>
+                            </div>
+                            <div class="col-12 cart-variations-column" style="display:none;">
+                                <span class="cart-Item-Variation-Text">Variations:</span>
+                                <span class="cart-item-Variation">Light Yellow Black L</span>
+                                <span class="badge badge-success cart-item-discount d-none"> 1 % off</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 cart-column row">
+                    <div class="detailTable col mt-3">
+                        <h3 class="pb-2 w-100">Order Details</h3>
+                        <div class="cart-product-detail">
+                            <div class="cart-row row mb-2">
+                                <span class="cart-column col pl-0">Order ID</span>
+                                <h4 class="order-shortid" id="shortId"></h4>
+                            </div>
+                            <div class="cart-row row mb-2">
+                                <span class="cart-column col pl-0">Order Date</span>
+                                <h4 id="createdAt" class="order-date"></h4>
+                            </div>
+                            <div class="cart-row row mb-2" style="display:none;">
+                                <span class="cart-column col pl-0">Payment Method</span>
+                                <h4 class="payment-method">...</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="form-group row d-none">
+            <div class="col-12 px-0 tracking-row">
+                <hr>
+                <div class="vertical-line-container">
+                    <div class="vertical-line">
+                    </div>
+                </div>
+                <div class="tracking-items" style="">
+                    <div class="order-shipping-placed col-xl-3 col-lg-3 col-md-3 col-12">
+                        <div class="tracking-tick-container col-xl-auto col-lg-auto col-md-auto col-2">
+                            <img class="order-tick-img" src="/Images/OrderHistory_Tick.png" aria-hidden="true">
+                        </div>
+                        <div class="tracking-icon col-xl-12 col-lg-12 col-md-12 col-3">
+                            <img src="/Images/OrderHistory_OrderPlaced.png">
+                        </div>
+                        <div class="tracking-text-container col-xl-12 col-lg-12 col-md-12 col-7">
+                            <div class="tracking-text">
+                                <span>Order Placed</span>
+                            </div>
+                            <div class="tracking-text">
+                                <span class="order-placed-date shipping-date-span"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-shipping-paid col-xl-3 col-lg-3 col-md-3 col-12">
+                        <div class="tracking-tick-container col-xl-auto col-lg-auto col-md-auto col-2">
+                            <img class="order-tick-img" src="/Images/OrderHistory_Tick.png" aria-hidden="true">
+                        </div>
+                        <div class="tracking-icon col-xl-12 col-lg-12 col-md-12 col-3">
+                            <img src="/Images/OrderHistory_OrderPaid.png">
+                        </div>
+                        <div class="tracking-text-container col-xl-12 col-lg-12 col-md-12 col-7">
+                            <div class="tracking-text">
+                                <span>Order Paid</span>
+                                <span class="order-paid-amount pl-2">(RM 158.74)</span>
+                            </div>
+                            <div class="tracking-text">
+                                <span class="order-paid-date shipping-date-span">20-04-2022 23:24</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-shipping-shipped-out col-xl-3 col-lg-3 col-md-3 col-12">
+                        <div class="tracking-tick-container col-xl-auto col-lg-auto col-md-auto col-2">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="tracking-icon col-xl-12 col-lg-12 col-md-12 col-3">
+                            <img src="/Images/OrderHistory_ShippedOut.png">
+                        </div>
+                        <div class="tracking-text-container col-xl-12 col-lg-12 col-md-12 col-7">
+                            <div class="tracking-text">
+                                <span class="order-shipping-shipped-out-span">Order Shipped Out</span>
+                            </div>
+                            <div class="tracking-text">
+                                <span class="order-shipped-date shipping-date-span"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-shipping-received col-xl-3 col-lg-3 col-md-3 col-12">
+                        <div class="tracking-tick-container col-xl-auto col-lg-auto col-md-auto col-2">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="tracking-icon col-xl-12 col-lg-12 col-md-12 col-3">
+                            <img src="/Images/OrderHistory_OrderRecieved.png">
+                        </div>
+                        <div class="tracking-text-container col-xl-12 col-lg-12 col-md-12 col-7">
+                            <div class="tracking-text">
+                                <span>Order Received</span>
+                            </div>
+                            <div class="tracking-text">
+                                <span class="order-received-date shipping-date-span"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tracking-items-degital" style="display:none">
+                    <div class="order-shipping-placed col-xl-4 col-lg-4 col-md-4 col-12">
+                        <div class="tracking-tick-container col-xl-auto col-lg-auto col-md-auto col-2">
+                            <img class="order-tick-img" src="/Images/OrderHistory_Tick.png" aria-hidden="true">
+                        </div>
+                        <div class="tracking-icon col-xl-12 col-lg-12 col-md-12 col-3">
+                            <img src="/Images/OrderHistory_OrderPlaced.png">
+                        </div>
+                        <div class="tracking-text-container col-xl-12 col-lg-12 col-md-12 col-7">
+                            <div class="tracking-text">
+                                <span>Order Placed</span>
+                            </div>
+                            <div class="tracking-text">
+                                <span class="order-placed-date shipping-date-span">20-04-2022 23:24</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-shipping-paid col-xl-4 col-lg-4 col-md-4 col-12">
+                        <div class="tracking-tick-container col-xl-auto col-lg-auto col-md-auto col-2">
+                            <img class="order-tick-img" src="/Images/OrderHistory_Tick.png" aria-hidden="true">
+                        </div>
+                        <div class="tracking-icon col-xl-12 col-lg-12 col-md-12 col-3">
+                            <img src="/Images/OrderHistory_OrderPaid.png">
+                        </div>
+                        <div class="tracking-text-container col-xl-12 col-lg-12 col-md-12 col-7">
+                            <div class="tracking-text">
+                                <span>Order Paid</span>
+                                <span class="order-paid-amount pl-2">(RM 158.74)</span>
+                            </div>
+                            <div class="tracking-text">
+                                <span class="order-paid-date shipping-date-span">20-04-2022 23:24</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-shipping-shipped-out col-xl-4 col-lg-4 col-md-4 col-12">
+                        <div class="tracking-tick-container col-xl-auto col-lg-auto col-md-auto col-2">
+                            <img class="order-tick-img" src="/Images/OrderHistory_Tick.png" aria-hidden="true">
+                        </div>
+                        <div class="tracking-icon col-xl-12 col-lg-12 col-md-12 col-3">
+                            <img src="/Images/OrderHistory_ShippedOut.png">
+                        </div>
+                        <div class="tracking-text-container col-xl-12 col-lg-12 col-md-12 col-7">
+                            <div class="tracking-text">
+                                <span class="order-shipping-shipped-out-span">Voucher Issued</span>
+                            </div>
+                            <div class="tracking-text">
+                                <span class="order-shipped-date shipping-date-span"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+    <a class="chat-card" style="display:none" target="_blank">
+        <span>Order Number </span>
+        <span class="chat-card-order-number"> </span>
+        <hr />
+        <div class="row">
+            <div class="col-4">
+                <img class="chat-card-product-image" />
+            </div>
+            <div class="col-8 row">
+                <div class="col-12">
+                    <span class="chat-card-product-title"></span>
+                </div>
+            </div>
+        </div>
+    </a>
+    <script src="~/lib/momentjs/moment-with-locales.min.js"></script>
+
+    <script>
+        var url = window.location.href;
+        //var productType = url.substring(url.lastIndexOf('?') + 6);
+        var id = (url.substring(url.lastIndexOf('/') + 1));
+        id = id.substr(0, id.lastIndexOf('?'));
+
+        var productType = getUrlVars()["type"]
+        var quantity = getUrlVars()["qu"]
+        var statusVal = getUrlVars()["sta"].replace("%20"," ")
+
+        $("#quantity").html(quantity)
+
+        var prodcutTitle = "";
+        var productImageUrl = "";
+        getShippingInfo(id, productType);
+
+        $("#shortId").html(getUrlVars()["shortId"])
+
+
+        if ($(window).width() > 1023) {
+            $("#profile-menu").addClass("widescreen-profile-menu");
+            $("#page-wrapper").css("min-height", $(".widescreen-profile-menu").css("height"));
+        }
+
+
+        function getShippingInfo(shopId, productType) {
+            //var shopId = $(this).attr("data-id");
+            //var paiedAmount = $(this).attr("data-paid");
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                url: '/Order/Get-Shippind-Details-By-Order-ShopId/',
+                data: { orderShopId: shopId, type: productType },
+                success: function (response) {
+
+                    if (response.successful) {
+
+                        if(productType == "2") {
+
+                            
+                            $("#merchantInfo_name").html(response.data.merchant.name)
+                            $("#productTitle").html(response.data.productTitle)
+                            $("#price").html("RM " +response.data.orderItem[0].price.toFixed(2))
+                            $("#productImageUrl").attr("src", response.data.productImageUrl);
+                            var dateString = response.data.createdAt;
+                            var date = moment(dateString, "YYYY-MM-DD HH:mm");
+
+                            $("#createdAt").html(date.format("DD/MM/YYYY"))
+
+                            $("#link_view_product").attr("href", "/product/0?i=" + response.data.orderItem[0].externalItemId+"&s="+response.data.merchant.merchantExternalId+"&t=1");
+                            $("#link_view_shop").attr("href", "/shop/0?s=" + response.data.merchant.merchantExternalId+"&t=1");
+
+                            $("#deliveryuserName").html(response.data.userInfo.name)
+                            $("#deliveryAddress_phone").html(response.data.userInfo.phoneNumber)
+                            $("#deliveryAddress_detail").html(response.data.userInfo.address)
+                        
+                            $("#div_deliveryAddress").removeClass('hide');
+
+                             setExternalProdStatus();
+
+                            if(response.data.courier != null && response.data.courier != ""){
+                                $("#courier").html("<p><i>" + response.data.courier + "</i></p>");
+                                $("#token").html(response.data.trackingNumber);
+
+                            }
+                            else{
+                                $("#div_tracking").addClass("d-none");
+                            }
+
+                            // show tracking information
+                            var trackingList = response.data.trackingList;
+
+                            if(trackingList.length > 0){
+                                $.each(trackingList, function(index, item) {
+                                    var deliveryDetail = '<div class="d-flex w-100">';
+
+                                    if(index == 0){
+                                        deliveryDetail += '<i class="fas fa-circle last" aria-hidden="true"></i>';
+                                        deliveryDetail += '<span class="delivery-info-span" style="color:#07B6C7;">' + item.description + ' - ' + item.createdAt + '</span>';
+                                    }
+                                    else{
+                                        deliveryDetail += '<i class="fas fa-circle circle" aria-hidden="true"></i>';
+                                        deliveryDetail += '<span class="delivery-info-span">' + item.description + ' - ' + item.createdAt + '</span>';
+                                    }
+                                    deliveryDetail += '</div>';
+                                    $('.delivery-details').append(deliveryDetail);
+                                });
+                            }
+                            else{
+                                $("#divUnavailableTracking").removeClass('d-none');
+                                $("#divUnavailableTracking").addClass('d-flex');
+                            }
+                        }
+
+                        else if(productType = "1") {
+
+                            $("#merchantInfo_name").html(response.data.merchantInfo.name)
+                            $("#productTitle").html(response.data.productTitle)
+                            $("#price").html("RM" + response.data.price.toFixed(2))
+                            $("#subtotalPrice").html("RM" + response.data.subtotalPrice.toFixed(2))
+                            $("#productImageUrl").attr("src", response.data.productImageUrl);
+
+                            var dateString = response.data.createdAt;
+                            var date = moment(dateString, "DD-MM-YYYY HH:mm");
+
+                            $("#createdAt").html(date.format("DD/MM/YYYY"))
+
+                            //Product URL
+
+                            $("#link_view_product").attr("href", "/product/" + response.data.productId);
+                            $("#link_view_shop").attr("href", "/shop/" + response.data.merchantInfo.id);
+
+                            //show discounted amount
+                            if (response.data.discountedAmount > 0 && response.data.discountedAmount != null) {
+
+                                var disCountDesc = "RM" + response.data.discountedAmount.toFixed(2) + " DISCOUNT (" + response.data.points + " VPoints)"
+                                $("#discountedAmount").html(disCountDesc)
+                                $("#discountedAmount").removeClass("hide")
+                                $("#subtotalPrice").removeClass("hide")
+                            }
+
+                            if(response.data.courier != null && response.data.courier != ""){
+                                $("#courier").html("<p><i>" + response.data.courier + "</i></p>");
+                                $("#token").html(response.data.token);
+
+                            }
+                            else{
+                                $("#div_tracking").addClass("d-none");
+                            }
+
+                            // show tracking information
+                            var trackingList = response.data.trackingList;
+
+                            if(trackingList.length > 0){
+                                $.each(trackingList, function(index, item) {
+                                    var deliveryDetail = '<div class="d-flex w-100">';
+
+                                    if(index == 0){
+                                        deliveryDetail += '<i class="fas fa-circle last" aria-hidden="true"></i>';
+                                        deliveryDetail += '<span class="delivery-info-span" style="color:#07B6C7;">[' + item.location + '] ' + item.status + ' - ' + item.date + '</span>';
+                                    }
+                                    else{
+                                        deliveryDetail += '<i class="fas fa-circle circle" aria-hidden="true"></i>';
+                                        deliveryDetail += '<span class="delivery-info-span">[' + item.location + '] ' + item.status + ' - ' + item.date + '</span>';
+                                    }
+                                    deliveryDetail += '</div>';
+                                    $('.delivery-details').append(deliveryDetail);
+                                });
+                            }
+                            else{
+                                $("#divUnavailableTracking").removeClass('d-none');
+                                $("#divUnavailableTracking").addClass('d-flex');
+                            }
+
+        
+
+                            //Digital Product
+                            if (response.data.redemptionType == 4) {
+
+                                if (response.data.isRedeemed == false) {
+
+                                    $("#status").html("Pending")
+                                    $("#status").css('color', '#f5a355');
+
+                                    //Pending Refund
+                                    if (response.data.status == 8) {
+
+                                        $("#status").html("Pending Refund")
+                                        $("#div_deliveryAddress").removeClass('hide');
+                                        $("#status").css('color', '#f5a355');
+                                    }
+
+                                    //Refund in progress
+                                    else if (response.data.status == 4) {
+
+                                        $("#status").html("Refund in progress")
+                                        $("#div_deliveryAddress").removeClass('hide');
+                                        $("#status").css('color', '#5147FE');
+                                    }
+
+                                    //Refunded
+                                    else if (response.data.status == 5) {
+
+                                        $("#status").html("Refunded")
+                                        $("#div_deliveryAddress").removeClass('hide');
+                                        $("#status").css('color', '#f5a355');
+                                    }
+
+
+                                    //Refund rejected
+                                    else if (response.data.status == 9) {
+
+                                        $("#status").html("Refund Rejected")
+                                        $("#div_deliveryAddress").removeClass('hide');
+                                        $("#status").css('color', '#da0419');
+                                    }
+
+                                }
+                         
+                                else if (response.data.isRedeemed == true) {
+
+                                    $("#status").html("Issued")
+                                    $("#status").css('color', '#25E643');
+                                }
+
+                            }
+
+                            else {
+
+                                $("#deliveryuserName").html(response.data.deliveryuserName)
+                                $("#deliveryAddress_phone").html(response.data.deliveryAddress.split(",").slice(0, -2).join(","))
+                                $("#deliveryAddress_detail").html(response.data.deliveryAddress.split(",").slice(-2).join(","))
+
+                  
+                                //Pending
+                                if (response.data.status == 1) {
+
+                                    $("#status").html("Pending")
+                                    $("#div_deliveryAddress").removeClass('hide');
+                                    $("#status").css('color', '#f5a355');
+
+                                }
+
+                                //Sent
+                                else if (response.data.status == 2) {
+
+                                    $("#div_tracking").removeClass('hide');
+                                    $("#div_deliveryAddress").removeClass('hide');
+                                    $("#div_shipping").removeClass('hide');
+
+                                    $("#status").html("Sent")
+                                    $("#token").html(response.data.token)
+                                    $("#status").css('color', '#f5a355');
+                                }
+
+                                //Pending Refund
+                                else if (response.data.status == 8) {
+
+                                    $("#status").html("Pending Refund")
+                                    $("#div_deliveryAddress").removeClass('hide');
+                                    $("#status").css('color', '#f5a355');
+                                }
+                            
+                                //Refund in progress
+                                else if (response.data.status == 4) {
+
+                                    $("#status").html("Refund in progress")
+                                    $("#div_deliveryAddress").removeClass('hide');
+                                    $("#status").css('color', '#5147FE');
+                                }
+
+                                //Refunded
+                                else if (response.data.status == 5) {
+
+                                    $("#status").html("Refunded")
+                                    $("#div_deliveryAddress").removeClass('hide');
+                                    $("#status").css('color', '#f5a355');
+                                }
+
+
+                                //Refund rejected
+                                else if (response.data.status == 9) {
+
+                                    $("#status").html("Refund Rejected")
+                                    $("#div_deliveryAddress").removeClass('hide');
+                                    $("#status").css('color', '#da0419');
+                                }
+
+                            }
+                        
+                        }
+
+
+
+
+                    }
+
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function setExternalProdStatus(){
+            $("#status").html(statusVal);
+
+            if(statusVal == "Refund in progress"){
+                $("#status").css('color', '#5147FE');
+            }
+            else if(statusVal == "Refund Rejected"){
+                $("#status").css('color', '#da0419');
+            }
+            else if(statusVal == "Issued"){
+                $("#status").css('color', '#25E643');
+            }
+            else {
+                $("#status").css('color', '#f5a355');
+            }
+
+        }
+
+        function getUrlVars() {
+            var vars = {};
+            var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
+                vars[key] = value;
+            });
+            return vars;
+        }
+
+        function createChatCard() {
+            var chatCard = $(".chat-card").clone();
+            chatCard.css("display", "block");
+            chatCard.find(".chat-card-product-image").attr("src", productImageUrl);
+            chatCard.find(".chat-card-product-title").html(prodcutTitle);
+            chatCard.find(".chat-card-order-number").html("#" + id);
+            chatCard.attr("href", "/order/ShippingDetails/" + id + "?type=" + productType);
+            chatCard.attr("card-type", "2");
+            chatCard.attr("data-id", id);
+            return chatCard;
+        }
+
+    </script>

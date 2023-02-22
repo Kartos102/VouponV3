@@ -1,0 +1,675 @@
+﻿@model Voupon.Rewards.WebApp.Services.Order.Pages.RefundsPage.RefundsPageViewModel
+@using Newtonsoft.Json;
+@{
+    ViewData["Title"] = "Order Refunds";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    .rate {
+        float: left;
+        height: 46px;
+        padding: 0 10px;
+    }
+
+        .rate:not(:checked) > input {
+            position: absolute;
+            top: -9999px;
+        }
+
+        .rate:not(:checked) > label {
+            float: right;
+            width: 1em;
+            overflow: hidden;
+            white-space: nowrap;
+            cursor: pointer;
+            font-size: 30px;
+            color: #ccc;
+        }
+
+            .rate:not(:checked) > label:before {
+                content: '★ ';
+            }
+
+        .rate > input:checked ~ label {
+            color: #ffc700;
+        }
+
+        .rate:not(:checked) > label:hover,
+        .rate:not(:checked) > label:hover ~ label {
+            color: #deb217;
+        }
+
+        .rate > input:checked + label:hover,
+        .rate > input:checked + label:hover ~ label,
+        .rate > input:checked ~ label:hover,
+        .rate > input:checked ~ label:hover ~ label,
+        .rate > label:hover ~ input:checked ~ label {
+            color: #c59b08;
+        }
+
+    @@media (min-width: 1024px) {
+        footer {
+            display: none;
+        }
+    }
+</style>
+
+<div class="user-page">
+    <div class="user-page-left-spacing">
+    </div>
+    <div class="user-page-right row row order-history" id="cartAvailable">
+        <div class="row col-12">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                <h1 class="page-title">
+                    <strong>
+                        Refunds
+                    </strong>
+                </h1>
+            </div>
+            <div class="col-lg-3 col-md-2 col-sm-1 d-xs">
+            </div>
+            <div class="input-group col-md-4 col-xl-4 col-lg-4 col-sm-5 col-12">
+                <input class="form-control py-2 border-right-0 border" type="search" value="" placeholder="search..." id="orderHistorySearch">
+                <span class="input-group-append">
+                    <button class="btn btn-outline-secondary border-left-0 border" type="button" id="orderHistorySearchbtn">
+                        <i class="fas fa-magnifying-glass"></i>
+                    </button>
+                </span>
+            </div>
+            <div class="col-lg-1">
+            </div>
+        </div>    
+        <div class="col-lg-12">
+            <div class="ibox product-detail">
+                <div class="ibox-content" style="overflow: auto;border: none;">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12">
+                                    <div class="table" id="cartTable">
+                                        <div id="orderHistoryItmes">
+                                            @if (Model.RefundedItems != null && Model.RefundedItems.Any())
+                                            {
+                                                foreach (var refund in Model.RefundedItems)
+                                                {
+                                                    <div class="cart-row row cart-item-row" id="@refund.Id">
+                                                        <div class="col-lg-5 col-md-5 row">
+                                                            <div class="cart-product-img cart-column col-4">
+                                                                <img src="@refund.ProductImageUrl" class="img-responsive">
+                                                            </div>
+                                                            <div class="cartTitleContainer col-8">
+                                                                <a href="/product/@refund.Id" class="cartItemTitle product-title"><h2>@refund.ProductTitle</h2></a>
+                                                                <h6 class="card-subtitle mb-2 text-muted"></h6>
+                                                                @if (refund.IsVariationProduct)
+                                                                {
+                                                                    <div class="col-12 cart-variations-column">
+                                                                        <span class="cart-Item-Variation-Text">Variations:</span>
+                                                                        <span class="cart-item-Variation">@refund.VariationText</span>
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-7 col-md-7 cart-column row">
+                                                            <div class="cart-column col-6">
+                                                                <div class="col-12 detailTable pl-0">
+                                                                    <div class="cart-column col cart-product-detail">
+                                                                        <div class="cart-row row">
+                                                                            <div class="cart-column col">
+                                                                                Date
+                                                                            </div>
+                                                                            <div class="cart-column col">
+                                                                                <span>
+                                                                                    @refund.CreatedAt.ToString("dd/MM/yyyy")
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="cart-row row">
+                                                                            <div class="cart-column col">
+                                                                                Refund ID
+                                                                            </div>
+                                                                            <div class="cart-column col Vpoints-detail">
+                                                                                <span>
+                                                                                    @(refund.ShortId)
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="cart-column col-6">
+                                                                <div class="col-12 detailTable pr-0">
+                                                                    <div class="cart-row row">
+                                                                        <div class="cart-column col">
+                                                                            VPoints
+                                                                        </div>
+                                                                        <div class="cart-column col Vpoints-detail">
+                                                                            <span>
+                                                                                @(refund.PointsRefunded)
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="cart-row row">
+                                                                        <div class="cart-column col">
+                                                                            Amount
+                                                                        </div>
+                                                                        <div class="cart-column col Vpoints-detail">
+                                                                            <span>
+                                                                                RM @(refund.MoneyRefunded)
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <div style="justify-content:center;padding-top:40px;text-align:center">
+                                                    <h2 style="text-align:center;"> No refund record available.</h2>
+                                                </div>
+                                            }
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="shoppingCartItems"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            </div>
+
+            <div class="modal fade" id="reviewProduct" status-id="0" remarks="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Product Title</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body order-detail-body">
+                            <div class="row">
+                                <label>Review this order:</label>
+                            </div>
+                            <div class="row">
+                                <div class="rate">
+                                    <input type="radio" id="star5" name="rate" value="5" />
+                                    <label for="star5" title="text">5 stars</label>
+                                    <input type="radio" id="star4" name="rate" value="4" />
+                                    <label for="star4" title="text">4 stars</label>
+                                    <input type="radio" id="star3" name="rate" value="3" />
+                                    <label for="star3" title="text">3 stars</label>
+                                    <input type="radio" id="star2" name="rate" value="2" />
+                                    <label for="star2" title="text">2 stars</label>
+                                    <input type="radio" id="star1" name="rate" value="1" />
+                                    <label for="star1" title="text">1 star</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label>Add comment:</label>
+                            </div>
+                            <div class="row">
+                                <textarea id="txtReview" rows="4" style="width:100%"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="btnSubmitReview">Submit</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="orderDetail" status-id="0" remarks="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div>
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header row">
+                        <h3 class="modal-title col-11" id="redemption-title">Aeon RM100 Cash Voucher (Lucky Draw)</h3>
+                        <button type="button" class="close col-1" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body order-detail-body">
+                        <div class="row">
+                            @*<div class="col-12 col-xl-4 col-lg-4 col-md-4 col-sm-12 qr-detail-image-div">
+                                    <span style="font-size:16px">Aeon RM100 Cash Voucher (Lucky Draw)</span>
+                                    <h6 class="card-subtitle mb-2 text-muted"></h6>
+                                    <span style="text-decoration:line-through;">RM 12.00 </span>
+
+                                    <span style="color:#7030a0;font-weight:600;">RM 9.00 </span><br>
+
+                                    &nbsp;<span class="badge badge-success" style="background-color:#7030a0">25 % off</span><br />
+                                    <img src="https://vodusdev.blob.core.windows.net/product-thumbnail-photo/2210773a-ae11-4e41-9c4a-b245f20a58a8.jpeg" class="img-responsive">
+                                </div>*@
+                            <div class="col-12 col-xl-5 col-lg-5 col-md-5 col-sm-12 text-left" style="align-self:center;">
+                                <div id="instoreRedemption">
+                                    <img id="redemption-token-image" src="~/images/qr-code-sample-300x300.jpg" class="img-responsive qr-img">
+                                    <a href="#" id="thirdPartyRedemption" target="_blank" class="btn btn-primary thirdPartyRedemption" style="display:none;">Click here to view QR</a>
+                                </div>
+                                <div id="digitalRedemption">
+                                    <a href="#" id="thirdPartyRedemption" target="_blank" class="btn btn-primary thirdPartyRedemption" style="display:none;">Click here to view QR</a>
+                                </div>
+                                <div id="deliveryRedemption" class="mb-2">
+                                    <h4>
+                                        Courier Service
+                                    </h4>
+                                    <span id="redemption-courier-provider">
+                                        ABC1230
+                                    </span>
+                                </div>
+                                @*<div class="mb-2" id="redemptionCodeContainer">
+                                        <h4>
+                                            Redemption Code
+                                        </h4>
+                                        <span id="redemption-token">
+                                            ABC1230
+                                        </span>
+                                    </div>*@
+                                <div class="delivery mb-2">
+                                    <h4>
+                                        Shipping Address
+                                    </h4>
+                                    <span id="delivery-address">
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-12 col-xl-7 col-lg-7 col-md-7 col-sm-12 qr-detail-info">
+                                <div class="detailTable" id="detailTableForOrderDetail">
+                                    <div class="cart-product-detail text-left">
+
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <h4>
+                                                    Order Date
+                                                </h4>
+                                            </div>
+                                            <div class="col-6">
+                                                <span id="redemption-order-date">
+                                                    30/05/2020
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="row delivery">
+                                            <div class="col-6">
+                                                <h4>
+                                                    Expected Delivery Date
+                                                </h4>
+                                            </div>
+                                            <div class="col-6">
+                                                <span id="expected-delivery-date">
+                                                    01/09/2020
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="row instore">
+                                            <div class="col-6">
+                                                <h4>
+                                                    Valid From
+                                                </h4>
+                                            </div>
+                                            <div class="col-6">
+                                                <span id="redemption-valid-date">
+                                                    01/09/2020
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="row instore">
+                                            <div class="col-6">
+                                                <h4>
+                                                    Valid until
+                                                </h4>
+                                            </div>
+                                            <div class="col-6">
+                                                <span id="redemption-ended-date">
+                                                    30/09/2020
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="row instore">
+                                            <div class="col-6">
+                                                <h4>
+                                                    Redeemed At
+                                                </h4>
+                                            </div>
+                                            <div class="col-6">
+                                                <span id="redemption-redemption-date">
+                                                    30/09/2020
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <h4>
+                                                    Status
+                                                </h4>
+                                            </div>
+                                            <div class="col-6">
+                                                <span>
+                                                    <i class="fas fa-check-circle"></i>
+                                                    Successful
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-2 how-to-redeem">
+                            <div class="col-12 col-xl-12 col-lg-12 col-md-12 col-sm-12" style="align-self: center;"><a id="order-detail-href" href="/product/44#redemption-instructions">How do I redeem this voucher?</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="orderHistoryTableTemplate" style="display:none;">
+        <div class="table" id="cartTable">
+            <div id="orderHistoryItmes">
+                <div class="cart-row row" id="7a8bb5f7-5562-40bf-8d38-7f4301e9e4d0">
+                    <div class="col-lg-5 row">
+                        <div class="cart-product-img cart-column col-4">
+                            <img src="" class="img-responsive">
+                        </div>
+                        <div class="cartTitleContainer col-8">
+                            <a href="/product/56" class="cartItemTitle"><h2>(Mon-Fri) Day Pass &amp;#x2B; Flying Fox (Unlimited) for 2 People</h2></a>
+                            <h6 class="card-subtitle mb-2 text-muted"></h6>
+                            <span class="cartItemOriPrice">RM 110.00 </span>
+                            <span class="cartItemPrice">RM 99.00 </span><br>
+                            <span class="badge badge-success">10 % off</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 cart-column row">
+                        <div class="cart-column col-12">
+                            <div class="col-12 detailTable">
+                                <div class="cart-column col cart-product-detail">
+                                    <div class="cart-row row">
+                                        <div class="cart-column col-5">
+                                            Order Date
+                                        </div>
+                                        <div class="cart-column col">
+                                            <span style="vertical-align: middle;">
+                                                10-09-2020
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="cart-row row">
+                                        <div class="cart-column col-5">
+                                            Transaction ID
+                                        </div>
+                                        <div class="cart-column col Vpoints-detail">
+                                            <span>
+                                                9e2792b7-8855-4ec6-b469-abdf7e3f8a70
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="cart-row row">
+                                        <div class="cart-column col-5">
+                                            Status
+                                        </div>
+                                        <div class="cart-column col">
+                                            <span>
+                                                <i class="fas fa-check-circle" aria-hidden="true"></i>
+                                                Successful
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 cart-column row">
+                        <div class="cart-column col-11 detailTable">
+                            <div class="cart-product-detail">
+                                <div class="cart-row row">
+                                    <div class="cart-column col-5">Quantity</div>
+                                    <div class="cart-column col"><span>1</span></div>
+                                </div>
+                                <div class="cart-row row">
+                                    <div class="cart-column col-5">VPoints</div>
+                                    <div class="cart-column col Vpoints-detail">
+                                        <span>
+                                            0 VPoints
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="cart-row row">
+                                    <div class="cart-column col-5">
+                                        Net Price
+                                    </div>
+                                    <div class="cart-column col-5">
+                                        <span>
+                                            RM 99.00
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cartMoreDetail col-1">
+                            <a><i class="fas fa-chevron-down qr-detail-btn" data-id="9e2792b7-8855-4ec6-b469-abdf7e3f8a70" product-id="56" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        if ($(window).width() > 1023) {
+            $("#profile-menu").addClass("widescreen-profile-menu");
+            $("#page-wrapper").css("min-height", $(".widescreen-profile-menu").css("height"));
+        }
+        $(".qr-detail-btn").click(function () {
+            //alert($(this).attr("data-id"));
+            var request = $.ajax({
+                url: "/Order/GetRedemptionDetails",
+                method: "GET",
+                data: {
+                    orderItemId: $(this).attr("data-id")
+                },
+                //contentType: "application/json; charset=utf-8",
+                dataType: "json",
+            });
+            var product_id = $(this).attr("product-id");
+
+            $("#order-detail-href").attr("href", "/product/" + product_id + "#redemption-instructions");
+            request.done(function (res) {
+                if (res.successful) {
+                    console.log(res);
+
+                    $("#redemptionCodeContainer").show();
+                    if (res.data.redemptionType == 1 || (res.data.redemptionType == 2)) {
+                        $(".how-to-redeem").show();
+                        $("#instoreRedemption").show();
+                        $("#deliveryRedemption").hide();
+                        $("#redemption-title").html(res.data.productTitle);
+                        $("#redemption-token").html(res.data.token);
+
+                        if (res.data.tokenType == 1) {
+                            $("#redemption-token-image").attr("src", res.data.tokenImageSrc);
+                            $("#redemption-token").show();
+                            $(".thirdPartyRedemption").hide();
+                            $(".redemptionCodeContainer").show();
+                        } else {
+
+                            $("#redemption-token-image").hide();
+                            $("#redemption-token").hide();
+                            $(".thirdPartyRedemption").attr("href", res.data.token).show();
+                            $(".redemptionCodeContainer").hide();
+                        }
+
+                        $("#redemption-order-date").html(res.data.createdAt);
+                        $("#redemption-valid-date").html(res.data.validFrom);
+                        $("#redemption-ended-date").html(res.data.validEnded);
+                        $("#redemption-redemption-date").html(res.data.redeemedAt);
+
+                        $(".delivery").hide();
+                        $(".instore").show();
+                    }
+                    else if (res.data.redemptionType == 4) {
+                        //Digital
+                        $(".how-to-redeem").show();
+                        $("#instoreRedemption").hide();
+                        $("#redemption-title").html(res.data.productTitle);
+                        $("#redemption-order-date").html(res.data.createdAt);
+                        $("#redemption-valid-date").html("-");
+                        $("#redemption-ended-date").html("-");
+                        $("#redemption-redemption-date").html(res.data.redeemedAt);
+                        $("#redemption-token").html(res.data.token);
+
+
+                        if (res.data.tokenType == 1) {
+                            $("#redemption-token").show();
+                            $(".thirdPartyRedemption").hide();
+                            $("#redemptionCodeContainer").show();
+                        } else {
+
+                            $("#redemption-token-image").hide();
+                            $("#redemption-token").hide();
+                            $(".thirdPartyRedemption").attr("href", res.data.token).show();
+                            $("#redemptionCodeContainer").hide();
+                        }
+
+                        $("#deliveryRedemption").hide();
+                        $(".delivery").hide();
+                        $(".instore").hide();
+
+                    }
+                    else if (res.data.redemptionType == 5) {
+                        //Delivery
+                        $(".thirdPartyRedemption").hide();
+                        $(".how-to-redeem").hide();
+                        $("#instoreRedemption").hide();
+                        $("#deliveryRedemption").show();
+                        $("#redemption-courier-provider").html(res.data.courier);
+                        $("#redemption-title").html(res.data.productTitle);
+                        $("#redemption-order-date").html(res.data.createdAt);
+                        $("#redemption-valid-date").html("-");
+                        $("#redemption-ended-date").html("-");
+                        $("#redemption-redemption-date").html(res.data.redeemedAt);
+                        $("#redemption-token").html(res.data.token);
+                        $("#expected-delivery-date").html(res.data.expectedDeliveryDate);
+                        $("#delivery-address").html(res.data.deliveryAddress);
+
+                        $(".delivery").show();
+                        $(".instore").hide();
+                    }
+                    //$("#EditShippingMobileCountryCode").val(res.data.mobileCountryCode);
+                    //$("#EditShippingMobileNumber").val(res.data.mobileNumber);
+                    //if (res.data.masterMemberShippingAddress.length > 0) {
+                    //    $("#EditShippingFirstName").val(res.data.masterMemberShippingAddress[0].firstName);
+                    //}
+                    //else {
+                    //    $("#EditShippingFirstName").val("");
+                    //    $("#EditShippingLastName").val("");
+                    //    $("#EditShippingMobileCountryCode").val("");
+                    //    $("#EditShippingMobileNumber").val("");
+                    //    $("#EditShippingAddressLine1").val("");
+                    //    $("#EditShippingAddressLine2").val("");
+                    //    $("#EditShippingPostcode").val("");
+                    //    $("#EditShippingCity").val("");
+                    //    $("#EditShippingState").val("");
+                    //    $("#EditShippingCountry").val("");
+                    //}
+                }
+            });
+
+            request.fail(function (jqXHR, textStatus) {
+                alert("Request failed: " + textStatus);
+            });
+            $("#orderDetail").modal("show");
+        });
+        $("#orderHistorySearch").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $(".product-title").filter(function () {
+                var textToFilter = $(this).text()/* + " " + $(this).siblings(0).text()*/;
+                console.log(textToFilter);
+                $(this).parent().parent().parent().toggle(textToFilter.toLowerCase().indexOf(value) > -1)
+            });
+        });
+        $(".show-product-review").click(function () {
+            //product-id=" merchant-id="" orderItem-id="" product-title
+            $("#txtReview").val("");
+            $("#star5").prop('checked', false);
+            $("#star4").prop('checked', false);
+            $("#star3").prop('checked', false);
+            $("#star2").prop('checked', false);
+            $("#star1").prop('checked', false);
+            $('#reviewProduct').attr("product-id", $(this).attr("product-id"));
+            $('#reviewProduct').attr("merchant-id", $(this).attr("merchant-id"));
+            $('#reviewProduct').attr("orderItem-id", $(this).attr("orderItem-id"));
+            $('#reviewProduct').attr("product-title", $(this).attr("product-title"));
+            $('#reviewProduct').find(".modal-title").html($(this).attr("product-title"));
+            $('#reviewProduct').modal('show');
+        });
+        $("#btnSubmitReview").click(function () {
+
+
+
+
+            var rating = 0;
+            if ($("#star1").is(":checked")) {
+                rating = 1;
+            }
+            if ($("#star2").is(":checked")) {
+                rating = 2;
+            }
+            if ($("#star3").is(":checked")) {
+                rating = 3;
+            }
+            if ($("#star4").is(":checked")) {
+                rating = 4;
+            }
+            if ($("#star5").is(":checked")) {
+                rating = 5;
+            }
+            var request = $.ajax({
+                url: "ReviewProduct/" + $('#reviewProduct').attr("product-id"),
+                method: "POST",
+                async: false,
+                data: {
+                    Rating: rating,
+                    MerchantId: $('#reviewProduct').attr("merchant-id"),
+                    Comment: $("#txtReview").val(),
+                    OrderItemId: $('#reviewProduct').attr("orderItem-id")
+                },
+                //contentType: "application/json; charset=utf-8",
+                dataType: "json",
+            });
+
+            request.done(function (res) {
+                toastr.success(res.message);
+                $(".show-product-review").each(function (index) {
+                    if ($(this).attr("orderItem-id") == $('#reviewProduct').attr("orderItem-id")) {
+                        $(this).hide();
+                    }
+                });
+                $('#reviewProduct').modal('hide');
+            });
+
+            request.fail(function (res) {
+                console.log(res);
+                toastr.error(JSON.parse(res.responseText).message);
+                $('#reviewProduct').modal('hide');
+
+            });
+        });
+
+    </script>

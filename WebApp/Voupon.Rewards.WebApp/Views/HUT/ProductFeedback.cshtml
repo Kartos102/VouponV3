@@ -1,0 +1,314 @@
+﻿@using System.Configuration
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@model Voupon.Rewards.WebApp.Services.HUT.Pages.ProductFeedbackPage.ProductFeedBackViewModel
+<style>
+    .project-name-header {
+        border-bottom: groove;
+        border-color: #ad7fcd;
+        width: fit-content;
+        font-weight: 600;
+        margin-left: 30px;
+    }
+
+    .project-info {
+        margin-bottom: 20px;
+    }
+
+        .project-info .row {
+            margin-top: 30px;
+        }
+
+    .back-home-btn {
+        width: -webkit-fill-available;
+        background-color: #330f4d;
+    }
+
+    .alert a {
+        margin: 10px;
+    }
+</style>
+
+<div style="margin-top:20px;max-width: 1200px;">
+
+    @if (!Model.IsValidRequest)
+    {
+        <div class="align-center" style="height:100%;margin:10vh auto 0;text-align:center;">
+            <p class="alert alert-warning">@Html.Raw(Model.ErrorMessage)</p>
+        </div>
+        <div class="align-center" style="text-align:center;">
+            @if (@Model.HUTSurveyProjectLanguageId == 1)
+            {
+                <p class="alert alert-warning">@Html.Raw("If you experiencing any issues, let us know by emailing<a style='color: blue;' href='mailto:noreply@vodus.my'>noreply@vodus.my</a>")</p>
+            }
+            else if (@Model.HUTSurveyProjectLanguageId == 2)
+            {
+                <p class="alert alert-warning">@Html.Raw("Jika anda mengalami sebarang isu, sila beritahu kami dengan menghantar email ke<a style='color: blue;' href='mailto:noreply@vodus.my'>noreply@vodus.my</a>")</p>
+            }
+        </div>
+    }
+    else
+    {
+        if (@Model.HUTSurveyProjectLanguageId == 1)
+        {
+            <div class="row">
+                <div class="col-lg-4 project-info">
+                    <h2 class="project-name-header">@Model.HUTSurveyProjectName</h2>
+                    <div class="row">
+                        <div class="col-6">
+                            <label>Survey End date:</label>
+                        </div>
+                        <div class="col-6">
+                            <label>@Model.SurveyEndDate.ToString("dd/MM/yyyy")</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label>Completion Reward: </label>
+                        </div>
+                        <div class="col-6">
+                            <label> @Model.CompletionReward</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="i18next">Survey Completed:</label>
+                        </div>
+                        <div class="col-6">
+                            <label> @Model.SurveyCompleted/@Model.AvailableForms</label>
+                        </div>
+                    </div>
+                    @if (@Model.SurveyCompleted == 0)
+                    {
+                        <div class="row">
+                            <div class="col-12">
+                                <p>
+                                    Welcome to the Vodus product test
+                                    <br /><br />
+                                    This test will require around @Model.TestLength minutes of your undivided attention. Please ensure that you have @Model.TestLength minutes of spare time before starting the survey.
+                                    <br /><br />
+                                    To begin the survey, Please follow the instructions stated on the survey and complete the survey.
+                                    <br /><br />
+                                    Happy testing!
+                                </p>
+                            </div>
+                        </div>
+                    }
+                    else if (@Model.SurveyCompleted > 0 && @Model.SurveyCompleted < @Model.AvailableForms)
+                    {
+                        <div class="row">
+                            <div class="col-12">
+                                <p>
+                                    Continue with the test by following the instructions stated on the survey and complete the survey.
+                                </p>
+                            </div>
+                        </div>
+                    }
+                    else if (@Model.SurveyCompleted == @Model.AvailableForms)
+                    {
+                        <div class="row">
+                            <div class="col-12">
+                                <p>
+                                    You have completed our product test. We will send you the @Model.CompletionReward in the next 7 days once we have validated your survey responses.
+                                    <br /><br />
+                                    Thank you for your participation.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <a href="/" class="btn btn-secondary btn-lg back-home-btn">BACK TO HOME</a>
+                        </div>
+
+                    }
+
+                    <div class="row">
+                        <div class="col-12">
+                            <p>
+                                If you experiencing any issues, let us know by emailing  <a style='color: blue;' href='mailto:noreply@vodus.my'> noreply@vodus.my</a>
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+                @if (@Model.SurveyCompleted == 0 || (@Model.SurveyCompleted > 0 && @Model.SurveyCompleted < @Model.AvailableForms))
+                {
+                    <div class="col-lg-8" style="display:flex;padding: 0; margin-bottom: 20px;">
+                        <iframe id="gForm" src="@Model.URL" frameborder="0" marginheight="0" marginwidth="0" style="margin:0 auto; max-width:100%;height:calc(100vh - 120px);">Loading...</iframe>
+                    </div>
+                }
+            </div>
+        }
+        else if (@Model.HUTSurveyProjectLanguageId == 2)
+        {
+            <div class="row">
+                <div class="col-lg-4 project-info">
+                    <h2 class="project-name-header">@Model.HUTSurveyProjectName</h2>
+                    <div class="row">
+                        <div class="col-6">
+                            <label>Tarikh akhir tinjauan:</label>
+                        </div>
+                        <div class="col-6">
+                            <label>@Model.SurveyEndDate.ToString("dd/MM/yyyy")</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label>Ganjaran penyiapkan: </label>
+                        </div>
+                        <div class="col-6">
+                            <label> @Model.CompletionReward</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="i18next">Tinjauan telah disiapkan:</label>
+                        </div>
+                        <div class="col-6">
+                            <label> @Model.SurveyCompleted/@Model.AvailableForms</label>
+                        </div>
+                    </div>
+                    @if (@Model.SurveyCompleted == 0)
+                    {
+                        <div class="row">
+                            <div class="col-12">
+                                <p>
+                                    Selamat datang ke penilaian produk oleh Vodus
+                                    <br /><br />
+                                    Penilaian ini akan mengambil masa sekitar @Model.TestLength minit.Sila pastikan anda mempunyai masa @Model.TestLength untuk diluangkan sebelum memulakan penilaian ini.
+                                    <br /><br />
+                                    Untuk mulakan tinjauan, sila ikuti arahan yang tertera dan lengkapkan tinjauan tersebut.
+                                    <br /><br />
+                                    Selamat mencuba!
+                                </p>
+                            </div>
+                        </div>
+                    }
+                    else if (@Model.SurveyCompleted > 0 && @Model.SurveyCompleted < @Model.AvailableForms)
+                    {
+                        <div class="row">
+                            <div class="col-12">
+                                <p>
+                                    Sila sambung penilaian ini dengan mengikuti arahan yang terpapar di tinjauan dan lengkapkan tinjauan.
+                                </p>
+                            </div>
+                        </div>
+                    }
+                    else if (@Model.SurveyCompleted == @Model.AvailableForms)
+                    {
+                        <div class="row">
+                            <div class="col-12">
+                                <p>
+                                    Anda telah melengkapkan penilaian produk kami. @Model.CompletionReward akan di hantar  dalam masa 7 hari setelah kami mengesahkan penilaian anda.
+                                    <br /><br />
+                                    Terima kasih atas penyertaan anda.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <a href="/" class="btn btn-secondary btn-lg back-home-btn"> Kembali ke halaman utama</a>
+                        </div>
+
+                    }
+                    <div class="row">
+                        <div class="col-12">
+                            <p>
+                                Jika anda mengalami sebarang isu, sila beritahu kami dengan menghantar email ke  <a style='color: blue;' href='mailto:noreply@vodus.my'> noreply@vodus.my</a>
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+                @if (@Model.SurveyCompleted == 0 || (@Model.SurveyCompleted > 0 && @Model.SurveyCompleted < @Model.AvailableForms))
+                {
+                    <div class="col-lg-8" style="display:flex;padding: 0; margin-bottom: 20px;">
+                        <iframe id="gForm" src="@Model.URL" frameborder="0" marginheight="0" marginwidth="0" style="margin:0 auto; max-width:100%;height:calc(100vh - 120px);">Sedang memuatkan...</iframe>
+                    </div>
+                }
+            </div>
+
+        }
+        @*<div id="formContainer">
+                <p class="introMessage">@Model.IntroMessage</p><br/>
+
+            </div>*@
+        @if (Model.HUTSurveyProjectLanguageId == 1)
+        {
+            <div style="display:none;" id="submitContainer">
+                <p class="alert alert-warning">Submitting response and checking for next form if any</p>
+            </div>
+        }
+        else if (Model.HUTSurveyProjectLanguageId == 2)
+        {
+            <div style="display:none;" id="submitContainer">
+                <p class="alert alert-warning">Menghantar respons anda dan menyemak tinjauan lain jika ada.</p>
+            </div>
+
+        }
+
+    }
+
+</div>
+
+@section scripts{
+
+    <script>
+        var project = {
+            id: @Model.HUTSurveyProjectId,
+            formId: @Model.Id
+        };
+
+        $(function () {
+            $(".login").click(function () {
+                $("#navLogin").click();
+            });
+            $(".register").click(function () {
+                $("#navRegister").click();
+            });
+        });
+
+        var load = 0;
+        var g = document.getElementById('gForm');
+        if (g != null) {
+
+            $("#gForm").css("width", window.outerWidth - 25 + "px");
+            document.getElementById('gForm').onload = function () {
+                /*Execute on every reload on iFrame*/
+                load++;
+                console.log("gForm loaded")
+                if (load == 2) {
+                    //  Second reload is a submit
+                    console.log("Google forms submitted");
+                    $("#formContainer").hide();
+                    $("#submitContainer").show();
+
+                    //  Create request for user
+
+                    var request = $.ajax({
+                        url: "/hut/product-feedback/create",
+                        method: "POST",
+                        global: false,
+                        data: {
+                            HUTSurveyFormId: project.formId,
+                            HUTSurveyProjectId: project.id
+                        }
+                    });
+
+                    request.done(function (res) {
+                        console.log(res);
+                        location.reload();
+                    });
+
+                    request.fail(function (res) {
+                        console.log(res.responseText);
+                        console.log(res.statusCode);
+                        alert("Opps.. Something went wrong...");
+                    });
+
+                }
+            }
+        }
+
+    </script>
+}

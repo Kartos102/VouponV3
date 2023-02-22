@@ -1,0 +1,173 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="dashboard-main-wrapper">
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content ">
+            <div class="row">
+                <div class="page-header-container col-lg-12 d-flex justify-content-between align-items-center mb-2">
+                    <h1>Mailing List</h1>
+                </div>
+            </div>
+            <div class="row col-6 block">
+                <h3>Total Email: <span id="totalEmail">...</span></h3>
+
+            </div>
+            <div class="row col-6 block">
+                <input type="email" id="email" class="form-control" style="width:200px;" />
+                <button type="button" class="btn btn-primary" style="float:right;" id="btnSendEmailCSV">Send CSV to Email</button>
+            </div>
+            <div class="row products-card-row col-lg-12 col-md-12 px-0 mt-2">
+
+                <div class="row emailCard col-lg-12 col-md-12">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div style="display:none">
+    <div class="row card-table-row card-table-template col-12 no-padding">
+        <div class="mobile-card-row product-row row col-12">
+            <div class="row col-xl-12 col-lg-12 col-md-12 col-12 no-padding">
+                <div class="row col-xl-6 col-lg-6 col-md-6 col-12 no-padding">
+                    <div class="row col-4 no-padding mt-2">
+                        <div class="row col-2 no-padding">
+                            <div class="emailCol col-12 card-record-row px-0">
+                                12
+                            </div>
+                            <div class="col-12 card-title-row px-0">
+                                Email
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row col-4 no-padding mt-2 ">
+                        <div class="isSubscribeCol col-12 px-0 card-record-row product-price-div px-0">
+
+                        </div>
+                        <div class="col-12 card-title-row  px-0">
+                            Is Subscribed?
+                        </div>
+                    </div>
+                    <div class="row col-4 no-padding mt-2">
+                        <div class="createdAtCol col-12 card-record-row product-category px-0 ellipsis px-0">
+
+                        </div>
+                        <div class="col-12 card-title-row  px-0">
+                            Created At
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+        var table = null;
+        $(document).ready(function () {
+            $("#promoCodeSubMenu").addClass("show");
+            getEmailSubscriber();
+
+            $("#btnSendEmailCSV").click(function () {
+                var email = $("#email").val();
+
+                if (email == null || email == "") {
+                    toastr.error("Email is required");
+                    return;
+                }
+
+                $("#btnSendEmailCSV").prop('disabled', true).html('Generating...');
+                toastr.success("Started generating email. You will receive an email when it's completed");
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    dataType: 'json',
+                    data: JSON.stringify({
+                        email: email
+                    }),
+                    url: 'https://vodus-api-serverless.azurewebsites.net/api/ExportMailingList',
+                    success: function (response) {
+                        console.log(response);
+                        if (response.successful) {
+                            toastr.success("Email generating completed");
+                        }
+                        else {
+                            toastr.error("Fail to generate csv. Please try again later");
+                        }
+                        $("#btnSendEmailCSV").prop('disabled', false).html('Send CSV to Email');
+                    },
+                    error: function (error) {
+                        toastr.error(error);
+                        $("#btnSendEmailCSV").prop('disabled', false).html('Send CSV to Email');
+                    }
+                });
+            });
+        });
+
+        function getEmailSubscriber() {
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/Admin/PromoCode/api/mailinglist',
+                success: function (response) {
+                    console.log(response);
+                    $("#totalEmail").html(response.totalCount)
+                    if (response.pageCount > 0) {
+                        $(".emailCard").html("");
+                        $(response.items).each(function (index, item) {
+                            var template = $(".card-table-template");
+
+
+                            template.find(".emailCol").html(item.email);
+                            template.find(".isSubscribeCol").html(item.isSubscribe);
+                            template.find(".createdAtCol").html(item.createdAt);
+                            $(".emailCard").append(template.html());
+                        });
+
+                    }
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function updatePromoCodeStatus(input) {
+            var id = $(input).attr("data-id");
+            var status = $(input).is(":checked");
+
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    id: id, status: status
+                },
+                url: '/Admin/PromoCode/UpdateStatus',
+                success: function (response) {
+                    if (response.successful)
+                        toastr.success(response.message);
+                    else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+
+        }
+    </script>
+
+}
+
+

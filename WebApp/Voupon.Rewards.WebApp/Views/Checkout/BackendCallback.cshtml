@@ -1,0 +1,10 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = null;
+}
+
+@if (ViewData["Result"] != null)
+{
+    Html.Raw(ViewData["Result"]);
+}

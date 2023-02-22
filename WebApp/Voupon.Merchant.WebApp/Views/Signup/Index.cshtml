@@ -1,0 +1,239 @@
+﻿@using Voupon.Merchant.WebApp.Services.SignUp.Page
+@{
+    ViewData["Title"] = "Home Page";
+    ViewBag.Description = "Track Your Product Sales, and Make Changes to Product Listings. All on Your Vodus Merchant Dashboard.";
+
+}
+@model IndexPageViewModel
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration configuration
+
+<html>
+<head>
+</head>
+<body>
+    <div class="row no-gutter bg-image">
+        <div class="sso-container top-purple-bar m-lg-5 mx-2">
+            <div class="row">
+                <div class="col-md-6 login d-flex mb-4">
+                    <div class="container">
+                        <div class="row container-row">
+                            <div class="col-lg-12 form-container">
+                                <div class="row title-tab">
+                                    <div class="col-6 tab-register @((ViewData["IsLogin"] != null)?"":"selected")">
+                                        <h2>Register​</h2>
+                                    </div>
+                                    <div class="col-6 tab-login @((ViewData["IsLogin"] != null)?"selected":"")">
+                                        <h2>Login​</h2>
+                                    </div>
+                                </div>
+                                <form id="signUpForm" class="sso-tab @((ViewData["IsLogin"] != null)?"":"selected")" name="signUpForm">
+                                    @Html.AntiForgeryToken()
+                                    <div class="name-form-container row">
+                                        <div class="form-group first col-md-12">
+                                            <input asp-for="BusinessName" class="form-control" placeholder="Business Name" />
+                                            <span asp-validation-for="BusinessName" class="text-danger"></span>
+                                        </div>
+                                        @*<div class="form-group second col-md-6">
+                <input asp-for="BusinessName" class="form-control" placeholder="Last Name" />
+                <span asp-validation-for="BusinessName" class="text-danger"></span>
+            </div>*@
+                                    </div>
+                                    <div class="form-group">
+                                        <input asp-for="MobileNumber" class="form-control" placeholder="Mobile Number" />
+                                        <span asp-validation-for="MobileNumber" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <input asp-for="Email" class="form-control" type="email" placeholder="Email" />
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                    </div>
+                                    @*<div class="form-group">
+            <select asp-for="CountryId" name="CountryId" data-val-required="The Country Selection is required." id="selectCountry" class="form-control bfh-countries" data-country="MY"><option selected="selected" data-value="1">Malaysia</option></select>
+            <span asp-validation-for="CountryId" class="text-danger"></span>
+        </div>*@
+                                    @*<div class="form-group">
+            <input asp-for="MobileNumber" class="form-control" type="password" placeholder="Password" />
+            <span asp-validation-for="MobileNumber" class="text-danger"></span>
+        </div>*@
+                                    <div class="form-group">
+                                        <div class="g-recaptcha" data-sitekey="@configuration["AppSettings:GoogleReCaptcha:ClientKey"]" name="g-recaptcha-response"></div>
+                                        <span class="text-danger g-recaptcha-message" style="display:none">Please verify that you're not a robot</span>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <input type="checkbox" id="agreeTerm"> <label class="h6 text-dark" for="agreeTerm"> I agree to the <a href="/TermsAndConditions" target="_blank">Terms &amp; Conditions</a></label>
+                                        <br />
+                                        <span class="text-danger terms-condition-message" style="display:none">Please check our Terms & Conditions to register</span>
+                                    </div>
+                                    <div class="row"><button type="submit" id="btnCreate" class="btn btn-primary btn-block text-uppercase shadow-sm mb-2">Register</button></div>
+                                    <div class="row already-signup">
+                                        <div class="col-12 mt-2">
+                                            <p>
+                                                Already signed up?
+                                            </p>
+                                        </div>
+                                    </div>
+                                </form>
+                                <form id="signInForm" class="sso-tab  @((ViewData["IsLogin"] != null)?"selected":"")" name="signInForm" method="post">
+                                    <div class="form-group">
+                                        <input asp-for="Email" class="form-control" placeholder="Email" />
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <input class="form-control" type="password" placeholder="Password" asp-for="Password" />
+                                        <span asp-validation-for="Password" class="text-danger"></span>
+                                    </div>
+                                    <div class="row">
+                                        <button type="submit" id="btnLogin" class="btn btn-primary btn-block text-uppercase mb-2 shadow-sm">Log In</button>
+                                    </div>
+                                    <div class="row forget-password">
+                                        <div class="col-12 mt-2">
+                                            <p>
+                                                <a href="/forgetPassword">
+                                                    Forgot your password?
+                                                </a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 row align-content-start py-md-4">
+                    <div class="description">
+                        <span>
+                            Expose your business to
+                        </span>
+                        <b>
+                            17 million Malaysian
+                        </b>
+                        <i>
+                            online media consumers from our combined network of online publishers at no upfront cost.
+                        </i>
+                    </div>
+                    <div class="media-partners">
+                        <div>
+                            <img src="~/Images/Media Prima.png" />
+                        </div>
+                        <div>
+                            <img src="~/Images/astro.png" />
+                        </div>
+                        <div>
+                            <img src="~/Images/star-group-logo.png" />
+                        </div>
+                        <div>
+                            <img src="~/Images/sinchew-group-logo.png" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    @section scripts{
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+        <script>
+            $("#btnCreate").click(function (e) {
+                $(".terms-condition-message").hide();
+                $(".g-recaptcha-message").hide();
+                e.preventDefault();
+                if ($("#signUpForm").valid()) {
+                    if (grecaptcha.getResponse() == null || grecaptcha.getResponse() == "") {
+                        $(".g-recaptcha-message").show();
+                        return;
+                    }
+                    if ($("#agreeTerm").prop("checked") == false) {
+                        $("#agreeTerm").focus();
+                        $(".terms-condition-message").show();
+                        return false;
+                    }
+                    $("#btnCreate").prop("disabled", true).text("Creating..");
+                    $.post("/signup/create", $("#signUpForm").serialize())
+                        .done(function (response) {
+                            if (response.successful) {
+                                $("#btnCreate").prop("disabled", true).text("Redirecting...");
+                                location.href = "/signup/verify-tac/" + response.data.id;
+                            }
+                            else {
+                                toastr.error(response.message);
+                                grecaptcha.reset();
+                            }
+                        })
+                        .fail(function (response) {
+                            grecaptcha.reset();
+                            toastr.error(response.responseJSON.message);
+                            $("#btnCreate").prop("disabled", false).text("Create");
+                        });
+                }
+            });
+
+            $(function () {
+                $("#signInForm").validate();
+            })
+            $("#btnLogin").click(function (e) {
+                e.preventDefault();
+                if ($("#signInForm").valid()) {
+                    $("#btnLogin").prop("disabled", true).text("Signing in...");
+                    $.post("/login/validate-login", $("#signInForm").serialize())
+                        .done(function (data) {
+                            console.log(data);
+                            $("#btnLogin").prop("disabled", true).text("Redirecting...");
+                            var returnTo = getParameterByName("ReturnUrl");
+                            if (returnTo != null && returnTo != "") {
+                                location.href = returnTo;
+                                return;
+                            }
+                            location.href = data.data; //"/app";
+                        })
+                        .fail(function (data) {
+                             toastr.error(data.responseText);
+                           // console.log(data.responseText);
+                          //  alert("Error. Failed to login");
+                            $("#btnLogin").prop("disabled", false).text("Sign In");
+                        });
+                }
+            });
+
+            $(".tab-register").click(function () {
+                $(".tab-login").removeClass("selected");
+                $(".tab-register").addClass("selected");
+                $("#signInForm").removeClass("selected");
+                $("#signUpForm").addClass("selected");
+            });
+            $(".tab-login").click(function () {
+                $(".tab-register").removeClass("selected");
+                $(".tab-login").addClass("selected");
+                $("#signInForm").addClass("selected");
+                $("#signUpForm").removeClass("selected");
+            });
+            $(".already-signup p").click(function () {
+                $(".tab-register").removeClass("selected");
+                $(".tab-login").addClass("selected");
+                $("#signInForm").addClass("selected");
+                $("#signUpForm").removeClass("selected");
+            });
+            //$(".dont-have-account p").click(function () {
+            //    $(".tab-login").removeClass("selected");
+            //    $(".tab-register").addClass("selected");
+            //    $("#signInForm").removeClass("selected");
+            //    $("#signUpForm").addClass("selected");
+            //});
+
+              function getParameterByName(name, url) {
+                    if (!url) url = window.location.href;
+                    name = name.replace(/[\[\]]/g, "\\$&");
+                    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                        results = regex.exec(url);
+                    if (!results) return null;
+                    if (!results[2]) return '';
+                    return decodeURIComponent(results[2].replace(/\+/g, " "));
+                }
+        </script>
+    }
+
+</body>
+</html>

@@ -1,0 +1,708 @@
+﻿@using System.Security.Claims
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+@{
+    var identity = User.Identity as ClaimsIdentity;
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Aggregator Merchant <> User Chat";
+}
+<html>
+<head>
+</head>
+<body>
+    <link href="~/lib/chat/chat.css" rel="stylesheet" />
+
+    <div class="chat-container">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="chat-app row col-12">
+                    <div class="people-list col-12 col-lg row" id="plist">
+                        <h1>CHAT</h1>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search..." id="searchChat">
+                            <div class="input-group-prepend" style="display:none;">
+                                <span class="input-group-text"><i class="fa fa-search"></i></span>
+                            </div>
+                        </div>
+                        <div class="chat-sidebar-content w-100">
+                            <div class="row h-100 w-100 overflow-auto">
+                                <ul class="list-unstyled chat-list mt-2 mb-0" id="usersList">
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="chat row col-12 col-lg" id="chatBody" style="display:none">
+                        <div class="chat-header clearfix row">
+                            <div class="col-6">
+                                <div class="chat-about">
+                                    <h6 class="m-b-0 user-name">Aiden Chavez</h6>
+                                    <span class="m-b-0 user-email"></span><br />
+                                </div>
+                            </div>
+                            <div class=" row col-6 justify-content-end">
+                                <div class="row chat-merchant">
+                                    <div class="col-auto row justify-content-end">
+                                        <span style="color:#666">Chatting as</span>
+                                        <span class="chat-merchant-name">
+                                            Merchant Name
+                                        </span>
+                                    </div>
+                                    <div class="col-auto p-0">
+                                        <img class="merchant-logo" src="/Images/Vodus V3 Merchant Logo Small.svg" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-history">
+                            <ul class="m-b-0" id="messagesList">
+                            </ul>
+                        </div>
+                        <div class="chat-message clearfix">
+                            <div class="image-chat-gallery-div">
+                                <hr />
+                                <div class="gallery ml-3 mr-3" id="imageChatGallery"></div>
+                            </div>
+                            <div class="input-group mb-0">
+                                <div class="col-12 py-1 chat-options">
+                                    <a id="chatEmoji" href="javascript:void(0);"><i class="fal fa-grin"></i></a>
+                                    @*<a href="javascript:void(0);" <i class="far fa-paperclip"></i></a>*@
+                                    <input type="file" name="files[]" id="chatImages" class="form-control" value="" multiple>
+                                    <a href="javascript:void(0);" <i class="fas fa-camera"></i></a>
+                                    <input type="file" name="files[]" id="chatFile" class="form-control" value="" multiple>
+                                </div>
+
+                                <div class="message-form-container">
+                                    <input type="text" class="form-control" placeholder="Type a message" id="txtMessage">
+                                    <div class="input-group-prepend" id="btnSendMessage">
+                                        <span class="input-group-text"><i class="fas fa-paper-plane-top"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="display:none" id="userTemplate">
+        <li class="clearfix">
+            <div class="about">
+                <div class="row justify-content-between">
+                    <div class="name col-8 pl-0 ellipsis">Kelvin Goh</div>
+                    <div class="message-time col-4 pr-0 ellipsis">Today 13:20</div>
+                </div>
+                <div class="row">
+                    <p class="last-message">
+                        Merchant-A: We will get this shipped as fast as possible
+                    </p>
+                </div>
+                @*<div class="name">Vincent Porter</div>
+                    <div class="status"> <i class="fa fa-circle offline"></i> left 7 mins ago </div>*@
+            </div>
+        </li>
+    </div>
+    <div style="display:none" id="messegegeTemplate">
+        <li class="clearfix">
+            <div class="message-data text-right">
+                <span class="message-data-time">10:10 AM, Today</span>
+            </div>
+            <div class="message my-message"> Hi Aiden, how are you? How is the project coming along? </div>
+        </li>
+        @*<li class="clearfix">
+                <div class="message-data">
+                    <span class="message-data-time">10:12 AM, Today</span>
+                </div>
+                <div class="message my-message">Are we meeting today?</div>
+            </li>*@
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" id="imagesChatModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="ellipsis"></span>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+
+                        <div class="mySlides-modal image-container-modal">
+                            <img src="" class="view-product-chat-image">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section scripts{
+        <script src="~/lib/FilesValidations.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.0-rc.1.21452.15/signalr.min.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="~/lib/emoji-picker/inputEmoji.js"></script>
+
+    }
+
+    <script>
+        var chatToMerchantId = "";
+        function initialize() {
+            axios.get('@Configuration.GetSection("AppSettings").GetSection("App")["ChatAPIUrl"]' + "/api/negotiate", {
+                headers: {
+                    'x-ms-client-principal-id': "@ViewData["UserName"]" + "_a",
+                    'chat-token' : "@ViewData["ChatToken"]"
+                }
+            }).then(response => {
+                const options = {
+                    accessTokenFactory: () => response.data.accessToken
+                }
+                const connection = new signalR.HubConnectionBuilder()
+                    .withUrl(response.data.url, options)
+                    .build(signalR.HttpTransportType.None)
+
+                connection.on('newMessage', (messageObj) => {
+                    //document.getElementById("messages").innerHTML = document.getElementById("messages").innerHTML + "<br/>" + message.Sender + ": " + message.Text;
+                    if ($("#usersList > .clearfix.active").attr("user-name") == messageObj.Sender) {
+                        var message = $("#messegegeTemplate").children().first().clone();
+
+                        message.find(".message-data-time").html(moment().format("DD-MM-YYYY HH:mm"));
+                        message.find(".message").html(messageObj.Text);
+
+                        message.find(".message").removeClass("my-message").parent().addClass("other-message");
+                        message.find(".message-data").removeClass("text-right");
+
+                        $("#messagesList").append(message);
+                    }
+                    else {
+                        var isChatExist = false;
+                        $("#usersList > .clearfix").each(function () {
+                            if ($(this).attr("user-name") == messageObj.Sender) {
+                                if ($(this).find(".about").find(".notification-message").length > 0) {
+                                    $(this).find(".about").find(".notification-message").attr("number", parseInt($(this).find(".about").find(".notification-message").attr("number")) + 1);
+                                    $(this).find(".about").find(".notification-message").html($(this).find(".about").find(".notification-message").attr("number"));
+                                }
+                                else {
+                                    $(this).find(".about").append('<span class="badge badge-primary badge-pill notification-message" style="float: right;" number="1">1</span>');
+                                }
+                                isChatExist = true;
+                                return false;
+                            }
+                        });
+                        if (!isChatExist) {
+                            var user = $("#userTemplate").children().first().clone();
+
+                            user.find(".name").html(messageObj.SenderName);
+                            if (messageObj.ImageUrl != "" && messageObj.ImageUrl != null) {
+                                user.find(".user-img").attr("src", messageObj.ImageUrl);
+                            }
+                            user.attr("data-id", messageObj.ChatGroupId);
+                            user.attr("user-name", messageObj.Sender);
+                            user.find(".about").append('<span class="badge badge-primary badge-pill notification-message" style="float: right;" number="1">1</span>');
+                            $(user).click(function () {
+                                $(this).parent().children().removeClass("active");
+                                $(this).addClass("active");
+                                $(this).find(".notification-message").remove();
+                                $("#messagesList").html("");
+                                var chatId = $(this).attr("data-id");
+                                $("#chatBody").find(".chat-about").find(".user-name").html($(this).attr("user-naViewDatae"));
+                                $("#chatBody").find(".chat-about").find(".user-name").html($(this).find(".name").html());
+                                $(".chat-user-img").attr("src", $(this).find(".user-img").attr("src"));
+                                getMessages(chatId);
+                            });
+                            $("#usersList").append(user);
+
+                        }
+                    }
+                });
+                connection.onclose(() => console.log('disconnected'));
+                console.log('connecting...');
+
+                connection.start({ withCredentials: true })
+                    .then(() => console.log('ready...'))
+                    .catch(console.error);
+            });
+            var chatToMerchant = 0;
+            const chatToType = (chatToMerchant == 1 ? 2 : 1);
+            document.getElementById("btnSendMessage").addEventListener("click", function (event) {
+                if (chatImagessList.length > 0) {
+                    SendFilesMessage(chatToType);
+                }
+                else {
+
+                    axios.post('@Configuration.GetSection("AppSettings").GetSection("App")["ChatAPIUrl"]' + "/api/SendMessage", {
+                        Message: {
+                            Sender: chatToMerchantId,
+                            Text: document.getElementById("txtMessage").value,
+                            TypeId: 3
+                        }, UserId: $("#usersList > .clearfix.active").attr("user-name"),
+                        TypeId: chatToType // Add the type here
+                    });
+
+                    var message = $("#messegegeTemplate").children().first().clone();
+
+                    message.find(".message-data-time").html(moment().format("DD-MM-YYYY HH:mm"));
+                    message.find(".message").html($("#txtMessage").val());
+                    $("#txtMessage").val("");
+                    $("#messagesList").append(message);
+                }
+
+            });
+
+            $('#txtMessage').keypress(function (e) {
+                var key = e.which;
+                if (key == 13) {
+                    $('#btnSendMessage').click();
+                    return false;
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $(function () {
+                $('#txtMessage').emoji({
+                    listCSS: {
+                        position: 'absolute',
+                        bottom: '57px',
+                        border: '1px solid gray',
+                        display: 'none'
+                    }
+                });
+            });
+            initialize();
+            GetChatMessages();
+
+            $('#chatImages').on('change', function () {
+                imagesChatPreview(this, '#imageChatGallery');
+            });
+            $(".fa-camera").click(function () {
+                $('#chatImages').click();
+            });
+
+            $(".btn-back-to-list").click(function () {
+                $("#chatBody").hide();
+                $("#plist").show();
+
+            });
+
+            document.getElementById("searchChat").addEventListener('keyup', function () {
+                var search = $("#searchChat").val();
+                if (search != null && search != "") {
+                    search = search.toLocaleLowerCase();
+                }
+                $("#usersList").find('li').each(function () {
+                    if ($(this).attr('user-fullname').indexOf(search) > -1) {
+                        $(this).fadeIn();
+                    }
+                    else {
+                        $(this).fadeOut();
+                    }
+                })
+            });
+
+        });
+
+
+
+    </script>
+    <script>
+        function getLabelFromHTML(message) { 
+            const {body} = new DOMParser().parseFromString(message, 'text/html');
+            const value = body.querySelector('.chat-card-product-title').innerText;
+            return value
+        }
+
+        function dateConverter(date) {
+            const today = moment();
+            const yesterday = moment().add(-1, 'days');
+            if (date == today) {
+                const time = today.format("HH:mm")
+                return `Today, ${time}`
+            } else if (date == yesterday) {
+                const time = today.format("HH:mm")
+                return `Yesterday, ${time}`
+            } else {
+                return date
+            }
+
+        }
+
+        var chatMessages = [];
+        var chatImagessList = [];
+        function GetChatMessages() {
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                url: '/admin/chat/GetChatUsers',
+                success: function (response) {
+                    if (response.successful) {
+                        if (response.data != null) {
+                            $(response.data).each(function () {
+                                var lastMessage = this.lastMessage.message
+                                var isHtml = this.lastMessage.isCardMessage
+                                const getDate= moment(this.lastChat).format("DD/MM/YYYY HH:mm")
+                                const formatedDate = dateConverter(getDate)
+
+                                var user = $("#userTemplate").children().first().clone();
+
+                                user.find(".name").html(this.userName + " with " + this.sender.userName );
+                                if (this.userProfileImageUrl != "" && this.userProfileImageUrl != null) {
+                                    user.find(".user-img").attr("src", this.userProfileImageUrl);
+                                }
+                                user.attr("data-id", this.chatGroupId);
+                                user.attr("user-name", this.userId);
+                                user.attr('user-fullname', this.userName.toLowerCase());
+                                if (this.unreadedMessagesCount > 0) {
+                                    //user.find(".about").append('<span class="badge badge-primary badge-pill notification-message" style="float: right;" number="' + this.unreadedMessagesCount + '">' + this.unreadedMessagesCount + '</span>');
+                                    user.find(".name").html((this.unreadedMessagesCount > 0 ? '<span class="badge badge-primary badge-pill notification-message" style="float: left; display: block; margin-right:10px;" number="' + this.unreadedMessagesCount + '">' + this.unreadedMessagesCount + '</span>' : "") + this.userName + " with " + this.receiver.userName);
+                                }
+
+
+                                user.find(".message-time").html(formatedDate)
+                                var msg = lastMessage
+                                if (isHtml) {
+
+                                    msg = getLabelFromHTML(lastMessage)
+                                } else if (this.lastMessage.isFileAttached){ 
+                                
+                                    msg ="File Attached"
+                                }
+                                user.find(".last-message").html(msg)
+
+                                user.attr("merchant-name", this.sender.userName)
+                                user.attr("merchant-logo", this.sender.userProfileImageUrl)
+
+                                $("#usersList").append(user);
+                                
+                                if (this.receiver) 
+                                { 
+                                    if ($("#usersList").children().last().attr("data-id") == this.sender.chatGroupId) 
+                                    {
+                                        $("#usersList").children().last().attr("merchant-id", this.sender.userId);
+                                        $("#usersList").children().last().attr("merchant-name", this.sender.userName);
+                                        $("#usersList").children().last().attr("merchant-img-url", this.sender.userProfileImageUrl);
+                                        $("#usersList").children().last().find(".status").html(this.sender.userName);
+                                    }
+                                
+                                }
+
+
+                            });
+                            $("#usersList").find(".clearfix").each(function () {
+                                $(this).click(function () {
+                                    $(this).parent().children().removeClass("active");
+                                    $(this).addClass("active");
+                                    var aggregatorMerchantWithUserUnreadMessageCount = parseInt($("#aggregatorMerchantWithUserUnreadMessageCount").attr("number"));
+
+
+                                    if ($(this).find(".notification-message").length > 0) {
+                                        var toMinus = $(this).find(".notification-message").attr("number");
+                                        updateReadMessages($(this).attr("data-id"), $(this).attr("merchant-id"));
+                                        $(this).find(".notification-message").remove();
+                                       
+                                        var newUnreadCount = aggregatorMerchantWithUserUnreadMessageCount - toMinus;
+                                        if (newUnreadCount > 0) {
+                                            $("#aggregatorMerchantWithUserUnreadMessageCount").attr("number", newUnreadCount).text(newUnreadCount);
+                                        }
+                                        else {
+                                            $("#aggregatorMerchantWithUserUnreadMessageCount").remove();
+                                        }
+                                    }
+
+                                    /*
+                                    if (parseInt($(".chat-main-header").find(".notification-header").attr("number")) == openNotificationsCount) {
+                                        $(".chat-main-header").find(".notification-header").remove()
+                                    }
+                                    else {
+                                        $(".chat-main-header").find(".notification-header").attr("number", parseInt($(".chat-main-header").find(".notification-header").attr("number")) - openNotificationsCount);
+                                    }
+                                    */
+
+                                    $("#messagesList").html("");
+                                    var chatId = $(this).attr("data-id");
+                                    $("#chatBody").find(".chat-about").find(".user-name").html($(this).find(".name").html());
+                                    $(".chat-user-img").attr("src", $(this).find(".user-img").attr("src"));
+                                    $("#chatBody").find(".chat-about").find(".user-email").html($(this).attr("user-name"));
+                                    // fill merchant info
+                                    $("#chatBody").find(".chat-about-merchant-info").find(".user-name").html($(this).attr("merchant-name"));
+                                    $(".chat-merchant-img").attr("src", $(this).attr("merchant-img-url"));
+                                    $("#chatBody").find(".chat-about-merchant-info").find(".merchant-link").attr("href", "https://shopee.com.my/" + $(this).attr("merchant-name"));
+                                    
+                                    chatToMerchantId = $(this).attr("merchant-id");
+                                    
+                                    $("#chatBody").find(".chat-merchant-name").html($(this).attr("merchant-name"));
+                                    $("#chatBody").find(".merchant-logo").attr("src",$(this).attr("merchant-logo"));
+
+                                    getMessages(chatId);
+                                    if ($(window).width() < 992) {
+                                        $("#chatBody").show();
+                                        $("#plist").hide();
+                                    }
+
+                                });
+                            });
+
+                        }
+                    } else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function getMessages(chatGroupId) {
+
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                data: { chatGroupId: chatGroupId },
+                url: '/admin/chat/GetChatMessagesByGroupId',
+                success: function (response) {
+                    if (response.successful) {
+                        if (response.data != null) {
+                            $(response.data).each(function () {
+                               
+                                var message = $("#messegegeTemplate").children().first().clone();
+
+                                message.find(".message-data-time").html(moment(this.createdAt).format("DD-MM-YYYY HH:mm"));
+                                message.find(".message").html(this.message);
+                                if (this.createdByUserId != chatToMerchantId) {
+                                    message.find(".message").removeClass("my-message").parent().addClass("other-message");
+                                    message.find(".message-data").removeClass("text-right");
+
+                                    message.find(".message-data").parent().append(message.find(".message-data"));
+                                    if (this.isCardMessage) {
+                                        message.find(".message-data").removeClass("message-data").addClass("message-card");
+                                        message.find(".chat-card").attr("href", "https://shopee.com.my/abc-i." + chatToMerchantId + "." + message.find(".chat-card").attr("data-id"));
+                                    }
+                                }
+
+                                if (this.isFileAttached) {
+                                    message = appendImagesToChat(message, this.filesList);
+                                }
+
+                                $("#messagesList").append(message);
+                                $("#chatBody").show();
+                                AddPreviewActionToChatMessages();
+                            });
+
+                            scrollChat()
+                            //AddPreviewActionToChatMessages();
+
+                        }
+                    } else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function updateReadMessages(chatGroupId, userId) {
+
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                data: { chatGroupId: chatGroupId, userId: userId },
+                url: '/admin/chat/UpdateReadMessagesByGroupIdAndUserId',
+                success: function (response) {
+                    if (response.successful) {
+                        getUnreadedChatUsersMessageCount();
+                        if (response.data != null) {
+                        }
+                    } else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function appendImagesToChat(message, filesList) {
+            message.find(".message").html("")
+            $(filesList).each(function () {
+                $($.parseHTML('<span class="chat-img-preview-container"><img src="' + this + '" class="chat-img-preview"/></span>')).appendTo(message.find(".message"));
+            });
+            AddPreviewActionToChatMessages();
+            return message;
+        }
+        function AddPreviewActionToChatMessages() {
+            $(".chat-img-preview").unbind().click(function () {
+                $("#imagesChatModal").modal("show");
+                $(".view-product-chat-image").attr("src", $(this).attr("src"));
+            });
+
+        }
+
+        var imagesChatPreview = function (input, placeToInsertImagePreview) {
+
+            if (input.files) {
+                var index = 0;
+                $(".chat-img-preview-container").each(function () {
+                    $(this).attr("index", index);
+                    index++;
+                });
+                var filesAmount = input.files.length;
+                var imageNumber = 0;
+
+                for (i = 0; i < filesAmount; i++) {
+                    var reader = new FileReader();
+                    var validDimentions = false;
+                    reader.onload = function (event) {
+                        var image = new Image();
+                        validDimentions = false;
+                        //Set the Base64 string return from FileReader as source.
+                        image.src = event.target.result;
+
+                        //Validate the File Height and Width.
+                        image.onload = function () {
+
+                            var height = this.height;
+                            var width = this.width;
+
+                            var size = Math.round((input.files[imageNumber].size / 1024));
+                            if (width > imageMinwidth && width < imageMaxwidth && height > imageMinHeight && height < imageMaxHeight && size > 0 && size < imageMaxSize) {
+                                validDimentions = true;
+                            }
+
+                            if (input.files[imageNumber].type == "image/png" || input.files[imageNumber].type == "image/jpeg" || input.files[imageNumber].type == "image/jpg" || input.files[imageNumber].type == "image/jfif") {
+                                if (validDimentions) {
+                                    $($.parseHTML('<span class="chat-img-preview-container" index="' + index + '"><span class="remove-img">x</span><img src="' + event.target.result + '" class="chat-img-preview"/></span>')).appendTo(placeToInsertImagePreview);
+                                    SetRemoveImageEvent();
+                                }
+                                else {
+                                    chatImagessList.pop();
+                                    toastr.error("Please ensure that each image file has the following dimensions and file size: Width: \n Between" + imageMinwidth + " to " + imageMaxwidth + "px \n Height: Between " + imageMinHeight + " to " + imageMaxHeight + "px \n Size: Less than " + imageMaxSize + "KB");
+                                }
+                                index++;
+                            }
+                            imageNumber++;
+
+                        }
+                    }
+
+
+                    if (input.files[i].type == "image/png" || input.files[i].type == "image/jpeg" || input.files[i].type == "image/jpg" || input.files[i].type == "image/jfif") {
+                        chatImagessList.push(input.files[i]);
+                        reader.readAsDataURL(input.files[i]);
+
+                    }
+                    else {
+                        imageNumber++;
+                        toastr.error("Please upload files having extensions: <b>png, jpeg, jpg, jfif</b> only");
+                    }
+                    if (chatImagessList.length > 0) {
+                        $(".image-chat-gallery-div").show();
+                    }
+                }
+            }
+        };
+
+        function SetRemoveImageEvent() {
+            $(".remove-img").unbind().click(function () {
+                var index = $(this).parent(".chat-img-preview-container").attr("index");
+
+                $(this).parent(".chat-img-preview-container").remove();
+                chatImagessList.splice(index, 1);
+
+                var index = 0;
+                $(".gallery").find(".chat-img-preview-container").each(function () {
+                    $(this).attr("index", index++);
+                });
+                if (chatImagessList.length == 0) {
+                    $(".image-chat-gallery-div").hide();
+                }
+            });
+        }
+
+        function appendImagesToChatFromPreview() {
+
+            $("#imageChatGallery").find(".remove-img").remove();
+            var message = $("#messegegeTemplate").children().first().clone();
+
+            message.find(".message-data-time").html(moment().format("DD-MM-YYYY HH:mm"));
+            message.find(".message").html($("#imageChatGallery").html());
+            $("#imageChatGallery").html("");
+            $(".image-chat-gallery-div").hide();
+            $("#messagesList").append(message);
+            AddPreviewActionToChatMessages();
+            scrollChat()
+        }
+        function AddPreviewActionToChatMessages() {
+            $(".chat-img-preview").unbind().click(function () {
+                $("#imagesChatModal").modal("show");
+                $(".view-product-chat-image").attr("src", $(this).attr("src"));
+            });
+
+        }
+
+        function appendImagesToChat(message, filesList) {
+            message.find(".message").html("")
+            $(filesList).each(function () {
+                $($.parseHTML('<span class="chat-img-preview-container"><img src="' + this + '" class="chat-img-preview"/></span>')).appendTo(message.find(".message"));
+            });
+            AddPreviewActionToChatMessages()
+            return message;
+        }
+
+        function SendFilesMessage(chatToType) {
+
+            var Message = {
+                "Sender": chatToMerchantId,
+                "Text": document.getElementById("txtMessage").value,
+                "TypeId": 3
+            };
+            const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+            var UserId = $("#usersList > .clearfix.active").attr("user-name");
+            var TypeId = chatToType;
+            //if (chatImagessList.length != 0) {
+            var formData = new FormData();
+            var totalfiles = chatImagessList.length;
+            for (var index = 0; index < totalfiles; index++) {
+                formData.append("files[]", chatImagessList[index]);
+            }
+
+            //formData.append("Message", Message);
+            formData.append("UserId", UserId);
+            formData.append("TypeId", TypeId);
+            formData.append("SenderTypeId", 3);
+            formData.append("Sender", chatToMerchantId);
+            forTest = formData;
+
+            $.ajax({
+                url: '@Configuration.GetSection("AppSettings").GetSection("App")["ChatAPIUrl"]' + "/api/SendFiles",
+                type: "POST",
+                async: false,
+                data: formData,
+                enctype: 'multipart/form-data',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                chatImagessList = [];
+                appendImagesToChatFromPreview();
+                $("#imageChatGallery").html("");
+                if ($("#txtMessage").val().trim() != '') {
+                    SendMessage(chatToType);
+                }
+            });
+
+
+
+
+            $(".image-chat-gallery-div").hide();
+
+        }
+
+    </script>
+</body>
+
+</html>
+

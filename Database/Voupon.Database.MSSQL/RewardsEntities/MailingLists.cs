@@ -1,0 +1,14 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace Voupon.Database.MSSQL.RewardsEntities
+{
+    public partial class MailingLists
+    {
+        public string Email { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public bool? IsSubscribe { get; set; }
+        public DateTime? LastEmailedAt { get; set; }
+        public DateTime? UnSubscribeAt { get; set; }
+    }
+}

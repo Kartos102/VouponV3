@@ -1,0 +1,433 @@
+﻿@model List<Voupon.Merchant.WebApp.Areas.Admin.Controllers.MerchantViewModel>
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Merchants";
+}
+
+<div class="dashboard-main-wrapper">
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content ">
+            <div class="row">
+                <div class="col-xl-4 col-lg-5 col-md-6 col-12 mt-0 mb-2 section-block">
+                    <h3 class="page-header">Merchants</h3>
+                    <div class="m-auto" id="pageSize"><label>Show <select id="selectpageSize" name="pageSize" aria-controls="pageSize" class=""><option value="10">10</option><option value="25">25</option><option value="50">50</option><option selected="selected" value="100">100</option></select> entries</label></div>
+                </div>
+                <div class="col-xl-8 col-lg-7 col-md-6 col-12 row">
+                    <div class="sort-div col-6 pl-0">
+                        <button class="dropdown-toggle" id="menu1" type="button" data-toggle="dropdown">
+                            <p>Sort: <span>Status</span></p>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu sort-list-menu" role="menu" aria-labelledby="menu1">
+                            <li role="presentation"><a class="product-sorting" role="menuitem" tabindex="-1" href="#" value="StatusTypeId">Status</a></li>
+                            <li role="presentation"><a class="product-sorting" role="menuitem" tabindex="-1" href="#" value="DisplayName">Product name</a></li>
+                            <li role="presentation"><a class="product-sorting" role="menuitem" tabindex="-1" href="#" value="CreatedAt">Created Date</a></li>
+                            <li role="presentation"><a class="product-sorting" role="menuitem" tabindex="-1" href="#" value="Code">Merchant Code</a></li>
+                        </ul>
+                    </div>
+                    <div class="search-row input-group col-6 no-padding">
+                        <input class="form-control py-2 border-right-0 border" type="search" value="" placeholder="Search a merchant" id="product-search-input">
+                        <span class="input-group-append">
+                            <button class="btn btn-outline-secondary border-left-0 border" type="button" id="product-search-btn">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="row merchant-card-row col-lg-12 col-md-12">
+                <div class="row merchants-table-card card-table-row">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="display:none" class="card-merchant-row">
+        <div class="row col-12 col-md-12 col-sm-12 mobile-card-row">
+            <div class="row col-xl-4 col-lg-4 col-md-4 col-12 px-0 mt-2">
+                <div class="row col-xl-5 col-lg-5 col-md-5 col-6 px-0">
+                    <div class="row col-xl-4 col-lg-4 col-md-4 col-4 px-0">
+                        <div class="col-12 card-record-row merchant-id">
+                        </div>
+                        <div class="col-12 card-title-row">
+                            No
+                        </div>
+                    </div>
+                    <div class="row col-xl-8 col-lg-8 col-md-8 col-8 px-0">
+                        <div class="col-12 card-record-row merchant-code">
+                        </div>
+                        <div class="col-12 card-title-row">
+                            Merchant Code
+                        </div>
+                    </div>
+                </div>
+                <div class="row col-xl-7 col-lg-7 col-md-7 col-6 px-0">
+                    <div class="row col-7 px-0">
+                        <div class="col-12 card-record-row company-name px-0 ellipsis">
+                            <a class="btn-review" data-id="" href="/Admin/Merchants/Details/"></a>
+                        </div>
+                        <div class="col-12 card-title-row px-0">
+                            Business Name
+                        </div>
+                    </div>
+                    <div class="row col-5 px-0">
+                        <div class="col-12 card-record-row user-action px-0">
+                        </div>
+                        <div class="col-12 card-title-row px-0">
+                            Total Outlets
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row col-xl-4 col-lg-4 col-md-4 col-12 px-0 mt-2">
+                <div class="row col-4">
+                    <div class="col-12 card-record-row px-0 merchant-created">
+                    </div>
+                    <div class="col-12 card-title-row px-0">
+                        Date Created
+                    </div>
+                </div>
+                <div class="row col-3 pl-0">
+                    <div class="col-12 card-record-row merchant-commission">
+                    </div>
+                    <div class="col-12 card-title-row">
+                        Commission
+                    </div>
+                </div>
+                <div class="row col-5">
+                    <div class="col-12 card-record-row merchant-status px-0">
+                        <span class="merchant-status-type">
+                        </span>
+                    </div>
+                    <div class="col-12 card-title-row px-0">
+                        Status
+                    </div>
+                </div>
+            </div>
+
+            <div class="row col-xl-4 col-lg-4 col-md-4 col-12 px-0 mt-2">
+                <div class="row col-xl-4 col-lg-4 col-md-4 col-4 px-0">
+                    <div class="col-12 card-record-row merchant-published-status">
+
+                    </div>
+                    <div class="col-12 card-title-row pr-0">
+                        Published
+                    </div>
+                </div>
+                <div class="row col-xl-4 col-lg-4 col-md-4 col-4 px-0">
+                    <div class="col-12 card-record-row merchant-shownInHomePage-status">
+
+                    </div>
+                    <div class="col-12 card-title-row pr-0">
+                        Shown in HomePage
+                    </div>
+                </div>
+                <div class="row col-xl-4 col-lg-4 col-md-4 col-4 px-0">
+                    <div class="col-12 row card-record-row px-0 merchant-actions" style="align-content: space-between;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Commission Modal -->
+    <div class="modal fade" id="EditCommissionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="EditCommissionModalTitle">Edit Commission</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Commission:</label>
+                            <input type="number" class="form-control" step="any" id="DefaultCommissionInput" value="0" min="0" max="100">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="UpdateCommission">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+
+
+    <script>
+        var selectedRow = null;
+        function EditCommission(btn) {
+            selectedRow = btn;
+            var merchantId = $(btn).attr("data-id");
+            var commission = $(btn).attr("commission");
+            $("#EditCommissionModal").attr("data-id", merchantId);
+            $("#DefaultCommissionInput").val(commission);
+            $("#EditCommissionModalTitle").html("Commission [" + $(btn).attr("merchant-code") + "]");
+            $("#EditCommissionModal").modal("show");
+        }
+        $(document).ready(function () {
+            $("#product-search-btn").on("click", function () {
+                $(".pagination").remove();
+                getMerchants();
+            });
+
+            $("#product-search-input").on("search", function () {
+                $(".pagination").remove();
+                getMerchants();
+            });
+
+            $("#UpdateCommission").click(function () {
+                var merchantId = $("#EditCommissionModal").attr("data-id");
+                var commission = $("#DefaultCommissionInput").val();
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    data: {
+                        MerchantId: merchantId, DefaultCommission: commission
+                    },
+                    url: '/Admin/Merchants/UpdateMerchantDefaultCommission',
+                    success: function (response) {
+                        if (response.successful) {
+                            $(selectedRow).closest("tr").find(".commission").html(parseFloat(commission).toFixed(2));
+                            $(selectedRow).attr("commission", parseFloat(commission).toFixed(2));
+                            toastr.success(response.message);
+                        }
+                        else
+                            toastr.error(response.message);
+                    },
+                    error: function (error) {
+                        toastr.error(error);
+                    }
+                });
+                $("#EditCommissionModal").modal("hide");
+            });
+            getMerchants();
+            $(".product-sorting").first().addClass("selected");
+
+            $('#dtMerchants').DataTable({ "iDisplayLength": 25, "order": [] });
+            $(".publishStatus").change(function () {
+
+                var merchantId = $(this).attr("data-id");
+                var status = $(this).is(":checked");
+
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    data: {
+                        MerchantId: merchantId, Status: status
+                    },
+                    url: '/Admin/Merchants/UpdateMerchantPublishedStatus',
+                    success: function (response) {
+                        if (response.successful)
+                            toastr.success(response.message);
+                        else
+                            toastr.error(response.message);
+                    },
+                    error: function (error) {
+                        toastr.error(error);
+                    }
+
+                });
+
+            });
+
+            $(".testAccountChange").change(function () {
+
+                var merchantId = $(this).attr("data-id");
+                var status = $(this).is(":checked");
+
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    data: {
+                        MerchantId: merchantId, Status: status
+                    },
+                    url: '/Admin/Merchants/UpdateMerchantTestAccountStatus',
+                    success: function (response) {
+                        if (response.successful)
+                            toastr.success(response.message);
+                        else
+                            toastr.error(response.message);
+                    },
+                    error: function (error) {
+                        toastr.error(error);
+                    }
+
+                });
+
+            });
+
+            $(".brandShownInHomePageStatus").change(function () {
+
+                var merchantId = $(this).attr("data-id");
+                var status = $(this).is(":checked");
+
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    data: {
+                        MerchantId: merchantId, Status: status
+                    },
+                    url: '/Admin/Merchants/UpdateMerchantBrandShownInHomePageStatus',
+                    success: function (response) {
+                        if (response.successful)
+                            toastr.success(response.message);
+                        else
+                            toastr.error(response.message);
+                    },
+                    error: function (error) {
+                        toastr.error(error);
+                    }
+
+                });
+
+            });
+
+            $("#selectpageSize").change(function () {
+                $(".pagination").remove();
+                getMerchants();
+            });
+
+            $(".product-sorting").click(function () {
+                $(".product-sorting").removeClass("selected");
+                $(this).addClass("selected");
+                getMerchants();
+                $(".sort-div > button > p > span").html($(this).html());
+            });
+        });
+
+        function GetBadgeClassName(type) {
+            if (type == 1) {
+                return "badge badge-light";
+            }
+            if (type == 2) {
+                return "badge badge-warning";
+            }
+            if (type == 3) {
+                return "badge badge-warning";
+            }
+            if (type == 4) {
+                return "badge badge-success";
+            }
+            if (type == 5) {
+                return "badge badge-success";
+            }
+            return "badge badge-danger";
+        }
+
+        function getMerchants() {
+            var length = $("#pageSize").find(":selected").attr("value");
+            var start = "0"
+            if ($(".nav-order-page.active").length > 0)
+                start = parseInt($(".nav-order-page.active").attr("order")) * parseInt(length);
+            var sortColumn = $(".product-sorting.selected").attr("value");
+            var searchValue = $("#product-search-input").val().toLowerCase();
+            $.ajax({
+                type: "Get",
+                async: false,
+                dataType: 'json',
+                data: { start: start, length: length, sortColumn: sortColumn, searchValue: searchValue },
+                url: '/Admin/Merchants/Get-Merchants-List',
+                success: function (response) {
+                    if (response.successful) {
+                        if (response.data != null) {
+
+                            $(".merchants-table-card").html("");
+                            $(response.data.data).each(function (index, item) {
+
+                                var template = $(".card-merchant-row").find(".mobile-card-row").clone();
+                                template.find(".merchant-id").html(++index);
+                                template.find(".merchant-code").html(item.code);
+                                template.find(".btn-review").attr("data-id", item.id);
+                                template.find(".btn-review").attr("href", "/Admin/Merchants/Details/" + item.id);
+                                template.find(".btn-review").html(item.displayName);
+                                template.find(".user-action").html(item.totalOutlets);
+                                template.find(".merchant-created").html(moment(item.createdAt).format("DD/MM/YYYY"));
+                                template.find(".merchant-commission").html(item.defaultCommission.toFixed(2) + "%");
+
+                                (item.statusTypeId == 1) ? template.find(".merchant-status-type").addClass("badge badge-light").html("<i>Draft</i>") :
+                                    ((item.statusTypeId == 2) ? template.find(".merchant-status-type").addClass("badge badge-warning").html("<i>Pending Review</i>") :
+                                        ((item.statusTypeId == 3) ? template.find(".merchant-status-type").addClass("badge badge-revision").html("<i>Pending Revision</i>") :
+                                            ((item.statusTypeId == 4) ? template.find(".merchant-status-type").addClass("badge badge-success").html(" <i>Approved</i>") :
+                                                template.find(".merchant-status-type").addClass("badge badge-danger").html("<i>Draft</i>"))));
+
+                                if (item.isPublished) {
+                                    template.find(".merchant-published-status").html('<div class="switch-button switch-button-success"><input class= "publishStatus" type ="checkbox" checked = "" name="switch_' + item.id + '" data-id="' + item.id + '" id="switch_' + item.id + '"><span><label for="switch_' + item.id + '"></label></span></div>');
+
+                                }
+                                else {
+                                    template.find(".merchant-published-status").html('<div class="switch-button switch-button-success"><input class= "publishStatus" type ="checkbox"  name="switch_' + item.id + '" data-id="' + item.id + '" id="switch_' + item.id + '"><span><label for="switch_' + item.id + '"></label></span></div>');
+                                }
+                                if (item.isBrandShownInHomePage) {
+                                    template.find(".merchant-shownInHomePage-status").html('<div class="switch-button switch-button-success"><input class= "brandShownInHomePageStatus" type ="checkbox" checked = "" name="brandSwitch_' + item.id + '" data-id="' + item.id + '" id="brandSwitch_' + item.id + '"><span><label for="brandSwitch_' + item.id + '"></label></span></div>');
+
+                                }
+                                else {
+                                    template.find(".merchant-shownInHomePage-status").html('<div class="switch-button switch-button-success"><input class= "brandShownInHomePageStatus" type ="checkbox"  name="brandSwitch_' + item.id + '" data-id="' + item.id + '" id="brandSwitch_' + item.id + '"><span><label for="brandSwitch_' + item.id + '"></label></span></div>');
+                                }
+
+                                template.find(".merchant-actions").html('<a class="btn-review col-12" data-id="' + item.id + '" href="/Admin/Merchants/Details/' + item.id + '">Review</a><a class="btn-editcommission col-12" data-id="' + item.id + '" merchant-code="' + item.code + '" commission="' + item.defaultCommission.toFixed(2) + '" href="#" onclick="EditCommission(this);return false;">Commission</a>');
+
+                                $(".merchants-table-card").append(template);
+                            });
+                            if ($(".pagination").length == 0) {
+                                var pagingHtml = '<div class="pagination"><a class="prev-order-page" href="#">&laquo;</a> <a class="nav-order-page active" order="0" href="#" class="active">1</a>';
+                                var pagingNumber = 1;
+                                var recordsPerPage = parseInt($("#pageSize").find(":selected").attr("value"));
+                                for (index = 0; index < response.data.recordsTotal; index++) {
+                                    if (index % recordsPerPage == 0 && index != 0)
+                                        pagingHtml += ' <a class="nav-order-page" order="' + pagingNumber++ + '" href="#">' + parseInt(index / recordsPerPage + 1) + '</a>';
+                                }
+                                pagingHtml += '<a class="next-order-page" href="#">&raquo;</a></div>';
+                                $(".merchant-card-row").append(pagingHtml);
+                                createPagingActions();
+                            }
+
+                            $(".pagination-details").remove();
+                            var from = parseInt($(".nav-order-page.active").attr("order")) * parseInt($("#pageSize").find(":selected").attr("value")) + 1;
+                            var to = from + response.data.recordsFiltered - 1;
+                            var pageDetails = '<div class="pagination-details">Showing ' + from + ' to ' + to + ' of ' + response.data.recordsTotal + ' entries</div>';
+                            $(".merchant-card-row").append(pageDetails);
+
+                        }
+                    }
+                    else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function createPagingActions() {
+            $(".next-order-page").click(function () {
+                if ($(".nav-order-page.active").next().hasClass("nav-order-page"))
+                    $(".nav-order-page.active").removeClass("active").next().click().addClass("active");
+            });
+            $(".prev-order-page").click(function () {
+                if ($(".nav-order-page.active").prev().hasClass("nav-order-page"))
+                    $(".nav-order-page.active").removeClass("active").prev().click().addClass("active");
+            });
+
+            $(".nav-order-page").click(function () {
+                if (!$(this).hasClass("active")) {
+                    $(".nav-order-page.active").removeClass("active");
+                    $(this).addClass("active");
+                    getMerchants();
+                }
+            });
+
+        }
+
+    </script>
+
+}
+

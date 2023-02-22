@@ -1,0 +1,210 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="dashboard-main-wrapper">
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content ">
+            <div class="row">
+                <div class="col-lg-12 mb-2 section-block" style="justify-content:space-between;">
+                    <h3 class="page-header">Product Ad Subgroups</h3>
+                </div>
+            </div>
+            <div class="col-12 row">
+                <div class="search-row input-group col-6 no-padding">
+                    <input class="form-control py-2 border-right-0 border" type="search" value="" placeholder="Search a product" id="product-search-input">
+                    <span class="input-group-append">
+                        <button class="btn btn-outline-secondary border-left-0 border" type="button" id="product-search-btn">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+            <div class="row users-table-card col-lg-12 col-md-12 px-0 mt-2">
+                <div class="row products-table-card col-lg-12 col-md-12">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row card-table-row card-table-template" style="display:none;">
+    <div class="mobile-card-row row col-12">
+        <div class="row col-xl-4 col-lg-4 col-md-4 col-7 px-1 mt-2">
+            <div class="row col-8 no-padding align-content-between">
+                <div class="row col-12 no-padding">
+                    <div class="col-12 pl-0 card-record-row subgroup-name bold">
+                        Test
+                    </div>
+                </div>
+            </div>
+            <div class="row col-4 no-padding">
+                <div class="row col-12 no-padding align-content-between">
+                    <div class="col-12 card-record-row subgroup-id px-0">
+                        12
+                    </div>
+                    <div class="col-12 card-title-row px-0">
+                        ID
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row col-xl-3 col-lg-3 col-md-3 col-5 no-padding mt-2">
+            <div class="row col-4 no-padding">
+                <div class="row col-12 no-padding align-content-between">
+                    <div class="col-12 card-record-row subgroup-rank px-0">
+                        12
+                    </div>
+                    <div class="col-12 card-title-row px-0">
+                        Rank
+                    </div>
+                </div>
+            </div>
+            <div class="row col-8 no-padding">
+                <div class="row col-12 no-padding align-content-between">
+                    <div class="col-12 card-record-row subgroup-createdAt px-0">
+                        17/09/2020
+                    </div>
+                    <div class="col-12 card-title-row px-0">
+                        Created At
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row col-xl-5 col-lg-5 col-md-5 col-12 px-1 no-padding mt-2">
+            <div class="row col-4 no-padding">
+                <div class="row col-12 no-padding align-content-between">
+                    <div class="col-12 card-record-row subgroup-adImpressionCount px-0">
+                        12
+                    </div>
+                    <div class="col-12 card-title-row px-0">
+                        Impression Count
+                    </div>
+                </div>
+            </div>
+            <div class="row col-4 no-padding">
+                <div class="row col-12 no-padding align-content-between">
+                    <div class="col-12 card-record-row subgroup-adClickCount px-0">
+                        12
+                    </div>
+                    <div class="col-12 card-title-row px-0">
+                        Click Count
+                    </div>
+                </div>
+            </div>
+            <div class="row col-4 no-padding">
+                <div class="row col-12 no-padding align-content-between">
+                    <div class="col-12 card-record-row subgroup-cTR px-0">
+                        12
+                    </div>
+                    <div class="col-12 card-title-row px-0">
+                        CTR
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+
+    <script>
+        var table = null;
+        var selectedRow = null;
+        function EditCommission(btn) {
+            selectedRow = btn;
+            var productId = $(btn).attr("data-id");
+            var commission = $(btn).attr("commission");
+            $("#EditCommissionModal").attr("data-id", productId);
+            $("#DefaultCommissionInput").val(commission);
+            $("#EditCommissionModalTitle").html("Commission [" + productId + "]");
+            $("#EditCommissionModal").modal("show");
+        }
+        $(document).ready(function () {
+            $("#product-search-btn").on("click", function () {
+                var execludedList = [];
+                var value = $("#product-search-input").val().toLowerCase();
+                if (value == "") {
+                    $(".products-table-card").children().each(function () {
+                        $(this).show();
+                    })
+                    return false;
+                }
+                $(".products-table-card .product-row").hide()
+                $(".products-table-card .subgroup-name").each(function () {
+                    var textToFilter = $(this).text();
+                    if (textToFilter.toLowerCase().indexOf(value) !== -1) {
+                        $(this).closest('.product-row').show();
+                    }
+                });
+            });
+
+            $("#product-search-input").on("search", function () {
+                var execludedList = [];
+                var value = $("#product-search-input").val().toLowerCase();
+                if (value == "") {
+                    $(".products-table-card").children().each(function () {
+                        $(this).show();
+                    })
+                    return false;
+                }
+                $(".products-table-card .product-row").hide()
+                $(".products-table-card .subgroup-name").each(function () {
+                    var textToFilter = $(this).text();
+                    if (textToFilter.toLowerCase().indexOf(value) !== -1) {
+                        $(this).closest('.product-row').show();
+                    }
+                });
+            });
+
+            var url = window.location.pathname;
+            var id = url.substring(url.lastIndexOf('/') + 1);
+            GetAdsubgroupsList(id);
+
+        });
+
+        function GetAdsubgroupsList(id) {
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/Admin/ProductReco/GetProductSubgroupRecoList',
+                data: {
+                    id: id
+                },
+                success: function (response) {
+                    if (table != null)
+                        table.destroy();
+                    if (response.successful) {
+                        if (response.data != null) {
+                            $(response.data).each(function (index, item) {
+                                var template = $(".card-table-template > div").clone();
+
+                                template.find(".subgroup-id").html(item.id);
+
+                                template.find(".subgroup-createdAt").html(moment(item.createdAt).format("DD/MM/YYYY"));
+                                template.find(".subgroup-name").html(item.subgroup.name);
+
+                                template.find(".subgroup-rank").html(item.subgroup.rankNumber);
+                                template.find(".subgroup-adImpressionCount").html(item.adImpressionCount);
+                                template.find(".subgroup-adClickCount").html(item.adClickCount);
+                                template.find(".subgroup-cTR").html(item.ctr);
+
+                                $(".products-table-card").append(template);
+                            });
+                        }
+                    } else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+
+    </script>
+}

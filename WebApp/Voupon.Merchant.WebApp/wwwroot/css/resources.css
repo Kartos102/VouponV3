@@ -1,0 +1,210 @@
+﻿.article-container {
+    max-width: 1400px;
+    margin: auto;
+}
+
+.top-bar-text {
+    background-color: #7903E9;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-top: 1px solid #fff;
+    box-sizing: border-box;
+    margin-top: 4px;
+}
+    .top-bar-text p {
+        padding: 0 15px;
+        margin: 0;
+    }
+    .top-bar-text b {
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+.topics {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0 15px;
+    margin: 10px 5%;
+}
+
+.topic-card {
+    padding: 0.5em 1em;
+    color: #aaa;
+    border: 1px solid #aaa;
+    border-radius: 3px;
+    margin: 5px;
+    cursor: pointer;
+}
+    .topic-card:hover {
+        box-shadow: 0 0 3px 0 #aaa;
+    }
+    .topic-card.selected {
+        border-color: #8C37F6;
+        color: #8C37F6;
+    }
+
+.article-cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+.article-card {
+    display: flex;
+    flex-wrap: wrap;
+    width: 320px;
+    padding: 0.5em 1em;
+    align-content: flex-start;
+}
+    .article-card .img-div {
+        height: 160px;
+        width: 100%;
+        background-size: cover;
+        box-shadow: 0 0 5px 0 rgba(0,0,0,0.3);
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+.topic-tag {
+    font-size: 14px;
+    margin-top: 10px;
+    padding: 0.5em 1em;
+    color: #fff;
+}
+    .topic-tag.learning {
+        background-color: #07B6C7;
+    }
+    .topic-tag.guides {
+        background-color: #8C37F6;
+    }
+
+
+.card-content {
+    margin: 10px;
+}
+.card-title {
+    margin: 0;
+}
+.card-content h3 {
+    font-weight: 600;
+    line-height: 1.4em;
+}
+.card-content p {
+    margin: 0;
+    color: #666;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
+    white-space: normal;
+}
+.card-content a {
+    color: #8C37F6;
+    cursor: pointer;
+}
+    .card-content a:hover,
+    .card-content a:focus {
+        color: #8C37F6;
+    }
+
+.article-head {
+    margin-top: 15px;
+}
+.date {
+    color: #999;
+    font-weight: 400;
+}
+.article-head h1 {
+    margin: 5px 0;
+    font-weight: 600;
+    color: #444;
+}
+.article-banner {
+    height: 250px;
+    max-width: 700px;
+    background-size: cover;
+    background-position: center;
+    margin: 15px 0 5px;
+}
+
+.article {
+    color: #666;
+    padding: 15px 0 ;
+}
+    .article img {
+        max-width: 500px;
+        max-height: 500px;
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+    .article strong,
+    .article b {
+        font-weight: 600;
+    }
+.related-article-container {
+    position: fixed;
+    top: 150px;
+    max-width: 450px;
+}
+    .related-article-container .title {
+        font-weight: 600;
+        color: #444;
+    }
+.related-article-item {
+    display: flex;
+}
+    .related-article-item > div {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+.related-article-img {
+    object-fit: cover;
+    min-height: 80px;
+}
+    .related-article-img img {
+        max-width: 120px;
+        max-height: 120px;
+    }
+.related-article-content {
+    padding: 0 15px;
+}
+    .related-article-content h4 {
+        color: #444;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        white-space: normal;
+    }
+
+@media (max-width: 992px) {
+    .merchant-body {
+        padding-top: 67px;
+    }
+
+    .related-article-container {
+        position: relative;
+        top: unset;
+    }
+
+    .article-card {
+        width: 50%;
+    }
+
+    .article {
+        padding: 15px 0;
+    }
+}
+
+@media (max-width: 450px) {
+    .merchant-body {
+        padding-top: 65px;
+    }
+    .topics {
+        margin: 10px 0;
+    }
+    .article-card {
+        width: 100%;
+    }
+}

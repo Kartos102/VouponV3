@@ -1,0 +1,233 @@
+﻿
+@{
+    ViewData["Title"] = "Keyword Filters";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@model Voupon.Merchant.WebApp.Areas.Admin.Services.Config.Pages.KeywordFilterPage.KeywordFilterPageViewModel
+<div class="dashboard-main-wrapper">
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content ">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Keyword Filter</h1>
+                    <p>This is to add Keyword filter to exclude items with related keywords from search result</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 pull-right">
+                    <button type="button" class="btn btn-primary pull-right" id="btnShowAddFilter" style="float:right;margin-left:10px;"><span class="fa fa-plus"></span>Add Filter</button>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12">
+                    <table id="keywordFilterTable" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Keyword</th>
+                                <th>Created At</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                        <tfoot>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addFilterModal" data-id="0" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form id="addForm" name="addForm">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Filter</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label asp-for="CreateViewModel.Keyword"></label>
+                        <input type="text" asp-for="CreateViewModel.Keyword" class="form-control" autocomplete="off" />
+                        <span asp-validation-for="CreateViewModel.Keyword" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnAdd">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editFilterModal" data-id="0" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form id="editForm" name="editForm">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Filter</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" asp-for="EditViewModel.Id" />
+                    <div class="form-group">
+                        <label asp-for="EditViewModel.Keyword"></label>
+                        <input type="text" asp-for="EditViewModel.Keyword" class="form-control" autocomplete="off" />
+                        <span asp-validation-for="CreateViewModel.Keyword" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnUpdate">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $(function () {
+            $("#aggregatorConfigHeader").removeData("collaped");
+            $("#aggegatorConfig").addClass("show");
+            $("#aggregatorKeywordFilter").addClass("active");
+
+            $("#btnShowAddFilter").click(function () {
+                $("#addFilterModal").modal('show');
+            });
+
+            $("#btnAdd").click(function () {
+                if (!$("#addForm").valid()) {
+                    //alert('no');
+                    return;
+                }
+
+                $.ajax({
+                    url: "/admin/config/keyword-filter",
+                    method: "POST",
+                    data: {
+                        keyword: $("#CreateViewModel_Keyword").val()
+                    }
+                }).done(function (res) {
+                    if (res.successful) {
+                        toastr.success("Successfully created data");
+                        getKeywords();
+                        $("#addFilterModal").modal('hide');
+                    }
+                    else { toastr.error("Fail to update data"); }
+                }).fail(function (res) {
+                    console.log(res);
+                    toastr.error("Fail to update data");
+                });
+            });
+
+            $("#btnUpdate").click(function () {
+                if (!$("#editForm").valid()) {
+                    //alert('no');
+                    return;
+                }
+
+                $.ajax({
+                    url: "/admin/config/update-keyword-filter",
+                    method: "POST",
+                    data: {
+                        id: $("#EditViewModel_Id").val(),
+                        keyword: $("#EditViewModel_Keyword").val(),
+                    }
+                }).done(function (res) {
+                    if (res.successful) {
+                        toastr.success("Successfully updated data");
+                        $("#editFilterModal").modal('hide');
+                        getKeywords();
+                    }
+                    else { toastr.error("Fail to update data"); }
+                }).fail(function (res) {
+                    console.log(res);
+                    toastr.error("Fail to update data");
+                });
+            });
+            $("#aggegatorConfig").addClass("show");
+            getKeywords();
+        });
+
+        function getKeywords() {
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/Admin/config/keyword-filter',
+                success: function (response) {
+                    if (response.successful) {
+                        var maxOrderTable = $('#keywordFilterTable').DataTable();
+                        if (response.data != null) {
+                            console.log(response.data.items);
+                            if (response.data.items != null) {
+                                $('#keywordFilterTable > tbody').html("");
+                                maxOrderTable.destroy();
+                                var table = "";
+                                $(response.data.items).each(function () {
+                                    table += '<tr id="item_"' + this.id + '">';
+                                    table += '<td>' + this.keyword + '</td>';
+                                    table += '<td>' + this.createdAt + '</td>';
+                                    table += '<td><div class="switch-button switch-button-success"><input class="" onchange="updateStatus(this);" type="checkbox"' + (this.statusId == 1 ? 'checked' : '') + ' id="status_item_' + this.id + '" name="status_item_' + this.id + '" data-id="' + this.id + '"><span> <label for="status_item_' + this.id +'"></label> </span><span class="d-none publish-status-merchant">Published</span> </div></td>';
+                                    table += '<td><button type="button" class="showEditModal btn btn-primary" data-id="' + this.id + '" data-keyword="' + this.keyword + '" data-max-quantity="' + this.maxQuantity + '">Edit</button></td>';
+                                    table += '</tr>';
+                                });
+                                $('#keywordFilterTable > tbody').html(table);
+                                maxOrderTable = $('#keywordFilterTable').DataTable();
+
+                                $(".showEditModal").click(function () {
+                                    $("#editFilterModal").modal('show');
+                                    $("#EditViewModel_Id").val($(this).attr('data-id'));
+                                    $("#EditViewModel_Keyword").val($(this).attr('data-keyword'));
+                                    $("#EditViewModel_MaxQuantity").val($(this).attr('data-max-quantity'));
+
+                                });
+                            }
+                        }
+                    } else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function updateStatus(data) {
+            var id = $(data).attr("data-id");
+            var status = $(data).is(":checked");
+
+            $.ajax({
+                url: "/admin/config/update-keyword-filter-status",
+                method: "POST",
+                data: {
+                    id: id,
+                    statusId: (status == true ? 1 : 2)
+                }
+            }).done(function (res) {
+                if (res.successful) {
+                    toastr.success("Successfully updated data");
+                    $("#editFilterModal").modal('hide');
+                }
+                else { toastr.error("Fail to update data"); }
+            }).fail(function (res) {
+                console.log(res);
+                toastr.error("Fail to update data");
+            });
+
+        }
+    </script>
+
+}
+

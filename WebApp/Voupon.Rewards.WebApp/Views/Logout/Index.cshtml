@@ -1,0 +1,78 @@
+﻿@{
+    ViewBag.Title = "Logout";
+}
+
+<style>
+    @@media (min-height: 580px) and (min-width: 800px) {
+        footer {
+        }
+    }
+</style>
+
+<div class="middle-box text-center animated fadeInDown">
+    <h1><span class="fa-solid fa-lock-keyhole-open"></span> </h1>
+    <h2 class="font-bold i18next" data-i18n="common.signed-out">Sign out successful</h2>
+
+    <p class="mb-1 mt-3" id="redirectContainer">Redirecting back to where you left off in <span id="countdownTimer">3</span></p>
+
+    <a class="btn btn-primary uppercase mt-2 redirect-btn">CONTINUE SHOPPING</a>
+    <div class="error-desc">
+
+        <p style="display:none;">Come back again soon to redeem more rewards!</p>
+    </div>
+</div>
+
+<div id="vodusDeleteToken"></div>
+
+@section scriptsFooter
+{
+    <script>
+        var partnerWebsiteName = "@(ViewData["PartnerWebsiteName"] != null ? ViewData["PartnerWebsiteName"] : "")";
+        var partnerWebsiteUrl = "@(ViewData["PartnerWebsiteUrl"] != null ? ViewData["PartnerWebsiteUrl"] : "")";
+    var apiUrl = '@ViewData["APIUrl"]';
+        $(function () {
+            $(".navbar").hide();
+            $(".userPoints").html("0");
+        vodusRewardCreateCookie('Vodus.Token', '', -3650, false)
+            $("#vodusDeleteToken").html('<iframe id="vodus3PDeleteTest" width="0" height="0"  src=' + apiUrl + '/v1/token/delete?partnerCode=vodus-test" frameborder="0" allowfullscreen></iframe>');
+            $("#vodus3PDeleteTest").load(function () {
+            console.log('Logging out 3P');
+            vodusRewardCreateCookie('Rewards.Temporary.Points', '', -3650, false);
+            vodusRewardCreateCookie('Rewards.Account.Email', '', -3650, false);
+            vodusRewardCreateCookie('vodus_device_sync_at', '', -3650, false);
+
+                $(".reward-login-top-menu").show();
+                $(".reward-logout-top-menu").hide();
+                $(".reward-login-username").html('');
+        });
+
+            var redirectURL = location.href.split("redirectURL=")[1];
+            if (redirectURL == null) {
+                redirectURL = "/"
+            } 
+            $(".redirect-btn").attr("href", redirectURL);
+
+            var seconds = 3; // seconds for HTML
+            var redirect = setInterval(function () {
+                seconds--;
+                    $("#countdownTimer").text(seconds);
+                if (seconds < 1) {
+                        var ref = getParameterByName("partnerWebsiteId");
+                        if (ref != null && ref != "") {
+                            location.href = "/?returnurl=vodus.my";
+                        }
+                        else {
+                            clearInterval(redirect);
+                            location.href = redirectURL;
+                        }
+                    }
+                }, 1000);
+            });
+
+        function closeMe() {
+            window.opener = self;
+            window.close();
+            $("#redirectContainer").html("Fail to redirect. <a href='https://" + partnerWebsiteUrl + "' style='text-decoration: underline;'>Click here to go back to " + partnerWebsiteName + "</a>");
+        }
+    </script>
+}

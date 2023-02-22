@@ -1,0 +1,40 @@
+﻿@{
+    ViewBag.Title = "Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="mt-5 container justify-content-center row">
+    <div class="swal2-header col-12">
+        <ul class="swal2-progress-steps" style="display: none;"></ul><div class="swal2-icon swal2-success swal2-icon-show" style="display: flex;">
+            <div class="swal2-success-circular-line-left" style="background-color: rgb(255, 255, 255);"></div>
+            <span class="swal2-success-line-tip"></span> <span class="swal2-success-line-long"></span>
+            <div class="swal2-success-ring"></div> <div class="swal2-success-fix" style="background-color: rgb(255, 255, 255);"></div>
+            <div class="swal2-success-circular-line-right" style="background-color: rgb(255, 255, 255);"></div>
+        </div>
+    </div>
+    <div class="row col-xl-6 col-lg-6 col-md-8 col-12 justify-content-center text-center">
+        <h1 class="mb-3"><b>You have successfully logged into<br />@ViewData["LoggedInEmail"]</b></h1>
+        <div class="col-xl-6 col-lg-6 col-md-6 col-12 py-1 px-1">
+            <a href="/" class="btn btn-primary w-100">Visit Vodus Rewards</a>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-6 col-12 py-1 px-1">
+            <a href="#" onclick="window.close();" class="btn btn-secondary w-100">Return to @ViewData["PartnerWebsiteName"]</a>
+        </div>
+    </div>
+</div>
+
+@section styles{
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css">
+}
+
+@section scripts{
+    <script>
+        $(function () {
+            getDeviceProfile(false);
+        })
+
+        function closeMe() {
+            window.opener = self;
+            window.close();
+        }
+    </script>
+}

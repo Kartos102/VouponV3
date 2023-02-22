@@ -1,0 +1,66 @@
+﻿
+@{
+    ViewData["Title"] = "ActivationFailed";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="passwordBox animated fadeInDown">
+    <div class="row" id="forgetPasswordContainer">
+
+        <div class="col-md-12">
+            <div class="ibox-content">
+                <h2 class="font-bold">Activation failed</h2>
+                <p class="alert alert-danger fail-message">
+                </p>
+                <a href="@Url.Action("Index","Home")" type="button" class="btn btn-primary block full-width m-b" id="btnSendResetLink">Back to home page</a>
+            </div>
+        </div>
+    </div>
+    <div class="row" id="forgetPasswordSuccessfulContainer" style="display:none;">
+        <p class="alert alert-success" id="resetLink"></p>
+    </div>
+</div>
+
+@section scripts
+{
+
+    <script>
+
+        $(function () {
+            var failMessage = getParameterByName("from");
+            $(".fail-message").html(failMessage)
+      $("#btnSendResetLink").click(function (e) {
+        toastr.clear();
+        var email = $("#email").val();
+        if (email != "") {
+          $.ajax({
+            global: true,
+            type: 'POST',
+            dataType: 'json',
+            data: { email: email },
+            url: "@Url.Action("SendResetLink", "Identity")",
+            success: function (response) {
+              if (response.successful) {
+                $("#forgetPasswordContainer").css("display", "none");
+                $("#forgetPasswordSuccessfulContainer").css("display", "block");
+                $("#resetLink").html("A reset link have been sent to your email: <strong>" + email + "</strong>");
+              }
+              else {
+                  $(".toast-warning").remove();
+                toastr.clear();
+                toastr.error(response.message);
+              }
+            },
+            error: function () {
+                $(".toast-warning").remove();
+            }
+          });
+        }
+        else {
+          toastr.error("Email is required");
+        }
+      });
+
+    });
+    </script>
+}

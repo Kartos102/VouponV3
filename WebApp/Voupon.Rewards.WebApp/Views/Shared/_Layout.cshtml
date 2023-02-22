@@ -1,0 +1,3267 @@
+﻿@using Voupon.Rewards.WebApp.Infrastructures.Extensions
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@(ViewBag.Title != null && !string.IsNullOrEmpty(ViewBag.Title) ? ViewBag.Title : "Vodus - Online Shopping Malaysia -  Get the best discounts")</title>
+    <meta name="title" content="@(ViewBag.Title != null && !string.IsNullOrEmpty(ViewBag.Title) ? ViewBag.Title :  "Vodus - Online Shopping Malaysia - Get the best discounts")">
+    <meta name="description" content="@(ViewBag.Description != "Home" && !string.IsNullOrEmpty(ViewBag.Description) ? ViewBag.Description :  "Shop Online at Vodus and Choose from the Widest Range of Brands and Products in Malaysia at the Best Prices. Get RM20 Discount Off Your First Purchase.")" />
+    <meta name="keywords" content="@(ViewBag.Keywords != null && !string.IsNullOrEmpty(ViewBag.Keywords) ? ViewBag.Keywords :  "Ecommerce, Marketplace, Surveys, Rewards, Cash Vouchers")">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta property="og:title" content="@(ViewBag.Title != null && !string.IsNullOrEmpty(ViewBag.Title) ? ViewBag.Title :  "Vodus - Online Shopping Malaysia - Get the best discounts")">
+    <meta property="og:description" content="@(ViewBag.Description != null && !string.IsNullOrEmpty(ViewBag.Description) ? ViewBag.Description :  "Shop Online at Vodus and Choose from the Widest Range of Brands and Products in Malaysia at the Best Prices. Get RM20 Discount Off Your First Purchase.")">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="@(ViewBag.OGUrl != null && !string.IsNullOrEmpty(ViewBag.OGUrl) ? ViewBag.OGUrl :  "https://vodus.my")">
+    <meta property="og:site_name" content="Vodus Rewards">
+    <meta property="og:image" content="@(ViewBag.OGImage != null && !string.IsNullOrEmpty(ViewBag.OGImage) ? ViewBag.OGImage :  "https://vodus.my/images/Vodus-V3-Logo-Small.svg")">
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="700069321358-1t3lj52il4lrfcbffo31qbj78b46dind.apps.googleusercontent.com">
+    <meta name="google-site-verification" content="gYFzlPAOw1oe8u0u6Pyvyqz2SNjJF1UYu5tpVSfzkkI" />
+    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.1.1/css/all.css">
+
+    <link rel="shortcut icon" type="image/svg" href="~/Vodus V3 Logo Favicon.svg" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" />
+    <link href="~/lib/toastr/toastr.min.css" rel="stylesheet" asp-append-version="true">
+    <link rel="stylesheet" href="/icons/elegant-icons/style.min.css" asp-append-version="true">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" />
+    <link href="/lib/owlcarousel2/owl.carousel.min.css" rel="stylesheet" asp-append-version="true">
+    <link href="/lib/owlcarousel2/owl.theme.default.min.css" rel="stylesheet" asp-append-version="true">
+    <link rel="preload" media="screen" href="https://fontlibrary.org/face/glacial-indifference" as="style" onload="this.rel='stylesheet'">
+
+    <link href="~/lib/chat/chat.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/shareon@1/dist/shareon.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/shareon@1/dist/shareon.min.js" type="text/javascript"></script>
+    @*<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.0-rc.1.21452.15/signalr.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="~/lib/momentjs/moment-with-locales.min.js" asp-append-version="true"></script>
+    <style type="text/css">
+        .m-lg {
+            margin: 0 30px;
+        }
+
+        #page-wrapper {
+            transition: none;
+        }
+
+        #btnSubscribe {
+            font-size: 120%;
+        }
+
+        @@media (min-width:320px) { /* smartphones, portrait iPhone, portrait 480x320 phones (Android) */
+            #btnSubscribe {
+                font-size: 80%;
+            }
+        }
+
+        .hoverPointer {
+            cursor: pointer;
+        }
+
+        input::placeholder {
+            font-style: italic;
+        }
+
+        #btnSubscribe {
+            text-transform: uppercase;
+            font-style: italic;
+            background: linear-gradient( 180deg, #000, #333);
+            width: 40%;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        .form-control {
+            box-shadow: none;
+            font-size: 18px;
+        }
+
+        paragraph {
+            text-align: justify;
+        }
+
+        no-thanks-message {
+            font-style: italic;
+        }
+    </style>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-107489690-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'UA-107489690-3');
+
+    </script>
+    @RenderSection("styles", required: false)
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/emoji-picker/inputEmoji.js"></script>
+
+    <script>
+        var isFingerprintingEnabled =  @(ViewData["IsFingerprintingEnabled"] == null ? "false" : ViewData["IsFingerprintingEnabled"].ToString().ToLower());
+        var serverlessUrl = '@ViewData["ServerlessUrl"]';
+        var apiUrl = '@ViewData["APIUrl"]';
+        var appUrl = '@ViewData["BaseUrl"]';
+        var ccJSFileUrl = "@Configuration.GetSection("AppSettings").GetSection("App")["CCJSFileUrl"]?d=" + new Date();
+        var loginRedirectUrl = '@Url.Action("Index","Home")';
+        var globalGoogleUser;
+        var auth2;
+        var fingerPrint = null;
+        var loggedInEmail = "@ViewData["AccountEmail"]";
+
+        var appIsLive = true;
+        if (appUrl == "https://vodus.my") {
+            appIsLive = true;
+        }
+        else {
+            appIsLive = false;
+        }
+
+
+        function vodusRewardCreateCookie(name, value, days, isLanguage) {
+            document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+            isLanguage = isLanguage || 0;
+
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                var expires = "; expires=" + date.toGMTString();
+            }
+            else var expires = "";
+
+            if (isLanguage == 0) {
+                if (typeof vodus !== 'undefined' && typeof vodus.setLanguageCode === 'function') {
+                    vodus.setLanguageCode(value);
+                }
+            }
+            var domain = "" + document.domain;
+            if (domain == 'localhost') {
+                document.cookie = name + "=" + value + " " + expires + ";domain=" + domain + ";path=/";
+            }
+            else {
+                document.cookie = name + "=" + value + " " + expires + ";domain=" + domain + ";path=/";
+                document.cookie = name + "=" + value + " " + expires + ";domain=" + "." + domain + ";path=/";
+            }
+
+        };
+
+        function vodusRewardReadCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return "";
+        };
+
+        function vodusRewardDeleteCookie(name) {
+            vodusRewardCreateCookie(name, "", -10);
+        };
+
+        function getFingerprintProfile(fromCC, visitorId) {
+            var token = vodusRewardReadCookie("Vodus.Token");
+            var oldVisitorId = vodusRewardReadCookie("vodus_old_visitor_id");
+
+            var data = {};
+            if (oldVisitorId != visitorId) {
+                data = {
+                    visitorId: visitorId,
+                    oldVisitorId: oldVisitorId,
+                    token: token
+                };
+            }
+            else {
+                data = {
+                    visitorId: visitorId,
+                    token: token
+                };
+            }
+
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                cache: false,
+                data: JSON.stringify(data),
+                url: serverlessUrl + '/api/FingerPrintSync',
+                success: function (response) {
+                    vodusRewardCreateCookie('vodus_device_id', response.data.deviceId, 3650);
+
+                    //  Store in cookie so serverside can access it
+                    vodusRewardCreateCookie('vodus_visitor_id', visitorId, 365);
+                    vodusRewardCreateCookie('vodus_old_visitor_id', visitorId, 365);
+                    getDeviceProfile(fromCC);
+                },
+                error: function (err) {
+                    console.log(err)
+                }
+            });
+        }
+
+        function getDeviceProfile(fromCC) {
+            isFingerprintingEnabled = false;
+            if (!isFingerprintingEnabled) {
+                var token = vodusRewardReadCookie("Vodus.Token");
+
+                if (token != null && token != "") {
+                    $.ajax({
+                        type: "GET",
+                        dataType: 'json',
+                        async: false,
+                        url: '/api/v1/device/token/' + token,
+                        success: function (response) {
+                            if (response.successful) {
+                                if (response.data != null) {
+                                    if (fromCC) {
+                                        $(".userPoints").html(response.data.availablePoints);
+                                    }
+                                    else {
+                                        if (loggedInEmail == "") {
+                                            $(".userPoints").html(response.data.availablePoints);
+
+                                            if (response.data.email == "" || response.data.email == null) {
+                                                $(".reward-login-top-menu").show();
+                                                $(".reward-logout-top-menu").hide();
+                                                $(".reward-login-username").html('');
+                                            }
+                                            else {
+                                                $(".reward-login-top-menu").hide();
+                                                $(".reward-logout-top-menu").show();
+                                                $(".reward-login-username").html(response.data.email);
+                                            }
+                                        }
+                                    }
+
+                                }
+                            } else {
+                                console.log(response.message);
+                            }
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    });
+                }
+                else {
+                    var tempToken = vodusRewardReadCookie("vodus_temp_token");
+
+                    if (tempToken != null && tempToken != "") {
+                        $.ajax({
+                            type: "GET",
+                            dataType: 'json',
+                            async: false,
+                            url: '/api/v1/device/tempToken/' + tempToken,
+                            success: function (response) {
+                                if (response.successful) {
+                                    if (response.data != null) {
+                                        if (fromCC) {
+                                            $(".userPoints").html(response.data.availablePoints);
+                                        }
+                                        else {
+                                            if (loggedInEmail == "") {
+                                                $(".userPoints").html(response.data.availablePoints);
+
+                                                if (response.data.email == "" || response.data.email == null) {
+                                                    $(".reward-login-top-menu").show();
+                                                    $(".reward-logout-top-menu").hide();
+                                                    $(".reward-login-username").html('');
+                                                }
+                                                else {
+                                                    $(".reward-login-top-menu").hide();
+                                                    $(".reward-logout-top-menu").show();
+                                                    $(".reward-login-username").html(response.data.email);
+                                                }
+                                            }
+                                        }
+
+                                    }
+                                } else {
+                                    console.log(response.message);
+                                }
+                            },
+                            error: function (error) {
+                                console.log(error);
+                            }
+                        });
+                    }
+
+                    $(".reward-login-top-menu").show();
+                    $(".reward-logout-top-menu").hide();
+                    $(".reward-login-username").html('');
+                }
+            }
+            else {
+                var deviceId = vodusRewardReadCookie("vodus_device_id");
+                $.ajax({
+                    type: "GET",
+                    dataType: 'json',
+                    async: false,
+                    url: '/api/v1/device/data/' + deviceId,
+                    success: function (response) {
+                        if (response.successful) {
+                            if (response.data != null) {
+                                if (fromCC) {
+                                    $(".userPoints").html(response.data.availablePoints);
+                                    console.log("fromcc device: " + response.data.availablePoints);
+                                }
+                                else {
+                                    if (loggedInEmail == "") {
+                                        console.log("points: " + response.data.availablePoints);
+                                        $(".userPoints").html(response.data.availablePoints);
+
+                                        if (response.data.email == "" || response.data.email == null) {
+                                            $(".reward-login-top-menu").show();
+                                            $(".reward-logout-top-menu").hide();
+                                            $(".reward-login-username").html('');
+                                        }
+                                        else {
+                                            $(".reward-login-top-menu").hide();
+                                            $(".reward-logout-top-menu").show();
+                                            $(".reward-login-username").html(response.data.email);
+                                        }
+                                    }
+                                }
+
+                            }
+                        } else {
+                            console.log(response.message);
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            }
+
+        }
+
+        /*
+        function initFingerprintJS() {
+            console.log("isFingerprintingEnabled: " + isFingerprintingEnabled);
+            if (isFingerprintingEnabled) {
+                var deviceId = vodusRewardReadCookie("vodus_device_id");
+                if (deviceId == null || deviceId == "") {
+                    FingerprintJS.load().then(fp => {
+                        fp.get().then(result => {
+                            fingerPrint = result;
+                            getFingerprintProfile(false, result.visitorId);
+                        });
+                    });
+                }
+                else {
+                    getDeviceProfile(false);
+                }
+            }
+            else {
+
+            }
+        }
+        */
+    </script>
+    <script src="~/lib/FilesValidations.js" asp-append-version="true"></script>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.2.0/lazysizes.min.js"></script>
+    <script src="~/lib/toastr/toastr.min.js" asp-append-version="true"></script>
+    <script src="https://apis.google.com/js/platform.js"></script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6C4D2EQSV4"></script>
+
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'AW-622814205');
+        gtag('config', 'G-6C4D2EQSV4');
+    </script>
+
+    <!-- Event snippet for Voupon Begin checkout conversion page
+    In your html page, add the snippet and call gtag_report_conversion when someone clicks on the chosen link or button. -->
+    <script>
+        function gtag_report_conversion(url) {
+            var callback = function () {
+                if (typeof (url) != 'undefined') {
+                    window.location = url;
+                }
+            };
+            gtag('event', 'conversion', {
+                'send_to': 'AW-622814205/ks9ICIGV6ZEDEP3H_agC',
+                'value': 20.0,
+                'currency': 'MYR',
+                'event_callback': callback
+            });
+            return false;
+        }
+    </script>
+
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true">
+</head>
+<body class="fixed-sidebar pace-done mini-navbar">
+    <div id="page-wrapper" class="gray-bg">
+        <div class="row border-bottom navbar-default reward-top-bar">
+            <nav class="navbar" role="navigation" style="width:100%">
+                <div class="row top-navbar">
+                    <div class="row top-navbar-left col">
+                        <div>
+                            <a href="https://vodus.com" target="_blank"><span class="merchant-url">Market Insights</span></a>
+                        </div>
+                        <div>
+                            <a href="https://merchant.vodus.my" target="_blank"><span class="merchant-url">Sell on Vodus</span></a>
+                        </div>
+                        <div>
+                            <a href="/about" target="_blank"><span class="merchant-url">About Us</span></a>
+                        </div>
+                        <div>
+                            <a href="/faq" target="_blank"><span class="merchant-url">FAQ</span></a>
+                        </div>
+                        <div class="social-media-container">
+                            <div class="hide-mobile">
+                                <span>Follow us on : </span>
+                            </div>
+                            <div class="social-media">
+                                <a target="_blank" href="https://www.facebook.com/vodusrewards"><i class="fa-brands fa-facebook"></i></a>
+                            </div>
+                            <div class="social-media">
+                                <a target="_blank" href="https://www.instagram.com/vodusrewards/"><i class="fa-brands fa-instagram"></i></a>
+                            </div>
+                            <div class="social-media">
+                                <a target="_blank" href="https://www.linkedin.com/company/vodus-insights/"><i class="fa-brands fa-linkedin"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bottom-navbar row">
+                    <div class="navbar-header col-auto no-padding hide-mobile align-items-center row">
+                        <a href="/#category" class="pull-left">
+                            <img src="~/images/Vodus V3 Logo White Small.svg" class="logo-img logo-horizontal lazyload" />
+                        </a>
+                    </div>
+                    <div class="navbar-menu col no-padding">
+                        <ul class="col-12 nav navbar-top-links navbar-right navbar-right-hide px-0 px-lg-2" id="navbar-right">
+                            <li class="row search-row col px-0 px-lg-2">
+                                <div class="input-group col-12 pr-1 pl-0">
+                                    <input class="form-control py-1 border-right-0 border product-search-input" type="search" value="" placeholder="Tell us what you want">
+                                    <i class="fas fa-magnifying-glass"></i>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary border-left-0 border product-search-btn" type="button">
+                                            <span></span>Search
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="input-group d-none px-1">
+                                    <select class="form-control" id="provinceSelect">
+                                    </select>
+                                </div>
+                            </li>
+
+                            @if (ViewData["AllLanguages"] != null)
+                            {
+                            <li>
+                                <a id="btnRewardGainPoint" class="px-sm-2 mx-1 row align-center" disabled="disabled" onclick="gainPointGetQuestion()">
+                                    <img src="/images/Vodus V3 Logo Favicon-White.svg">
+                                    <span class="userPoints">@(ViewData["AvailablePoints"] != null ? ViewData["AvailablePoints"].ToString() : "0")</span>
+                                    <span class="gain-vpoints-text i18next" data-i18n="common.gain-points">
+                                        Gain VPoints
+                                    </span>
+                                </a>
+                            </li>
+                            }
+                            <li class="hide-mobile">
+                                <a href="@Url.Action("Index","Cart")" class="cart-btn row align-center" id="btnToCartMobile">
+                                    <img src="/images/Cart_icon_white.svg">
+                                    <div class="topbar-cart row">
+                                        <span class="icon-counter cartProductCount">0</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li @(ViewData["AccountEmail"] != null && ViewData["AccountEmail"] != "" ? "style=display:none;margin-top:0;" : "style=margin-top:0;") class="reward-login-top-menu hide-mobile">
+                                <a id="navRegister" class="navRegister" href="#">
+                                    <strong><span class="i18next" data-i18n="common.register">Register</span></strong>
+                                </a>
+                            </li>
+                            <li @(ViewData["AccountEmail"] != null && ViewData["AccountEmail"] != "" ? "style=display:none;" : "") class="reward-login-top-menu hide-mobile">
+                                <a id="navLogin" class="vouponLogin" href="#">
+                                    <strong><span class="i18next" data-i18n="common.login">Login</span></strong>
+                                </a>
+                            </li>
+                            <li class="dropdown reward-logout-top-menu hide-mobile col-auto px-1" @(ViewData["AccountEmail"] != null && ViewData["AccountEmail"] != "" ? "" : "style=display:none;")>
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="true">
+
+                                    @if (User.Identity.GetFirstName() == "" && User.Identity.GetLastName() == "")
+                                    {
+                                    <strong class="reward-login-username">@((ViewData["AccountEmail"] != null ? ViewData["AccountEmail"].ToString() : ""))</strong>
+                                    @*<span class="icon_profile"></span>*@
+                                    }
+                                    else
+                                    {
+                                    <strong class="reward-login-username">@(User.Identity.GetFirstName() + " " + User.Identity.GetLastName())</strong>
+                                    }
+
+                                    @*<i class="fas fa-caret-down" style="margin-left:10px"></i>*@
+                                </a>
+                                <div class="dropdown-menu dropdown-alerts">
+                                    <ul>
+                                        <li>
+                                            <a href="@Url.Action("History", "Order")"><span class="i18next" data-i18n="common.order-history">My Purchases</span></a>
+                                        </li>
+                                        <li>
+                                            <a href="/order/refunds"><span>Refund History</span></a>
+                                        </li>
+                                        <li>
+                                            <a href="/profile/points"><span>VPoints History</span></a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Pending", "Order")"><span class="i18next" data-i18n="common.order-payment">Pending Payment</span></a>
+                                        </li>
+                                        <li>
+                                            <a href="/profile/edit"><span class="i18next" data-i18n="common.update-profile">My Profile</span></a>
+                                        </li>
+                                        <li>
+                                            <a href="/profile/change-password"><span>Change Password</span></a>
+                                        </li>
+                                        @if (User.Identity.GetRole() == "Admin" || User.Identity.GetRole() == "RewardsAdmin")
+                                        {
+                                        <li>
+                                            <a href="@Url.Action("Index", "Dashboard", new { area = "Admin" })">Admin Dashboard</a>
+                                        </li>
+                                        }
+
+                                        <li>
+                                            <a id="navLogout" class="navLogout" href="@Url.Action("Index", "Logout")"><span class="i18next" data-i18n="common.logout">Logout</span></a>
+                                        </li>
+                                        <li class="divider"></li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="overlay hidden" onclick="closeHamburgerFunction()">
+        </div>
+        <div class="mobile-left-menu hidden" id="shop-menu">
+            <div class="left-menu-title">
+                <h2>SHOP ON VODUS</h2>
+                <div loading="lazy" class="close-btn-img" onclick="closeHamburgerFunction()"></div>
+            </div>
+            <div class="left-menu-list-container">
+                <ul class="left-menu-list product-category-list">
+                    <li><a id="btnHome" href="/">Home</a></li>
+                    <li><a data-type-name="Women's-Fashion">Women's Fashion</a></li>
+                    <li><a data-type-name="Men's-Fashion">Men's Fashion</a></li>
+                    <li><a data-type-name="Gadgets-and-Accessories">Gadgets and Accessories</a></li>
+                    <li><a data-type-name="Home-and-Family">Home and Family</a></li>
+                    <li><a data-type-name="Leisure-and-Entertainment">Leisure and Entertainment</a></li>
+                    <li><a data-type-name="Groceries-Health-and-Beauty">Groceries, Health and Beauty</a></li>
+                    <li><a data-type-name="Sports-and-Outdoor">Sports and Outdoor</a></li>
+                    <li><a data-type-name="Vouchers-and-Others">Vouchers and Others</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="mobile-left-menu hidden" id="chat-menu">
+            <div class="chat chat-body-mobile" id="chatBody" style="display:none">
+                <div class="chat-header clearfix">
+                    <div class="d-flex">
+                        <div class="col-auto pl-0 align-center">
+                            <button type="button" class="close btn-back-to-list" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true"><i class="fas fa-arrow-left"></i></span>
+                            </button>
+                        </div>
+                        <div class="col-10 pl-0">
+                            <a class="col-4" href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
+                                <img class="chat-user-img" src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
+                            </a>
+                            <div class="col-8 chat-about pr-0">
+                                <h6 class="m-b-0 user-name">Aiden Chavez</h6>
+                                <span class="m-b-0 user-email ellipsis"></span>
+                            </div>
+                        </div>
+                        <div class="col-auto row justify-content-end align-content-center px-0">
+                            <div loading="lazy" class="close-btn-img" onclick="closeHamburgerFunction()"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-history chat-history-mobile">
+                    <div class="currently-no-chat align-center">
+                        <i class="text-center w-100 mt-3">
+                            You currently have no chat
+                        </i>
+                    </div>
+                    <ul class="m-b-0" id="messagesList">
+                    </ul>
+                </div>
+                <div class="chat-message clearfix">
+                    <div class="image-chat-gallery-div">
+                        <hr />
+                        <div class="gallery ml-3 mr-3" id="imageChatGallery"></div>
+                    </div>
+                    <hr />
+                    <div class="input-group mb-0">
+                        <div class="col-12 pb-1">
+                            <a id="chatEmoji" href="javascript:void(0);"><i class="fal fa-grin"></i></a>
+                            @*<a href="javascript:void(0);" <i class="far fa-paperclip"></i></a>*@
+                            <input type="file" name="files[]" id="chatImages" class="form-control" value="" multiple>
+                            <a href="javascript:void(0);"> <i class="fas fa-camera"></i></a>
+                            <input type="file" name="files[]" id="chatFile" class="form-control" value="" multiple>
+                        </div>
+                        <br />
+                        <input type="text" class="form-control" placeholder="Type a message" id="txtMessage">
+                        <div class="input-group-append">
+                            <button type="button" id="btnSendMessage" class="input-group-text">
+                                <span class="px-3"><i class="fas fa-chevron-right"></i></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="plist" class="people-list chat-list-mobile">
+                <div class="d-flex col-12">
+                    <div class="input-group col pl-0">
+                        <input id="chatListSearch" type="text" class="form-control" placeholder="Search Chat">
+                        <i class="fas fa-magnifying-glass  chat-search-icon"></i>
+                    </div>
+                    <div class="col-auto row justify-content-end align-content-center px-0">
+                        <div loading="lazy" class="close-btn-img" onclick="closeHamburgerFunction()"></div>
+                    </div>
+                </div>
+                <ul class="list-unstyled chat-list mt-2 mb-0 pl-2" id="usersList">
+                </ul>
+                <div class="welcome-to-chat">
+                    <img src="~/images/Vodus-V3-Logo-Small.svg" />
+                    <span class="text-center w-100 mt-3">
+                        WELCOME TO <br />
+                        VODUS CHAT
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mobile-left-menu hidden" id="profile-menu">
+            <div class="left-menu-profile row">
+                <div class="profile-pic">
+                    <img src="~/images/Mobile_05_Uers_Login.svg" />
+                </div>
+                <div class="profile-name col">
+                    <strong class="voupon-login-name" style="width:100%;">@((ViewData["AccountName"] != null ? ViewData["AccountName"].ToString() : "User Name"))</strong>
+                    <span class="reward-login-username voupon-login-email ellipsis">@((ViewData["AccountEmail"] != null ? ViewData["AccountEmail"].ToString() : ""))</span>
+                </div>
+                <div loading="lazy" class="close-btn-img d-lg-none" onclick="closeHamburgerFunction()"></div>
+            </div>
+            <div class="left-menu-list-container">
+                <ul class="left-menu-list">
+                    <li>
+                        <a href="@Url.Action("History", "Order")"><span class="i18next" data-i18n="common.order-history">My Purchases</span></a>
+                    </li>
+                    <li>
+                        <a href="/order/refunds"><span>Refund History</span></a>
+                    </li>
+                    <li>
+                        <a href="/profile/points"><span>VPoints History</span></a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Pending", "Order")"><span class="i18next" data-i18n="common.order-payment">Pending Payment</span></a>
+                    </li>
+                    <li>
+                        <a href="/profile/edit"><span class="i18next" data-i18n="common.update-profile">My Profile</span></a>
+                    </li>
+                    <li>
+                        <a href="/profile/change-password"><span>Change Password</span></a>
+                    </li>
+                    <li>
+                        <a id="navLogout" class="navLogout"><span class="i18next" data-i18n="common.logout">Logout</span></a>
+                    </li>
+                    <li class="redirect-link"><a href="/">Back to Home</a></li>
+                    <li class="redirect-link d-none"><a href="https://merchant.vodus.my">Sell on Vodus</a></li>
+                    <li class="redirect-link d-none"><a href="https://vodus.com">Conduct Market Research with Vodus</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="rewards-body">
+            @*<div class="row text-right prod-type-nav" style="max-width:1500px;">
+                    <div class="prod-type-btn-div" style="width:100%">
+                        <div hidden class="sort-menu">
+                            <div class="sort-text">
+                                <span class="i18next" data-i18n="common.sort">Sort:</span>
+                            </div>
+                            <div class="sort-dropdown">
+                                <select id="orderSorting" class="form-control">
+                                    <option value="1" class="i18next" data-i18n="common.points-low-to-high">Prices: Low to high</option>
+                                    <option value="2" class="i18next" data-i18n="common.points-high-to-low">Prices: High to low</option>
+                                    <option value="3" class="i18next" data-i18n="common.name-a-to-z">Name: A - Z</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+            @RenderBody()
+        </div>
+    </div>
+
+    @if (ViewData["AccountEmail"] != null && ViewData["AccountEmail"] != "")
+    {
+
+    <button class="chat-open" onclick="openChatForm()" style="display:none"><i class="fas fa-comment-alt-dots"></i><br />Chat</button>
+
+    <div class="container chat-popup" id="">
+        <div class="row clearfix">
+            <div class="col-lg-12 p-0">
+                <div class="card chat-app row">
+                    <div class="col-12 chat-main-header">
+                        <span>Chat</span>
+                        <div class="align-center">
+                            <i class="fas fa-angle-right chat-expand-shrink chat-shrink"></i>
+                            <i class="fas fa-minus chat-close"></i>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <div class="chat chat-body" id="chatBody" style="display:none">
+                            <div class="chat-header clearfix pt-2" style="opacity:0">
+                                <div class="row">
+                                    <div class="d-flex">
+                                        <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
+                                            <img class="chat-user-img" src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
+                                        </a>
+                                        <div class="chat-about">
+                                            <h6 class="m-b-0 user-name">Aiden Chavez</h6>
+                                            <span class="m-b-0 user-email"></span><br />
+                                            @*<small>Last seen: 2 hours ago</small>*@
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="chat-history">
+                                <div class="currently-no-chat align-center">
+                                    <i class="text-center w-100 mt-3">
+                                        You currently have no chat
+                                    </i>
+                                </div>
+                                <ul class="m-b-0" id="messagesList">
+                                </ul>
+                            </div>
+                            <div class="chat-message clearfix">
+                                <div class="image-chat-gallery-div">
+                                    <hr />
+                                    <div class="gallery ml-3 mr-3" id="imageChatGallery"></div>
+                                </div>
+                                <hr />
+                                <div class="input-group mb-1">
+                                    <div class="col-12 pb-1">
+                                        <a href="javascript:void(0);"><i id="chatEmoji" class="fal fa-grin"></i></a>
+                                        @*<a href="javascript:void(0);" <i class="far fa-paperclip"></i></a>*@
+                                        <input type="file" name="files[]" id="chatImages" class="form-control" value="" multiple>
+                                        <a href="javascript:void(0);"> <i class="fas fa-camera"></i></a>
+                                        <input type="file" name="files[]" id="chatFile" class="form-control" value="" multiple>
+                                    </div>
+                                    <br />
+                                    <input type="text" class="form-control" placeholder="Type a message" id="txtMessage">
+                                    <div class="input-group-append">
+                                        <button type="button" id="btnSendMessage" class="input-group-text">
+                                            <span class="px-3"><i class="fas fa-chevron-right"></i></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="plist" class="people-list chat-list-desktop">
+                            <div class="input-group">
+                                <input id="chatListSearch" type="text" class="form-control" placeholder="Search Chat">
+                                <i class="fas fa-magnifying-glass chat-search-icon"></i>
+                            </div>
+                            <ul class="list-unstyled chat-list mt-2 mb-0" id="usersList">
+                            </ul>
+                            <div class="welcome-to-chat">
+                                <img src="~/images/Vodus-V3-Logo-Small.svg" />
+                                <span class="text-center w-100 mt-3">
+                                    WELCOME TO <br />
+                                    VODUS CHAT
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="display:none" id="userTemplate">
+        <li class="clearfix">
+            <div class="d-flex align-items-center w-100 ellipsis">
+                <img class="user-img" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar">
+                <div class="about">
+                    <div class="name">Vincent Porter</div>
+                    <div class="status"> @*<i class="fas fa-circle offline"></i> left 7 mins ago*@ </div>
+                </div>
+            </div>
+            <button type="button" class="close btn-delete-chat" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+        </li>
+    </div>
+    <div style="display:none" id="messegegeTemplate">
+        <li class="clearfix">
+            <div class="message-data text-right">
+                <span class="message-data-time">10:10 AM, Today</span>
+                @*<img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="avatar">*@
+                <div class="message my-message float-right"> Hi Aiden, how are you? How is the project coming along? </div>
+
+            </div>
+        </li>
+    </div>
+    }
+
+    <div class="mobile-bottom-bar">
+        <div class="col">
+            <a id="btnMenu" onclick="shopMenu()">
+                <img src="~/images/Mobile_02_Menu.svg" />
+                <span>Menu</span>
+            </a>
+            <a id="btnFilter" style="display:none;">
+                <i class="fa-solid fa-filter"></i>
+                <span>Filter</span>
+            </a>
+        </div>
+
+        @if ((ViewData["AccountEmail"] != null) && (ViewData["AccountEmail"].ToString() != ""))
+    {
+        <div class="col">
+            <a id="btnMobileChat" href="#chat-menu" onclick="chatMenu()">
+                <i class="fas fa-comment-alt-dots mobile-chat-icon"></i><br />
+                <span>Chat</span>
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="col">
+            <a id="btnHome" class="" href="/">
+                <img src="~/images/Mobile_01_Home.svg" />
+                <span>Home</span>
+            </a>
+        </div>
+
+    }
+
+        <div class="col">
+            <a href="@Url.Action("Index","Cart")" class="cart-btn" id="btnToCart">
+                <img src="~/images/Mobile_04_Cart.svg" />
+                <span class="icon-counter cartProductCount"></span>
+                <span>Cart</span>
+            </a>
+        </div>
+
+        <div class="col">
+            <a @((ViewData["AccountEmail"] != null) && (ViewData["AccountEmail"].ToString() != "") == true ? "class=profileMenu" : "class=vouponLogin") href="#">
+                <img src="~/images/Mobile_05_Uers_Login.svg" />
+                <span>@((ViewData["AccountEmail"] != null) && (ViewData["AccountEmail"].ToString() != "") == true ? "Profile" : "Login")</span>
+            </a>
+        </div>
+    </div>
+
+    <footer id="footer">
+        <div class="footer-row-1">
+            <div class="footer-content col-sm-12 row">
+                <div class="col-md-5 col-lg-6 row footer-nav">
+                    <div class="col-md-12">
+                        <div class="footer-logo">
+                            <img src="/images/Vodus V3 Logo White Small.svg" class="ls-is-cached lazyloaded">
+                        </div>
+                        <div class="footer-company-description">
+                            <p>
+                                Vodus e-commerce is the first online shopping platform in Malaysia that allows shoppers the opportunity to earn reward points by answering simple survey questions. These points can then be converted directly into discounts anytime and redeemed against a wide variety of in-store products and vouchers.
+                            </p>
+                            <p>
+                                We bring you the best of online shopping in Malaysia by partnering with merchants of all sizes, from well-known brands to value-for-money local products, to help you compare and find most suitable products at the best price.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7 col-lg-6 row footer-nav" style="z-index:2;">
+                    <div class="col-6">
+                        <div>
+                            <h4>Quick links</h4>
+                        </div>
+                        <div>
+                            <div>
+                                <a href="https://vodus.my">Vodus Ecommerce</a>
+                            </div>
+                            <div>
+                                <a href="/about">About us</a>
+                            </div>
+                            <div>
+                                <a href="/contact">Contact us</a>
+                            </div>
+                            <div>
+                                <a href="/FAQ">FAQ</a>
+                            </div>
+                            <div>
+                                <a href="/TermsAndConditions">Terms and Conditions</a>
+                            </div>
+                            <div>
+                                <a href="/return-policy">Return Policy</a>
+                            </div>
+                            <div>
+                                <a href="/privacy">Privacy Policy</a>
+                            </div>
+                            <div>
+                                <a href="https://vodus.com/Careers">Careers</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div>
+                            <h4>
+                                OUR SOLUTIONS FOR BUSINESSES
+                            </h4>
+                        </div>
+                        <div>
+                            <div>
+                                <h6>Vodus Merchant</h6>
+                            </div>
+                            <div>
+                                <a href="https://merchant.vodus.my">
+                                    Sell on Vodus
+                                </a>
+                            </div>
+
+                            <div style="margin-top:15px;">
+                                <h6>Vodus Market Research</h6>
+                            </div>
+                            <div>
+                                <a href="https://vodus.com">Consumer Insights</a>
+                            </div>
+                            <div>
+                                <a href="https://vodus.com/solutions/brand-health">
+                                    Brand Health Tracker
+                                </a>
+                            </div>
+                            <div>
+                                <a href="https://vodus.com/solutions/product-test">
+                                    Product Test
+                                </a>
+                            </div>
+                            <div>
+                                <a href="https://vodus.com/solutions/marketing-research">
+                                    Marketing Research
+                                </a>
+                            </div>
+                            <div>
+                                <a href="https://vodus.com/solutions/marketing-impact">
+                                    Advertising Research
+                                </a>
+                            </div>
+                            <div>
+                                <a href="https://vodus.com/Solutions/customer-satisfaction">
+                                    User Experience Research
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-row-2">
+            <div class="footer-content col-sm-12 row">
+                <div class="row">
+                    <div class="col-md-6 row footer-nav">
+                        <div>
+                            <h4>Payment Methods</h4>
+                            <div class="partner-logo-container-footer">
+                                <div>
+                                    <img src="~/images/Footer_payment_07_GrabPay.png" class="lazyload" />
+                                </div>
+                                <div>
+                                    <img src="~/images/Footer_payment_04_Touch_n_Go.png" class="lazyload" />
+                                </div>
+                                <div>
+                                    <img src="~/images/Footer_payment_06_Boost.png" class="lazyload" />
+                                </div>
+                                <div>
+                                    <img src="~/images/Footer_payment_01_Visa.png" class="lazyload" />
+                                </div>
+                                <div>
+                                    <img src="~/images/Footer_payment_02_MasterCard.png" class="lazyload" />
+                                </div>
+                                <div>
+                                    <img src="~/images/Footer_payment_05_FPX.png" class="lazyload" />
+                                </div>
+                                <div>
+                                    <img src="~/images/Footer_payment_09_MAE_Maybank_Light.png" class="lazyload" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row col-12">
+                            <div>
+                                <h4 class="partner-title-container-footer">Our media partners</h4>
+                                <div class="partner-logo-container-footer">
+                                    <div>
+                                        <img src="~/images/Footer_partner_Astro.png" class="lazyload" />
+                                    </div>
+                                    <div>
+                                        <img src="~/images/Footer_partner_MediaPrima.png" class="lazyload" />
+                                    </div>
+                                    <div>
+                                        <img src="~/images/Footer_partner_TheStar.png" class="lazyload" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-100 d-flex" style="margin-top: 10px;">
+                            <div class="col-6 contact-item">
+                                <h5>
+                                    Email
+                                </h5>
+                                <p>
+                                    support@vodus.my
+                                </p>
+                            </div>
+                            <div class="col-6 contact-item">
+                                <h5>
+                                    Tel
+                                </h5>
+                                <p>
+                                    (+60)1154168816
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 row footer-nav">
+                        <div class="col-12 row" style="margin-top: 10px;">
+                            <div class="col-12 px-0">
+                                <h5>
+                                    Our office
+                                </h5>
+                            </div>
+                            <div class="col-6 pl-0 pr-1">
+                                <h6>
+                                    <i>Kuala Lumpur</i>
+                                </h6>
+                                <p>
+                                    A-10-01, Tower A, Pinnacle PJ, Lorong Utara C, PJS 52, 46200 Petaling Jaya <br />
+                                    Selangor, Malaysia
+                                </p>
+                            </div>
+                            <div class="col-6 pr-0 pl-1">
+                                <h6>
+                                    <i>Penang</i>
+                                </h6>
+                                <p>
+                                    Plot 96, IV, Solok Bayan Lepas, 11900 Bayan Lepas, <br />
+                                    Penang, Malaysia
+                                </p>
+                                <p>
+                                    312-E, Jalan Perak, 11600 George Town, <br />
+                                    Penang, Malaysia
+                                </p>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="col-12 px-0">
+                                <h4>Follow us</h4>
+                                <ul class="social-icons">
+                                    <li><a href="https://www.facebook.com/vodusrewards"><i class="fa-brands fa-facebook-f"></i></a></li>
+                                    <li><a href="https://www.instagram.com/vodusrewards/"><i class="fa-brands fa-instagram"></i></a></li>
+                                    <li><a href="https://www.linkedin.com/company/vodus-insights/"><i class="fa-brands fa-linkedin"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-copyright col-sm-12">
+                    Copyright &copy; 2022 Vodus Research Sdn Bhd. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="addedToCartModal">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content top-purple-border">
+                <div class="modal-body">
+                    <div class="modal-close">
+                        <div loading="lazy" class="close close-btn-img" data-dismiss="modal" aria-label="Close" aria-hidden="true"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <h2>Successfully added to cart</h2>
+                        </div>
+                        <div class="col-12 row image-container">
+                            <img src="~/images/Cart_successfully_added.png" />
+                        </div>
+                        <div class="mycart-modal-btn col-12 row">
+                            <button style="background-color: #eee;" type="button" class="btn btn-default" data-dismiss="modal"><span class="i18next" data-i18n="common.continue-browsing">Continue Shopping</span></button>
+                            <a href="@Url.Action("Index","Cart")" class="btn btn-primary"><span class="i18next" data-i18n="common.check-out">CHECKOUT</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="vodusRewardLoginModal" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document" id="vodusRewardLoginDialog" style="width:100%;font-family:'Open Sans'">
+            <div class="modal-content" style="border:none;">
+                <div class="modal-body top-purple-border" id="vodusRewardLoginModalContent" style="padding-top: 0; padding-bottom: 0;">
+                    <div class="row">
+                        <div id="sso-reward-desktop-container" class="col-xs-12 col-sm-9">
+                            <div id="sso-reward-desktop-content" class="row" style="background-color:white;margin-left:10px;margin-right:10px;display:inline-flex;">
+                                <div id="sso-reward-back-btn" class="pull-left">
+                                    <div loading="lazy" class="close close-btn-img" data-dismiss="modal" aria-label="Close" aria-hidden="true"></div>
+                                </div>
+                                <div id="divRewardSignupModal" class="col-md-12" style="display:none;">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <h2><strong class="i18next" data-i18n="common.sign-up">Sign up</strong></h2>
+                                            <h4 class="d-none" style="font-family:'Open Sans'; font-weight:400; margin-bottom:10px;line-height:1.3em;">
+                                                <span class="i18next" data-i18n="common.get-rewarded-for-consuming-content">
+                                                    Enjoy great rewards and discounts on your online shopping.
+                                                </span>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                    <form class="row">
+                                        <div class="col-sm-12 sso-input-container">
+                                            <input placeholder="Email" type="email" class="form-control" autocomplete="new-username" id="vodusRewardSignupEmail" />
+                                            <br />
+                                            <input placeholder="Password" type="password" style="margin-bottom:15px;" class="form-control" autocomplete="new-password" id="vodusRewardSignupPassword" />
+                                            <div class="col-12 d-flex align-items-center">
+                                                <input type="checkbox" id="agreeTerm" name="agreeTerm" style="margin-right:5px;">
+                                                <label style="margin:0;font-size: 14px;" for="agreeTerm"> I agree to the <a href="/TermsAndConditions" target="_blank">Terms & Conditions</a></label><br>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 text-center" style="margin-top:5px;">
+                                            <button id="btnVodusRewardCreateAccount" class="btn wisteria-flat-button i18next" style="font-size: 16px; padding:5px 20px;" type="submit"><span class="i18next" data-i18n="common.register">Register</span></button>
+                                        </div>
+                                    </form>
+                                    <div class="mt-2">
+                                        <h5 class="or-divider">OR</h5>
+                                        <div class="row">
+                                            <div class="col-12" style="text-align:center;">
+                                                <button class="vodusFacebookLogin wisteria-flat-button fb-btn btn btn-primary i18next" type="button"><span class="fa-brands fa-facebook-f">&nbsp;</span><span data-i18n="common.login-with-facebook">Login with Facebook</span></button>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12" style="text-align:center;">
+                                                <button class="vodusGoogleLogin g_signin_btn wisteria-flat-button google-btn btn btn-primary i18next" type="button"><span class="fa-brands fa-google">&nbsp;</span><span data-i18n="common.login-with-google">Login with Google</span></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="row" style="margin:0;">
+                                        <div class="sso-alternative col d-flex justify-center text-right" style="line-height:1.3em;color:#999;">
+                                            <span class="i18next" data-i18n="common.already-signed-up">Already signed up?</span>
+                                            <b aria-hidden="true" class="i18next px-2 py-0" style="width:auto;cursor:pointer;" data-i18n="common.login" id="btnShowVodusRewardLogin">Login</b>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="divRewardLoginModal" class="col-md-12" style="display:none;">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <h2><b class="i18next loginLabel" data-i18n="common.login">Login</b></h2>
+                                        </div>
+                                    </div>
+                                    <form class="row">
+                                        <div class="sso-input-container col-12">
+                                            <input placeholder="Email" type="email" class="form-control" autocomplete="username" id="vodusRewardLoginEmail" />
+                                            <br />
+                                            <input placeholder="Password" type="password" class="form-control" autocomplete="current-password" id="vodusRewardLoginPassword" />
+                                        </div>
+                                        <div class="col-12 text-center mt-2">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <button id="btnVodusRewardLogin" class="btn wisteria-flat-button" type="submit" value="Login"><span class="i18next" data-i18n="common.login">Login</span></button>
+                                                </div>
+                                                <div class="col-12 d-flex align-items-left">
+                                                    <a id="btnRewardForgotPW" target="_blank" href="@Url.Action("ForgetPassword","Home")" style="padding-top:5px">
+                                                        <span class="i18next" data-i18n="common.forgot-password">Forgot password?</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div>
+                                        <h5 class="or-divider">OR</h5>
+                                        <div class="row">
+                                            <div class="col-12" style="text-align:center;">
+                                                <button class="vodusFacebookLogin wisteria-flat-button fb-btn btn btn-primary i18next" type="button"><span class="fa-brands fa-facebook-f">&nbsp;</span><span data-i18n="common.login-with-facebook">Login with Facebook</span></button>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12" style="text-align:center;">
+                                                <button id="vodusGoogleLogin" class="vodusGoogleLogin wisteria-flat-button google-btn btn btn-primary i18next" type="button"><span class="fa-brands fa-google">&nbsp;</span><span data-i18n="common.login-with-google">Login with Google</span></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="row" style="margin:0;">
+                                        <div class="sso-alternative col d-flex justify-center text-right" style="line-height:1.3em;color:#999;">
+                                            <span class="i18next" data-i18n="common.not-yet-signed-up">New to Vodus?</span>
+                                            <b aria-hidden="true" class="i18next px-2 py-0" style="width:auto;cursor:pointer;" data-i18n="common.sign-up" id="btnShowVodusRewardSignup">Sign up</b>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="PreferredLanguageModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog prefer-language-modal" role="document">
+            <div class="modal-content top-purple-border">
+                <div class="modal-body row">
+                    <div class="modal-close">
+                        <div loading="lazy" class="close close-btn-img" data-dismiss="modal" aria-label="Close" aria-hidden="true"></div>
+                    </div>
+                    <div class="select-language-image">
+                        <img src="/images/select-language.webp" />
+                    </div>
+                    <h4 class="modal-title preferred-language-title">Select your preferred language</h4>
+                    <div id="divPreferLanguageButton" class="col-12">
+                        @if (ViewData["AllLanguages"] != null)
+                        {
+                            foreach (var item in (List<SelectListItem>)ViewData["AllLanguages"])
+                            {
+                                if (item.Value != "0")
+                                {
+                        <div class="prefer-language-div  col-12"><div class="prefer-language-button" value="@item.Value">@item.Text</div></div>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+
+
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="promoCodeModal" style="background-color:transparent;z-index:9999;">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="background-color:transparent;top:-3%;align-items:baseline;">
+            <div class="modal-content" style="background-color:transparent;box-shadow:none;border:none;">
+                <img src="/images/banners/first-time-popup.webp" />
+                <div class="modal-close" style="position:absolute;top:20%;right:9%;">
+                    <div loading="lazy" class="close close-btn-img" data-dismiss="modal" aria-label="Close" aria-hidden="true" style="border-radius:2em;color:#000;background-color:#000;opacity:1"></div>
+                </div>
+                <div class="modal-body" style="background-color: #FDEDDE;color: #000;padding: 0;border-top-left-radius: 15px;border-top-right-radius:15px;position:absolute;top:87%;">
+                    <div style="margin: 0 auto;padding: 5px;background-color: #fff;display: inline-flex;width: 100%;border-top-left-radius: 5px;border-top-right-radius: 5px;border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;box-shadow: 0 4px 2px -2px gray;">
+                        <input type="text" class="form-control" placeholder="Enter your email here" id="subsriberEmail" style="width:60%;border:none;box-shadow:none; padding-top:20px;padding-bottom:20px;" autocomplete="off" />
+                        <button class="btn" type="button" id="btnSubscribe">Get RM20 off</button>
+                    </div>
+                    <div class="row" style="text-align:center;margin:0 auto;padding:15px;">
+                        <div class="col-12">
+                            <p class="hoverPointer" data-dismiss="modal" style="font-style:italic;text-decoration:underline;text-transform:uppercase;font-size:90%;">No thanks, I don't want RM20 off</p>
+                            <p style="font-size:80%;text-align:justify;">
+                                By signing up, you consent to receive emails about Vodus's latest promotions,offers and news, as well as information on how to participate in Vodus's events, competitions or promotions. You have certain rights under applicable privacy laws, and can withdraw your consent at any time. See <a href="/privacy" style="text-decoration:underline;color: #000;">Privacy Policy</a> for more information.
+                            </p>
+                            <p style="font-size:80%;"><a href="/tnc/first-time-rm20-off" style="color: #000;">**T&C applies**</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mySlides-modal image-container-modal">
+        <img src="" class="view-product-chat-image">
+    </div>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="deleteChatModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="ellipsis">Delete Chat</span>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        Are you sure that you want to delete this chat with <b class="delete-chat-name"></b>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-primary" id="DeleteChat">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/js/app.min.js" asp-append-version="true"></script>
+    <script src="~/lib/vodus/helper.cookie.min.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/8.4.3/i18next.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-i18next/1.2.0/jquery-i18next.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next-xhr-backend/1.5.1/i18nextXHRBackend.js"></script>
+    <script src="~/lib/vodus/cart.js" asp-append-version="true"></script>
+    <script src="~/lib/vodus/user.config.min.js" asp-append-version="true"></script>
+
+    <script>
+        var forTest;
+        var chatImagessList = [];
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        gtag('config', 'UA-109773685-1');
+        var reloginNeeded = getParameterByName("relogin");
+
+        if (window.location.href.indexOf('/google') < 0) {
+            vodusRewardCreateCookie('VODUS_LAST_PAGE', window.location.href, 3650);
+        }
+
+        var stateDataList = "";
+        var email = "@ViewData["AccountEmail"]";
+        var ccMainJSVersion = @Configuration.GetSection("AppSettings").GetSection("App")["ccMainJSVersion"];
+        $.ajax({
+            type: "GET",
+            dataType: 'json',
+            async: false,
+            url: '/GetProvinceList/1',
+            success: function (response) {
+                if (response.successful) {
+                    stateDataList = response.data;
+                    if (response.data != null) {
+                        var stateID = (vodusUser_config.getUserProvince() - 1);
+                        if (stateDataList[stateID] != null) {
+                            var state = stateDataList[stateID].name;
+                            console.log(state);
+                            $(".product-category-list a").each(function (index) {
+                                if (index == 0) {
+                                    return true;
+                                }
+                                var url = "https://" + document.location.host + "/" + $(this).attr('data-type-name').replace(" ", "-") /*+ "?location=" + state.replace(" ", "-")*/;
+                                $(this).attr("href", url)
+                            });
+                        }
+                    }
+                } else
+                    toastr.error(response.message);
+            },
+            error: function (error) {
+                toastr.error(error);
+            }
+        });
+
+        function GetProvinceList(countryId) {
+            if (countryId == 0) {
+                var options = "<option value='0'>Choose Province</option>";
+                $("#provinceSelect").html();
+                $("#provinceSelect").html(options);
+                return;
+            }
+
+            if (stateDataList != null) {
+                $(stateDataList).each(function (index, item) {
+                    options += "<option value=" + item.id + ">" + item.name + "</option>";
+                });
+                $("#provinceSelect").html(options);
+            }
+        }
+
+        function GetDistrictList(provinceId) {
+            if (provinceId == 0) {
+                var options = "<option value='0'>Choose District</option>";
+                $("#distritSelect").html();
+                $("#distritSelect").html(options);
+                return;
+            }
+
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/GetDistrictList/' + provinceId,
+                success: function (response) {
+                    var options = "<option value='0'>Choose District</option>";
+                    $("#distritSelect").html();
+                    if (response.successful) {
+                        if (response.data != null) {
+                            $(response.data).each(function (index, item) {
+                                options += "<option value=" + item.id + ">" + item.name + "</option>";
+                            });
+                            $("#distritSelect").html(options);
+                        }
+                    } else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        GetProvinceList(1);
+        if (vodusUser_config.getUserProvince() == null || vodusUser_config.getUserProvince() == undefined) {
+            vodusUser_config.addToUser_config(14);
+            $("#provinceSelect").val(14);
+        }
+        else {
+            $("#provinceSelect").val(vodusUser_config.getUserProvince());
+            $("#provinceSelect").find("option[value=" + vodusUser_config.getUserProvince() + "]").attr("selected", "selected");
+        }
+
+
+        $("#provinceSelect").on("change", function () {
+            var stateVal = $("#provinceSelect").val();
+            $("#provinceSelect option[selected=selected]").removeAttr("selected");
+            $(this).find("option[value=" + stateVal + "]").attr("selected", "selected");
+            vodusUser_config.addToUser_config(stateVal);
+        });
+
+
+        $(".product-search-btn").on("click", function () {
+            var value = $(this).parents().parents().find(".product-search-input").val().toLowerCase();
+            if (value != "") {
+                document.location = "/search?keyword=" + value;
+            }
+        });
+
+        $('.product-search-input').on('search', function () {
+            var value = $(this).val().toLowerCase();
+            if (value != "") {
+                document.location = "/search?keyword=" + value;
+            }
+        });
+
+        function gainPointGetQuestion() {
+            var token = vodusRewardReadCookie("Vodus.Token");
+
+            if (token == null || token == "") {
+                console.log("null token");
+                $.ajax({
+                    type: "GET",
+                    dataType: 'json',
+                    cache: false,
+                    url: serverlessUrl + '/api/token/check',
+                    success: function (response) {
+                        if (response.successful) {
+                            console.log("null token OK");
+                            if (response.data != null && response.data != null) {
+                                var date = new Date();
+                                date.setTime(date.getTime() + (3650 * 24 * 60 * 60 * 1000));
+                                var expires = "; expires=" + date.toGMTString();
+                                //document.cookie = "Vodus.Token" + "=" + expires + response.data + "; SameSite=None;secure;path=/";
+                                var domain = "" + document.domain;
+
+                                document.cookie = "Vodus.Token" + "=" + response.data + expires + "; SameSite=None;secure; domain=" + domain + ";path=/";
+
+                                console.log("Done issuing a new token...");
+
+                                var preferLanguage = vodusRewardReadCookie("Vodus.Language");
+                                console.log(preferLanguage);
+                                if (preferLanguage == "0" || preferLanguage == "" || preferLanguage == null) {
+                                    $("#PreferredLanguageModal").modal('show');
+                                }
+                                else {
+                                    try {
+                                        vodusRewardCommercialCallback();
+                                    }
+                                    catch (err) {
+                                        console.log(err);
+                                        toastr.error("Sorry, Gain VPoints feature is not available at the moment");
+                                    }
+
+                                }
+                            }
+                            else {
+                                console.log("null token fail");
+                            }
+
+                        }
+                    },
+                    error: function (err) {
+                        console.log(err)
+                    }
+                });
+            }
+            else {
+
+                /*
+                var isSynced = vodusRewardReadCookie("Vodus.Token.Email.Sync");
+                if (isSynced == "true") {
+                    vodusRewardDeleteCookie("Vodus.Token.Email.Sync");
+                    isSynced = vodusRewardReadCookie("Vodus.Token.Email.Sync");
+                }
+
+                if (email != "" && token != null && !isSynced) {
+
+                    var data = {
+                        Token: token,
+                        Email:  email,
+                    }
+                    vodusRewardDeleteCookie("Rewards.Temporary.Points");
+                    vodusRewardDeleteCookie("Vodus.Token");
+                    vodusRewardDeleteCookie("Rewards.Account.Email");
+                    vodusRewardDeleteCookie("Vodus.Language");
+                    vodusRewardDeleteCookie("vodus_device_sync_at");
+                    $(".userPoints").html("0");
+                    $(".reward-login-top-menu").show();
+                    $(".reward-logout-top-menu").hide();
+                    $(".reward-login-username").html('');
+                    vodusRewardCreateCookie('Vodus.Token.Email.Sync', "yes", 365);
+                    $("#navLogin").click();
+                    return;
+
+                }
+                */
+
+                var preferLanguage = vodusRewardReadCookie("Vodus.Language");
+                console.log(preferLanguage);
+                if (preferLanguage == "0" || preferLanguage == "" || preferLanguage == null) {
+                    $("#PreferredLanguageModal").modal('show');
+                }
+                else {
+                    try {
+                        vodusRewardCommercialCallback();
+                    }
+                    catch {
+                        toastr.error("Sorry, Gain VPoints feature is not available at the moment");
+                    }
+
+                }
+            }
+        }
+
+        function vodusRewardCommercialCallback() {
+            vodus.setSubmitResponseCallback("vodusRewardCommercialCallback", "");
+            vodus.setNoQuestionCallback("VodusRewardNoQuestionAvailable", "");
+            vodus.setRewardGetQuestionCallback("getQuestionCallback", "");
+            vodus.setRewardLoginCallback("updateRewardLogin", "");
+            vodus.setRewardLogoutCallback("updateRewardLogout", "");
+            vodus.setRewardCreateAccountCallback("updateRewardLogin", "");
+            vodus.setSkipQuestionStatusCheck(true);
+            var preferLanguage = vodusRewardReadCookie("Vodus.Language");
+            if (preferLanguage != "") {
+                vodus.setLanguageCode(preferLanguage);
+            }
+
+            if (ccMainJSVersion == 1) {
+                vodus.getQuestion();
+            }
+        }
+
+        function getQuestionCallback() {
+            //var VodusPoint = vodus.getAvailablePoint()
+            getDeviceProfile(true);
+            //$(".userPoints").html((readCookie('Rewards.Temporary.Points') == null ? "0" : readCookie('Rewards.Temporary.Points')) + " VPoints");
+        }
+
+        function updateRewardLogin() {
+
+            var vodusToken = vodusRewardReadCookie("Vodus.Token");
+            var vodusEmail = vodus.getEmail();
+
+            //console.log('points...' + readCookie('Rewards.Temporary.Points'))
+            //$(".userPoints").html((readCookie('Rewards.Temporary.Points') == null ? "0" : readCookie('Rewards.Temporary.Points')) + " VPoints");
+
+            getDeviceProfile(true);
+            if (vodusToken == "") {
+                $(".reward-login-top-menu").show();
+                $(".reward-logout-top-menu").hide();
+                $(".reward-login-username").html('');
+            }
+            else {
+                $(".reward-login-top-menu").hide();
+                $(".reward-logout-top-menu").show();
+                $(".reward-login-username").html(vodusEmail);
+            }
+            if (vodus.getPreferredLanguage() != "") {
+                vodus.setLanguageCode(vodus.getPreferredLanguage());
+            }
+
+            closeAllVodusModal();
+            gainPointGetQuestion();
+        }
+
+        function updateRewardLogout() {
+            vodusRewardDeleteCookie("Vodus.Language");
+            vodusRewardDeleteCookie("Rewards.Account.Email");
+            $(".userPoints").html("0");
+            $(".reward-login-top-menu").show();
+            $(".reward-logout-top-menu").hide();
+            $(".reward-login-username").html('');
+            location.reload();
+        }
+
+        function VodusRewardNoQuestionAvailable() {
+            /*
+            if ($("#vodusQuestionModal").length > 0) {
+
+              $("#vodusQuestionModal").modal({
+                show: true,
+                keyboard: true,
+                backdrop: true
+              });
+
+              //$("#vodusQuestionModal").css('display', 'block');
+              $("#divQuestionaireEditorContainer").empty();
+              $("#divQuestionaireEditorContainer").css("background-color", "#fff");
+              $("#divQuestionaireEditorContainer").append("<div></div>").addClass("thankYouMessage");
+              $(".thankYouMessage").html("<span>There are no more questions for you. Thank you for completing our surveys.</span>").addClass("vodus-reward-no-question-available");
+            }
+            else {
+              //alert("There are no more questions for you. Thank you for completing our surveys.");
+              toastr.success("There are no more questions for you now. Please try again later");
+            }
+            */
+
+            if (ccMainJSVersion == 1) {
+                if ($("#divQuestionaireEditorContainer").length > 0) {
+
+                    $("#divQuestionaireEditorContainer").append("<div></div>").addClass("thankYouMessage");
+                    var prefLanguage = vodusRewardReadCookie("Vodus.Language");
+                    if (prefLanguage == 'ms') {
+                        $(".thankYouMessage").html("<span class='i18next' data-i18n='common.no-more-question'>Tiada soal selidik buat masa ini. Terima kasih atas kerjasama anda menjawab soal selidik kami.</span>").addClass("vodus-reward-no-question-available");
+                    }
+                    else if (prefLanguage == 'zh') {
+                        $(".thankYouMessage").html("<span class='i18next' data-i18n='common.no-more-question'>您已回答所有问题， 感谢您完成我们的调查</span>").addClass("vodus-reward-no-question-available");
+                    }
+                    else {
+                        $(".thankYouMessage").html("<span class='i18next' data-i18n='common.no-more-question'>There are no more questions for you. Thank you for completing our surveys.</span>").addClass("vodus-reward-no-question-available");
+                    }
+                }
+                else {
+                    toastr.success("There are no more questions for you now. <br/> Please try again later.");
+                }
+            }
+        }
+
+        function VodusRewardClickToClose() {
+            $('.modal').modal('hide');
+        }
+
+
+
+        function googleLogin(GoogleEmail, PartnerCode) {
+            toastr.clear();
+            var token = readCookie('Vodus.Token');
+            var data = {
+                partnerCode: PartnerCode,
+                token: token,
+                email: GoogleEmail,
+                password: "",
+                loginProvider: "Google",
+                externalUserId: "",
+            }
+            $('#btnVodusLogin').prop('disabled', true);
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(data),
+                url: apiUrl +"/v1/authentication/EmailLogin",
+                success: function (response) {
+                    $('#btnVodusLogin').prop('disabled', false);
+                    if (response.successful) {
+                        var language = readCookie('Vodus.Language');
+                        if (language == null) {
+                            language = "en"
+                        }
+                        if (language == "ms") {
+
+                            toastr.success('', '<h4>Anda telah berjaya log masuk ke akaun Vodus anda</h4>');
+                        }
+                        else if (language == "zh") {
+                            toastr.success('', '<h4>您已成功登录Vodus帐户</h4>');
+                        }
+                        else {
+
+                            toastr.success('', '<h4>You have successfully logged in to your Vodus account</h4>');
+                        }
+                        $("#toast-container").addClass("vodus-responded-toast");
+                        vodusRewardCreateCookie('Vodus.Token', response.data.Token, 3650);
+                        if (location.href.indexOf("ReturnUrl=%2Fprofile") > 0) {
+                            location.href = "/";
+                        }
+                        location.reload();
+                    }
+                    else {
+                        $("#vodusLoginLoader").hide();
+                        var language = readCookie('Vodus.Language');
+                        if (language == "ms") {
+                            toastr.error("Butiran log masuk anda tidak sah");
+                        }
+                        else if (language == "zh") {
+                            toastr.error("无效的登录信息");
+                        }
+                        else {
+                            toastr.error("Invalid login details");
+                        }
+                        return false;
+
+                    }
+                },
+                error: function (err) {
+                    $("#vodusLoginLoader").hide();
+                    toastr.error("");
+                }
+            });
+        }
+        function shopMenu() {
+            if ($('#shop-menu').hasClass('hidden')) {
+                $('#shop-menu').removeClass('hidden');
+                $('.overlay').removeClass('hidden');
+                $('body').css('overflow', 'hidden');
+            } else {
+                $('#shop-menu').addClass('hidden');
+                $('.overlay').addClass('hidden');
+                $('body').css('overflow', '');
+            }
+            $('#profile-menu').addClass('hidden');
+            $('#chat-menu').addClass('hidden');
+        };
+        function chatMenu() {
+            if ($('#chat-menu').hasClass('hidden')) {
+                $('#chat-menu').removeClass('hidden');
+                $('.overlay').removeClass('hidden');
+                $('.mobile-bottom-bar').css('bottom', '-60px');
+                $('body').css('overflow', 'hidden');
+            } else {
+                $('#chat-menu').addClass('hidden');
+                $('.overlay').addClass('hidden');
+                $('.mobile-bottom-bar').css('bottom', '0');
+                $('body').css('overflow', '');
+            }
+            $('#profile-menu').addClass('hidden');
+            $('#shop-menu').addClass('hidden');
+        };
+
+        $(".profileMenu").click(function () {
+            if ($('#profile-menu').hasClass('hidden')) {
+                $('#profile-menu').removeClass('hidden');
+                $('.overlay').removeClass('hidden');
+                $('body').css('overflow', 'hidden');
+            } else {
+                $('#profile-menu').addClass('hidden');
+                $('.overlay').addClass('hidden');
+                $('body').css('overflow', '');
+            }
+            $('#shop-menu').addClass('hidden');
+            $('#chat-menu').addClass('hidden');
+        });
+
+        $("#btnFilter").click(function () {
+            if ($(".product-filter").hasClass("show")) {
+                $(".product-filter").removeClass("show");
+                $('body').css('overflow', '');
+            } else {
+                $(".product-filter").addClass("show");
+                $(".mobile-left-menu").addClass("hidden");
+                $('.overlay').addClass('hidden');
+                $('body').css('overflow', 'hidden');
+            }
+        });
+        $(".product-filter .close-btn-img").click(function () {
+            $(".product-filter").removeClass("show")
+        })
+
+        function toggleHamburgerFunction() {
+            if ($('.navbar-right').hasClass('navbar-right-hide')) {
+                $('.navbar-right').removeClass('navbar-right-hide');
+                $('.navbar-right > li').addClass('loaded');
+            } else {
+                $('.navbar-right').addClass('navbar-right-hide');
+                $('.navbar-right > li').removeClass('loaded');
+            }
+        }
+
+        function closeHamburgerFunction() {
+            $(".navbar-right").addClass('navbar-right-hide');
+            $('.navbar-right > li').removeClass('loaded');
+            $('.mobile-left-menu').addClass('hidden');
+            $('.overlay').addClass('hidden');
+            $('body').css('overflow', '');
+            $('.mobile-bottom-bar').css('bottom', '0');
+        }
+
+        function localizePage() {
+            var prefLanguage = vodusRewardReadCookie("Vodus.Language");
+            i18next
+                .use(i18nextXHRBackend)
+                .init({
+                    lng: prefLanguage,
+                    fallbackLng: 'en',
+                    backend: {
+                        loadPath: '/locales/{{lng}}/translation.json'
+                        // loadPath: appUrl + '/locales/{{lng}}/translation.json?id=1234578910'
+                        //  loadPath: 'https//vodus-rewards-uat.azurewebsites.net/content/locales/{{lng}}/translation.json?id=1234578910'
+                        // loadPath: 'localhost:63828/content/locales/{{lng}}/translation.json?id=12345'
+                        // loadPath: 'https://localhost:44301/locales/en/translation.json'
+                    },
+                    debug: false
+                }, function (err, t) {
+                    jqueryI18next.init(i18next, $);
+                    $('.i18next').localize();
+                });
+        }
+
+        var readCookie = function (name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        };
+
+        function createRewardGoogleAccount(email, password) {
+            if (email != "" && password != "") {
+                //var token = vodus.readCookie('Vodus.Token');
+                var token = vodusRewardReadCookie('Vodus.Token');
+                var syncToken = getParameterByName("token");
+                var tempToken = getParameterByName("tempToken");
+                var data = {
+                    partnerCode: "vodus-reward",
+                    email: email,
+                    password: password,
+                    loginProvider: "Google",
+                    token: token,
+                    syncToken: syncToken,
+                    tempToken: tempToken
+                }
+                toastr.warning("Loading...");
+                $.ajax({
+                    global: false,
+                    type: 'POST',
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(data),
+                    //data: { email: email, password: password, Provider: 'Google', token: vodusRewardReadCookie('Vodus.Token') },
+                    url: apiUrl + "/v1/authentication/CreateAccount",
+                    success: function (response) {
+                        if (response.successful) {
+                            $("#vodusRewardLoginModal").modal('hide');
+
+                            //toastr.success(response.message);
+                            //  Update CC token
+                            if (response.data != null) {
+                                if (response.data.Token != null) {
+                                    vodusRewardCreateCookie('Vodus.Token', response.data.Token, 3650);
+                                    //  Update 3P token
+                                    console.log('updating 3P ' + response.data.Token);
+                                    if (ccMainJSVersion == 1) {
+                                        vodus.setToken(response.data.Token);
+                                        vodus.update3PToken(response.data.Token);
+                                    }
+                                }
+                            }
+                            else {
+                                location.reload();
+                            }
+                        }
+                        else {
+                            $("#vodusSignupLoader").hide();
+                            toastr.options = {
+                                allowHtml: true
+                            }
+                            if (response.message == 'Email already reqistered. Try to login instead') {
+                                $(".toast-warning").remove();
+                                googleLogin(email, data.partnerCode);
+                            }
+                            else
+                                toastr.error(response.message);
+                        }
+                    },
+                    error: function () {
+                        $(".toast-warning").remove();
+                    }
+                });
+            }
+            else {
+                toastr.error("Email and password is required");
+            }
+        }
+
+        function onRewardSuccess(googleUser) {
+            if (googleUser == null) {
+                googleUser = globalGoogleUser;
+            }
+            var profile = googleUser.getBasicProfile();
+            var googleToken = googleUser.getAuthResponse().id_token;
+            login(profile.getEmail(), '', 'google', googleToken);
+        }
+        function onRewardFailure(error) {
+            console.log('Google API: ' + error);
+
+        }
+
+        function initRewardGoogleLogin() {
+            gapi.load('auth2', function () {
+                auth2 = gapi.auth2.init({
+                    client_id: '@Configuration.GetSection("AppSettings").GetSection("App")["GoogleLoginClientId"]',
+                    fetch_basic_profile: false,
+                    scope: 'profile email',
+                    ux_mode: 'redirect',
+                    response_type: 'id_token',
+                    redirect_uri: '@Configuration.GetSection("AppSettings").GetSection("App")["GoogleLoginRedirectUrl"]'
+                });
+                auth2.isSignedIn.listen(signinChanged);
+                auth2.currentUser.listen(userChanged);
+                auth2.attachClickHandler(document.getElementById('vodusGoogleLogin'), {},
+                    onRewardSuccess, onRewardFailure);
+            });
+        }
+
+        $('.g_signin_btn').click(function () {
+            $('#vodusGoogleLogin').click();
+        })
+
+        var signinChanged = function (val) {
+        };
+
+        var userChanged = function (user) {
+            if (user.getId()) {
+                globalGoogleUser = user;
+            }
+        };
+
+        function getProductCategoryList() {
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                async: false,
+                url: '@Url.Action("getProductCategoryList", "Home")',
+                success: function (response) {
+                    if (response.successful) {
+                        if (response.data != null) {
+                            var categoryList = " <button type='button' class='prod-type-btn selectedProductType' data-type-id='0'><span class='i18next' data-i18n='common.all'>All</span></button>";
+                            $.each(response.data, function (i, item) {
+                                categoryList = categoryList + " <button type='button' class='prod-type-btn selectedProductType' data-type-id='" + item.id + "'><span class='i18next' data-i18n='common." + item.name + "'>" + item.name + "</span></button>";
+                            });
+                            $("#productCategoryFilter").html(categoryList);
+                        }
+                    } else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+
+        function createPreferLanguageCookies() {
+          var previousCookies = vodusRewardReadCookie("Vodus.Language");
+          var isGetQuestion = vodusRewardReadCookie("Vodus.GetQuestion");
+
+          if (previousCookies == "") {
+            vodusRewardCreateCookie("Vodus.Language", "@ViewData["PreferLanguage"]", 3650);
+          }
+          else
+          {
+            vodus.setLanguageCode(previousCookies);
+          }
+
+          $("#btnRewardGainPoint").removeAttr("disabled");
+          $(".mobile-bottom-bar #btnRewardGainPoint").removeAttr("disabled");
+
+          autoGainVpoints();
+          pageloadLogin();
+
+            if (isGetQuestion == "1") {
+                vodusRewardCommercialCallback();
+            }
+            else {
+                console.log('loading..');
+                getDeviceProfile(false);
+            }
+        }
+
+        function login(email, password, loginProvider, thirdPartyToken) {
+            toastr.warning("Loading...");
+            var token = readCookie('Vodus.Token');
+            var syncToken = getParameterByName("token");
+            var tempToken = getParameterByName("tempToken");
+
+            var deviceId = "";
+            if (isFingerprintingEnabled) {
+                deviceId = readCookie('vodus_device_id');
+            }
+
+            $.ajax({
+                global: false,
+                type: 'POST',
+                data: { syncToken: syncToken, tempToken: tempToken, deviceId: deviceId,email: email, password: password, token: token, loginProvider: loginProvider, thirdPartyToken: thirdPartyToken, RedirectToCheckOut: true },
+                url: "@Url.Action("Validate", "Identity")",
+                success: function (response) {
+                    if (response.successful) {
+                        $("#vodusRewardLoginModal").modal('hide');
+                        toastr.success("Please wait while we sync your data.");
+                        $(".toast-warning").remove();
+
+                        vodusCart.syncLocalCartItems();
+
+                        var url = location.href.toLowerCase();
+
+                        //  sync to api page
+                        if ($("#voupon3P").length == 0) {
+                            $("<div>").attr({
+                                'class': "",
+                                'id': "voupon3P"
+                            }).appendTo("body");
+                        }
+
+                        $("#voupon3P").html('<iframe id="vodus3PTest" width="0" height="0"  src="' + apiUrl + '/v1/token/create?partnerCode=&token=' + response.data.token + '" frameborder="0" allowfullscreen></iframe>');
+
+                        if (url.indexOf("returnurl=") > 0) {
+                            var returnURL = getParameterByName("returnurl",url);
+                            if (window.history.replaceState) {
+                                window.history.replaceState({}, null, returnURL);
+                            }
+                        }
+                        if (url.indexOf("sync?syncType") > 0) {
+                            var partnerWebsiteId = getParameterByName("partnerWebsiteId");
+                            if (window.history.replaceState) {
+                                window.history.replaceState({}, null, '/sync/loginsuccess?partnerWebsiteId=' + partnerWebsiteId);
+                            }
+                        }
+
+                        if (response.data != null) {
+                            if (response.data.token != null) {
+                                console.log('Logging in...');
+                                vodusRewardCreateCookie('Vodus.Token', "", -3650);
+                                vodusRewardCreateCookie('Vodus.Token', response.data.token, 3650);
+                                $(".userPoints").html((readCookie('Rewards.Temporary.Points') == null ? "0" : readCookie('Rewards.Temporary.Points')));
+                                if (ccMainJSVersion == 1) {
+                                    try {
+
+                                        vodus.setToken(response.data.token);
+                                        vodus.update3PToken(response.data.token);
+                                    }
+                                    catch (err) {
+                                        console.log(err);
+                                    }
+                                }
+
+                                console.log('Completed login data sync...');
+
+
+                                if (window.location.href.indexOf('/hut/') > -1) {
+                                    if (window.location.href.indexOf('/google') > -1) {
+                                        var vodusLastPage = vodusRewardReadCookie('VODUS_LAST_PAGE');
+                                        if (vodusLastPage != null && vodusLastPage != "") {
+                                            location.href = vodusLastPage;
+                                        }
+
+                                    }
+                                    else {
+                                        location.reload();
+                                    }
+                                }
+                                else {
+                                    if (window.location.href.indexOf('/google') > -1) {
+                                        var vodusLastPage = vodusRewardReadCookie('VODUS_LAST_PAGE');
+                                        if (vodusLastPage != null && vodusLastPage != "") {
+                                            location.href = vodusLastPage;
+                                        }
+
+                                    }
+                                    else if (window.location.href.indexOf('/sync') > -1) {
+                                        var partnerWebsiteId = getParameterByName("partnerWebsiteId");
+                                        location.href = '/sync/loginsuccess?partnerWebsiteId=' + partnerWebsiteId;
+                                    }
+                                    else {
+                                        location.reload();
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            if (window.location.href.indexOf('/hut/') > -1) {
+                                if (window.location.href.indexOf('/google') > -1) {
+                                    var vodusLastPage = vodusRewardReadCookie('VODUS_LAST_PAGE');
+                                    if (vodusLastPage != null && vodusLastPage != "") {
+                                        location.href = vodusLastPage;
+                                    }
+
+                                }
+                                else {
+                                    if (window.location.href.indexOf('/google') > -1) {
+                                        var vodusLastPage = vodusRewardReadCookie('VODUS_LAST_PAGE');
+                                        if (vodusLastPage != null && vodusLastPage != "") {
+                                            location.href = vodusLastPage;
+                                        }
+
+                                    }
+                                    else if (window.location.href.indexOf('/sync') > -1) {
+                                        var partnerWebsiteId = getParameterByName("partnerWebsiteId");
+                                        location.href = '/sync/loginsuccess?partnerWebsiteId=' + partnerWebsiteId;
+                                    }
+                                    else {
+                                        location.reload();
+                                    }
+                                }
+                            }
+                            else {
+                                if (window.location.href.indexOf('/google') > -1) {
+                                    var vodusLastPage = vodusRewardReadCookie('VODUS_LAST_PAGE');
+                                    if (vodusLastPage != null && vodusLastPage != "") {
+                                        location.href = vodusLastPage;
+                                    }
+                                }
+                                else if (window.location.href.indexOf('/sync') > -1) {
+                                    var partnerWebsiteId = getParameterByName("partnerWebsiteId");
+                                    location.href = '/sync/loginsuccess?partnerWebsiteId=' + partnerWebsiteId;
+                                }
+                                else {
+                                    location.reload();
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        $(".toast-warning").remove();
+                        toastr.clear();
+                        toastr.error(response.message);
+                    }
+                },
+                error: function (result) {
+                    $(".toast-warning").remove();
+                    toastr.error(result.responseText);
+                }
+              });
+        }
+
+        $(document).ready(function () {    //  Start document ready
+
+            $('.modal').on('shown.bs.modal', function () {
+                $('.rotatingContainer').hide();
+            })
+
+            $('.modal').on('hide.bs.modal', function () {
+                $('.rotatingContainer').show();
+            })
+
+            if ($(window).width() < 992) {
+                $(".chat-list-desktop").remove();
+                $(".chat-body").remove();
+                $(".chat-open").remove();
+            }
+            else {
+                $(".chat-list-mobile").remove();
+                $(".chat-body-mobile").remove();
+                $(".chat-open").show();
+            }
+            $(function () {
+                $('#txtMessage').emoji({
+                    listCSS: {
+                        position: 'absolute',
+                        bottom: '57px',
+                        border: '1px solid gray',
+                        display: 'none'
+                    }
+                });
+            });
+
+            $('#loading').hide();
+            $(document)
+                .ajaxStart(function () {
+                    toastr.warning("Loading...");
+                })
+                .ajaxStop(function () {
+                    $(".toast-warning").remove();
+                });
+
+            var minContentHeight = $('body').outerHeight() - $(".footer-content").outerHeight() - $(".footer-copyright").outerHeight();
+
+            minContentHeight = minContentHeight - 15;
+            if (minContentHeight !== undefined && minContentHeight > 0) {
+                // $("#page-wrapper").css("min-height", minContentHeight + "px");
+            }
+
+            var cartSetup = {
+                cartCounterClass: "cartProductCount"
+            }
+
+            if (vodusCart.init(cartSetup)) {
+                if (!vodusCart.isLocalStorageAvailable()) {
+                    toastr.error("Localstorage not enable.. Cart functions are not available");
+                    return;
+                }
+                vodusCart.updateCartCounter();
+
+                $("#btnToCart").click(function () {
+
+                    if ('@((ViewData["AccountEmail"] != null ? ViewData["AccountEmail"].ToString() : ""))' == '') {
+                        $(".vouponLogin").click();
+                        return false;
+                    }
+                    if ($(".cartProductCount").html() == "(0)") {
+                        toastr.error("No Cart Item");
+                        return false;
+                    }
+                });
+
+                $("#btnToCartMobile").click(function () {
+
+                    if ('@((ViewData["AccountEmail"] != null ? ViewData["AccountEmail"].ToString() : ""))' == '') {
+                        $(".vouponLogin").click();
+                        return false;
+                    }
+                    if ($(".cartProductCount").html() == "(0)") {
+                        toastr.error("No Cart Item");
+                        return false;
+                    }
+                });
+            }
+
+            if ("@ViewData["AccountEmail"]" != "") {
+                vodusRewardCreateCookie('Rewards.Account.Email', '@ViewData["AccountEmail"]', 3650);
+                vodusRewardCreateCookie('Rewards.Temporary.Points', @(ViewData["AvailablePoints"] != null ? ViewData["AvailablePoints"].ToString() : "0"), 3650);
+            }
+            else {
+                vodusRewardDeleteCookie("Rewards.Account.Email");
+            }
+
+            getDeviceProfile(false);
+
+            /*
+            $(".userPoints").html((readCookie('Rewards.Temporary.Points') == null ? "0" : readCookie('Rewards.Temporary.Points')) + " VPoints");
+            let tempEmail = readCookie('Rewards.Account.Email');
+
+            if (tempEmail == null || tempEmail == "") {
+                $(".reward-login-top-menu").show();
+                $(".reward-logout-top-menu").hide();
+                $(".reward-login-username").html('');
+            }
+            else {
+                tempEmail = decodeURIComponent(tempEmail);
+                $(".reward-login-top-menu").hide();
+                $(".reward-logout-top-menu").show();
+                $(".reward-login-username").html(tempEmail);
+            }
+            */
+
+            $("#navLogin").css("color", "#fff");
+            var lang = docCookies.getItem("Vodus.Language");
+            if (lang != "") {
+                $(".languageSelector").each(function () {
+                    var language = this;
+                    if (lang == $(language).attr('data-code')) {
+                        $(this).addClass("selected-language");
+                    }
+                });
+            }
+
+            $(".languageSelector").click(function () {
+                var language = this;
+                $(".languageSelector").removeClass("selected-language");
+                $(this).addClass("selected-language");
+                vodusRewardCreateCookie("Vodus.Language", $(language).attr('data-code'), 300, true);
+            });
+
+            $(".vouponLogin").click(function () {
+
+                $("#vodusRewardLoginModal").modal('show');
+
+                $("#divRewardSignupModal").hide();
+                $("#divRewardLoginModal").show();
+
+                initRewardGoogleLogin();
+            });
+
+            $(".navRegister").click(function () {
+                $("#vodusRewardLoginModal").modal('show');
+
+                $("#divRewardSignupModal").show();
+                $("#divRewardLoginModal").hide();
+                initRewardGoogleLogin();
+            });
+
+            $("#btnShowVodusRewardSignup").click(function () {
+
+                $("#divRewardSignupModal").show();
+                $("#divRewardLoginModal").hide();
+            });
+
+            $("#btnShowVodusRewardLogin").click(function () {
+
+                $("#divRewardSignupModal").hide();
+                $("#divRewardLoginModal").show();
+            });
+
+
+            var req = getParameterByName("returnurl");
+            if (req != "" && req != null) {
+                $(".vouponLogin").click();
+            }
+
+            $("#sso-reward-desktop-container").removeClass("col-sm-9");
+
+            $("#btnVodusRewardLogin").click(function (e) {
+                e.preventDefault();
+                toastr.clear();
+                var email = $("#vodusRewardLoginEmail").val();
+                var password = $("#vodusRewardLoginPassword").val();
+                if (email != "" && password != "") {
+                    login(email, password, 'email', '');
+                }
+                else {
+                    toastr.error("Email and password is required");
+                }
+            });
+
+            $("#divPreferLanguageButton").find(".prefer-language-button").click(function () {
+                vodusRewardCreateCookie("Vodus.Language", $(this).attr("value"), 3650);
+                if (typeof vodus !== 'undefined' && typeof vodus === 'function') {
+                    vodus.setLanguageCode($(this).attr("value"));
+                }
+                if ("@User.Identity.Name" != "") {
+                    $.ajax({
+                        type: "POST",
+                        data: { PreferLanguageCode: $(this).attr("value") },
+                        url: "@Url.Action("UpdateMemberProfilePreferLanguage", "MyAccount")",
+                        success: function (response) {
+                        },
+                        error: function (err) {
+                        }
+                    });
+                }
+                $("#PreferredLanguageModal").modal('hide');
+                vodusRewardCommercialCallback();
+            });
+
+            $("#btnVodusRewardCreateAccount").click(function (e) {
+                $("#btnVodusRewardCreateAccount").attr("disabled", true);
+                e.preventDefault();
+                toastr.clear();
+                var email = $("#vodusRewardSignupEmail").val();
+                var password = $("#vodusRewardSignupPassword").val();
+
+                if (email != "" && password != "") {
+                    var pattern = /^([a-zA-Z0-9_\.\-\+])+\@@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/
+                    if (!pattern.test(email)) {
+                        toastr.error("Please enter a valid email address.");
+                        $("#vodusRewardSignupEmail").focus();
+                        $("#btnVodusRewardCreateAccount").attr("disabled", false);
+                        return;
+                    }
+                    if ($("#agreeTerm").prop("checked") == false) {
+                        $("#agreeTerm").focus();
+                        toastr.error("Please check Terms & Conditions to register");
+                        $("#btnVodusRewardCreateAccount").attr("disabled", false);
+                        return false;
+                    }
+                    var token = vodusRewardReadCookie('Vodus.Token');
+                    var reqFrom = $("#reqFrom").val();
+
+                    var deviceId = "";
+                    if (isFingerprintingEnabled) {
+                        deviceId = readCookie('vodus_device_id');
+                    }
+
+                    var syncToken = getParameterByName("token");
+                    var tempToken = getParameterByName("tempToken");
+
+                    toastr.warning("Loading...");
+                    $.ajax({
+                        global: false,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: { email: email, password: password, token: token, reqFrom: reqFrom, deviceId: deviceId, syncToken: syncToken, tempToken: tempToken},
+                        url: "@Url.Action("CreateAccount", "Identity")",
+                        success: function (response) {
+                            if (response.successful) {
+                                vodusCart.syncLocalCartItems();
+                                $("#vodusRewardLoginModal").modal('hide');
+                                toastr.success(response.message);
+                                //  Update CC token
+                                if (response.data != null) {
+                                    if (response.data.token != null) {
+                                        console.log('Logging in...');
+                                        vodusRewardCreateCookie('Vodus.Token', response.data.token, 3650);
+                                        //  Update 3P token
+                                        $(".userPoints").html((readCookie('Rewards.Temporary.Points') == null ? "0" : readCookie('Rewards.Temporary.Points')));
+
+
+                                        if (ccMainJSVersion == 1) {
+                                            vodus.setToken(response.data.token);
+                                            vodus.update3PToken(response.data.token);
+                                        }
+
+                                        //vodus.setToken(response.data.token);
+                                        console.log('Logging in...2');
+
+                                        console.log('Done syncing...');
+                                        $(".toast-warning").remove();
+                                        location.href = "/cart";
+                                    }
+                                }
+                                else {
+                                    if (location.href.indexOf("sync?syncType") > 0) {
+                                        if (window.history.replaceState) {
+                                            window.history.replaceState({}, null, '/');
+                                        }
+                                        location.href = "/cart";
+                                    }
+                                    else {
+                                        location.href = "/cart";
+                                    }
+                                }
+                            }
+                            else {
+                                $("#btnVodusRewardCreateAccount").attr("disabled", false);
+                                $(".toast-warning").remove();
+                                toastr.clear();
+                                toastr.error(response.message);
+                            }
+                        },
+                        error: function (res) {
+                            $("#btnVodusRewardCreateAccount").attr("disabled", false);
+                            toastr.error(res.responseText);
+                            $(".toast-warning").remove();
+                        }
+                    });
+                }
+                else {
+                    $("#btnVodusRewardCreateAccount").attr("disabled", false);
+                    toastr.error("Email and password is required");
+                }
+            });
+
+            //$(window).scroll(function () {
+            //    if ($(this).scrollTop() < 10) {
+            //        $(".top-navbar").removeClass('hide-topbar');
+            //   } else {
+            //        $(".top-navbar").addClass('hide-topbar');
+            //    }
+            //})
+
+            //Rotating Search Placeholder
+            var popularList = ['Tell us what you want', 'Search on Vodus'/*, 'Calbee Granola', 'Baju kanak', 'Blouse', 'Dress', 'Keyboard', 'Wireless Mouse', 'Milo', 'Farm Fresh', 'Chocolat',
+                'Maggi Goreng Cili Kampung', 'Hijab', 'Tudung', 'Telekung', 'Nescafe', 'Tealive', 'Suri', 'TNG Voucher', 'Vacuum cleaner', 'Table',
+                'Chair', 'Toys', 'Dyson', 'Xiaomi', 'Shampoo', 'Sabun', 'Lego', 'Speaker', 'Headphones', 'Battery', 'Lingerie', 'Pampers', 'Susu formula',
+                'Fresh milk', 'Nescafe', 'Kacang', 'Sambal', 'Belacan', 'Cili', 'Almari', 'Meja', 'Kerusi', 'Safi', 'Garnier', 'Rexona',
+                'Body shop', 'Innisfree', 'Lipstick', 'Tissue', 'Botol susu', 'Yoga mat', 'Fridge', 'Peti Sejuk', 'Air fryer', 'Toaster',
+                'Microwave', 'Cheddar cheese', 'Monitor', 'Fishing', 'Diving', 'Swim wear', 'Beach wear', 'Kiehl’s', 'SK-II'*/];
+
+            window.setInterval(function () {
+                var popular = popularList[Math.floor(Math.random() * popularList.length)];
+                $('.product-search-input').attr('placeholder', popular);
+            }, 2000)
+
+            if(email != null && email != "")
+            {
+                initializeChat();
+                GetChatMessages();
+            }
+
+            var logoutRedirectURL = '/logout?redirectURL=' + location.href;
+            $('.navLogout').attr("href", logoutRedirectURL);
+
+            $('#chatImages').on('change', function () {
+                imagesChatPreview(this, '#imageChatGallery');
+            });
+            $(".fa-camera").click(function () {
+                $('#chatImages').click();
+            });
+
+            $(".btn-back-to-list").click(function () {
+                $("#chatBody").hide();
+                $(".chat-list-mobile").show();
+            });
+
+            $(".chat-expand-shrink").click(function () {
+                if ($(window).width() < 992) {
+                        if ($(".clearfix.active").length == 0) {
+                            if ($("#plist").find(".welcome-to-chat").length > 0) {
+                                $("#chatBody").find(".chat-header").css('opacity','0');
+                                $("#chatBody").find(".chat-message").hide();
+                            }
+                            $("#usersList").children().first().click();
+                    }
+                        $("#chatBody").show();
+                    $(".chat-list-mobile").hide();
+
+                }
+                else {
+                    if ($(this).hasClass("chat-expand")) {
+                        if ($(".clearfix.active").length == 0) {
+                            if ($("#plist").find(".welcome-to-chat").length > 0) {
+                                $("#chatBody").find(".chat-header").css('opacity', '0');
+                                $("#chatBody").find(".chat-message").hide();
+                            }
+                            $("#usersList").children().first().click();
+                        }
+                        $(this).addClass("chat-shrink").removeClass("fa-angle-left");
+                        $(this).removeClass("chat-expand").addClass("fa-angle-right");
+                        $("#chatBody").show();
+                    }
+                    else {
+                        $("#chatBody").hide();
+                        $(this).addClass("chat-expand").addClass("fa-angle-left");
+                        $(this).removeClass("chat-shrink").removeClass("fa-angle-right");
+                    }
+                }
+            });
+
+            $(".chat-close").click(function () {
+                closeChatForm();
+            });
+        });// End of document ready
+
+        function numberWithCommas(x) {
+            if (x == null) {
+                return "";
+            }
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        (function (v, o, d, u, s, a, m) { v['VodusObject'] = s; v[s] = v[s] || function () { (v[s].q = v[s].q || []).push(arguments) }, v[s].l = 1 * new Date(); v['vodus']['cc-scroll-trigger'] = "0"; v['vodus']['interval'] = "0"; v['vodus']['ctc-interval'] = "0"; v["vodus"]["banner-mode"] = "0";v['vodus']['ccType'] = "1"; v['vodus']['demographic-cc-type'] = "1";v['vodus']['partner_code'] = "vodus-reward"; v['vodus']['interval'] = "0"; v['vodus']['modalClose'] = true; v['vodus']['language'] = "@ViewData["PreferLanguage"]"; a = o.createElement(d), m = o.getElementsByTagName(d)[0]; a.async = 1; a.src = u; m.parentNode.insertBefore(a, m) })(window, document, 'script', ccJSFileUrl, 'vodus');
+        vodus("init", "createPreferLanguageCookies");
+
+        //Trigger Gain VPoints upon page load if URL parameter == gainvpoints
+        function autoGainVpoints() {
+            var sPageURL = window.location.search.substring(1),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i];
+
+                if (sParameterName === "gainvpoints") {
+                    gainPointGetQuestion();
+                }
+            }
+        }
+
+        //Trigger Login upon page load if URL parameter == login
+        function pageloadLogin() {
+            var sPageURL = window.location.search.substring(1),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i];
+
+                if (sParameterName === "login") {
+                    $("#navLogin").click();
+                }
+            }
+        }
+
+        $("#btnSubscribe").click(function () {
+            var subsriberEmail = $("#subsriberEmail").val();
+            if (subsriberEmail == null || subsriberEmail == "") {
+                toastr.error("Please enter your email");
+                return;
+            }
+            $("#btnSubscribe").prop('disabled', true).text('Sending...');
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                data: { email: subsriberEmail },
+                url: "/api/v1/promocode/subscribe",
+                success: function (response) {
+                    toastr.success("Thank you for subscribing to Vodus. Check your email for your promo code");
+                    $("#promoCodeModal").modal('hide');
+                    $("#btnSubscribe").prop('disabled', false).text('Send me');
+                },
+                error: function (err) {
+                    $("#btnSubscribe").prop('disabled', false).text('Send me');
+                }
+            });
+        });
+
+    </script>
+    <script>
+    var isChatCard = false;
+    var isChatCardSend = false;
+
+    function initializeChat() {
+        axios.get('@Configuration.GetSection("AppSettings").GetSection("App")["ChatAPIUrl"]' + "/api/negotiate",
+            {
+              headers: {
+                    'x-ms-client-principal-id': "@ViewData["AccountEmail"]" + "_v",
+                    'chat-token' : "@ViewData["ChatToken"]"
+             }
+            }).then(response => {
+                const options = {
+                    accessTokenFactory: () => response.data.accessToken
+                }
+                const connection = new signalR.HubConnectionBuilder()
+                    .withUrl(response.data.url, options)
+                    .build(signalR.HttpTransportType.None)
+
+                connection.on('newMessage', (messageObj) => {
+                    if ($("#usersList > .clearfix.active").attr("user-name") == messageObj.Sender && $("#chatBody").css("display") != "none") {
+                        var message = $("#messegegeTemplate").children().first().clone();
+
+                        message.find(".message-data-time").html(moment().format("DD-MM-YYYY HH:mm"));
+                        message.find(".message").html(messageObj.Text);
+
+                        message.find(".message").removeClass("my-message").removeClass("float-right").addClass("other-message");
+                        message.find(".message-data").removeClass("text-right");
+                        message.find(".message-data").append(message.find(".message-data-time"));
+                        $("#messagesList").append(message);
+                    }
+                    else if ($("#usersList > .clearfix.active").attr("user-name") == messageObj.Sender && $("#chatBody").css("display") == "none") {
+                        $("#usersList > .clearfix").each(function () {
+                            if ($(this).attr("user-name") == messageObj.Sender) {
+                                if ($(this).find(".about").find(".notification-message").length > 0) {
+                                    $(this).find(".about").find(".notification-message").attr("number", parseInt($(this).find(".about").find(".notification-message").attr("number")) + 1);
+                                    $(this).find(".about").find(".notification-message").html($(this).find(".about").find(".notification-message").attr("number"));
+                                }
+                                else {
+                                    $(this).find(".about").append('<span class="badge badge-primary badge-pill notification-message" style="float: right;" number="1">1</span>');
+                                }
+                                if ($(".chat-open").css("display") == "none") {
+                                    if ($(".chat-main-header").find(".notification-header").length > 0) {
+                                        $(".chat-main-header").find(".notification-header").attr("number", parseInt($(".chat-main-header").find(".notification-header").attr("number")) + 1);
+                                    }
+                                    else {
+                                        $(".chat-main-header").append('<span class="badge badge-primary badge-pill notification-header" style="float: left;" number="1">1</span>');
+                                    }
+                                }
+                                else {
+                                    if ($(".chat-open").find(".notification-icon").length > 0) {
+                                        $(".chat-open").find(".notification-icon").attr("number", parseInt($(".chat-open").find(".notification-icon").attr("number")) + 1);
+                                    }
+                                    else {
+                                        $(".chat-open").append('<span class="badge badge-primary badge-pill notification-icon" style="float: right;" number="1">1</span>');
+                                    }
+                                }
+
+                                isChatExist = true;
+                                return false;
+                            }
+                        });
+                    }
+                    else {
+                        var isChatExist = false;
+                        $("#usersList > .clearfix").each(function () {
+                            if ($(this).attr("user-name") == messageObj.Sender) {
+                                if ($(this).find(".about").find(".notification-message").length > 0) {
+                                    $(this).find(".about").find(".notification-message").attr("number", parseInt($(this).find(".about").find(".notification-message").attr("number")) + 1);
+                                    $(this).find(".about").find(".notification-message").html($(this).find(".about").find(".notification-message").attr("number"));
+                                }
+                                else {
+                                    $(this).find(".about").append('<span class="badge badge-primary badge-pill notification-message" style="float: right;" number="1">1</span>');
+                                }
+                                if ($(".chat-open").css("display") == "none") {
+                                    if ($(".chat-main-header").find(".notification-header").length > 0) {
+                                        $(".chat-main-header").find(".notification-header").attr("number", parseInt($(".chat-main-header").find(".notification-header").attr("number")) + 1);
+                                    }
+                                    else {
+                                        $(".chat-main-header").append('<span class="badge badge-primary badge-pill notification-header" style="float: right;" number="1">1</span>');
+                                    }
+                                }
+                                else {
+                                    if ($(".chat-open").find(".notification-icon").length > 0) {
+                                        $(".chat-open").find(".notification-icon").attr("number", parseInt($(".chat-open").find(".notification-icon").attr("number")) + 1);
+                                    }
+                                    else {
+                                        $(".chat-open").append('<span class="badge badge-primary badge-pill notification-icon" style="float: right;" number="1">1</span>');
+                                    }
+                                }
+
+                                isChatExist = true;
+                                return false;
+                            }
+                        });
+                        if (!isChatExist) {
+                            var user = $("#userTemplate").children().first().clone();
+
+                            user.find(".name").html(messageObj.SenderName);
+                            user.find(".user-img").attr("src", messageObj.ImageUrl);
+                            user.attr("data-id", messageObj.ChatGroupId);
+                            user.attr("user-name", messageObj.Sender);
+                            user.find(".about").append('<span class="badge badge-primary badge-pill notification-message" style="float: right;" number="1">1</span>');
+                            $(user).click(function () {
+                                $(this).parent().children().removeClass("active");
+                                $(this).addClass("active");
+                                $(this).find(".notification-message").remove();
+                                $("#messagesList").html("");
+                                var chatId = $(this).attr("data-id");
+                                $("#chatBody").find(".chat-about").find(".user-email").html($(this).attr("user-name"));
+                                $("#chatBody").find(".chat-about").find(".user-name").html($(this).find(".name").html());
+                                $(".chat-user-img").attr("src", $(this).find(".user-img").attr("src"));
+                                getMessages(chatId);
+                            });
+                            $("#usersList").append(user);
+
+                        }
+                    }
+                    $('.chat-history').scrollTop($('.chat-history').find("#messagesList").height());
+                });
+                connection.onclose(() => console.log('disconnected'));
+                console.log('connecting...');
+
+                connection.start({ withCredentials: true })
+                    .then(() => console.log('ready...'))
+                    .catch(console.error);
+            });
+
+        if (typeof externalTypeId === 'undefined') {
+            externalTypeId = 0;
+        }
+
+        const chatToType = (externalTypeId == 1 ? 3 : 2);
+        $("#btnSendMessage").click(function (event) {
+            if (chatImagessList.length > 0) {
+                SendFilesMessage(chatToType);
+            }
+            else {
+                SendMessage(chatToType);
+            }
+        });
+
+        $('#txtMessage').keypress(function (e) {
+            var key = e.which;
+            if (key == 13) {
+                $('#btnSendMessage').click();
+                return false;
+            }
+        });
+    }
+
+    function GetChatMessages() {
+        $.ajax({
+            type: "GET",
+            dataType: 'json',
+            url: '/chat/GetChatUsers',
+            success: function (response) {
+                if (response.successful) {
+                    if (response.data != null) {
+                        $(response.data).each(function () {
+                            if (this.chatGroupUsers.length > 0) {
+                                removeNoChatImg();
+                            }
+                            $(this.chatGroupUsers).each(function () {
+                                var user = $("#userTemplate").children().first().clone();
+
+                                user.find(".name").html(this.userName);
+                                user.find(".user-img").attr("src", this.userProfileImageUrl);
+                                user.attr("data-id", this.chatGroupId);
+                                user.attr("user-name", this.userId);
+                                $("#usersList").append(user);
+
+                            });
+                        });
+                        $("#usersList").find(".clearfix").each(function () {
+                            $(this).click(function () {
+                                removeWelcomeToChatImg();
+                                $("#usersList").children().removeClass("active");
+                                $(this).addClass("active");
+                                var openNotificationsCount = parseInt($(this).find(".notification-message").attr("number"));
+                                $(this).find(".notification-message").remove();
+                                if (parseInt($(".chat-main-header").find(".notification-header").attr("number")) == openNotificationsCount) {
+                                    $(".chat-main-header").find(".notification-header").remove()
+                                }
+                                else {
+                                    $(".chat-main-header").find(".notification-header").attr("number", parseInt($(".chat-main-header").find(".notification-header").attr("number")) - openNotificationsCount);
+                                }
+
+
+                                $("#messagesList").html("");
+                                var chatId = $(this).attr("data-id");
+                                $("#chatBody").find(".chat-about").find(".user-name").html($(this).find(".name").html());
+                                $(".chat-user-img").attr("src", $(this).find(".user-img").attr("src"));
+                                $("#chatBody").find(".chat-about").find(".user-email").html($(this).attr("user-name"));
+                                getMessages(chatId);
+                                $("#txtMessage").focus();
+
+                                if ($(window).width() < 992) {
+                                    $(".chat-list-mobile").hide();
+                                }
+                            });
+                        });
+                    }
+                    deleteChatAction();
+                } else
+                    toastr.error(response.message);
+            },
+            error: function (error) {
+                toastr.error(error);
+            }
+        });
+    }
+
+    function getMessages(chatGroupId) {
+        $.ajax({
+            type: "GET",
+            dataType: 'json',
+            data: { chatGroupId: chatGroupId },
+            url: '/chat/GetChatMessagesByGroupId',
+            success: function (response) {
+                if (response.successful) {
+                    if (response.data != null) {
+                        console.log(response.data);
+                        $(response.data).each(function () {
+                            var message = $("#messegegeTemplate").children().first().clone();
+
+                            message.find(".message-data-time").html(moment(this.createdAt).format("DD-MM-YYYY HH:mm"));
+                            message.find(".message").html(this.message);
+                            if (this.createdByUserId != "@ViewData["AccountEmail"]") {
+                                message.find(".message").removeClass("my-message").removeClass("float-right").addClass("other-message");
+                                message.find(".message-data").append(message.find(".message-data-time"));
+                                message.find(".message-data").removeClass("text-right");
+                                message.find(".message-data").parent().append(message.find(".message-data"));
+                                if (this.isCardMessage) {
+                                    message.find(".message-data").removeClass("message-data").addClass("message-card");
+                                }
+                            }
+                            if (this.isFileAttached) {
+                                message = appendImagesToChat(message, this.filesList);
+                            }
+                            $("#messagesList").append(message);
+                            $(".chat-expand").click();
+                            $("#chatBody").show();
+                        });
+                        $('.chat-history').scrollTop($('.chat-history').find("#messagesList").height());
+                        AddPreviewActionToChatMessages();
+
+                    }
+                } else
+                    toastr.error(response.message);
+            },
+            error: function (error) {
+                toastr.error(error);
+            }
+        });
+    }
+
+    function appendImagesToChatFromPreview() {
+
+        $("#imageChatGallery").find(".remove-img").remove();
+        var message = $("#messegegeTemplate").children().first().clone();
+
+        message.find(".message-data-time").html(moment().format("DD-MM-YYYY HH:mm"));
+        message.find(".message").html($("#imageChatGallery").html());
+        $("#imageChatGallery").html("");
+        $(".image-chat-gallery-div").hide();
+        $("#chatBody").find(".chat-history").css("max-height", "300px");
+        $("#messagesList").append(message);
+        AddPreviewActionToChatMessages();
+        $('.chat-history').scrollTop($('.chat-history').find("#messagesList").height());
+    }
+
+    function AddPreviewActionToChatMessages() {
+        $(".chat-img-preview").unbind().click(function () {
+            $("#imagesChatModal").modal("show");
+            $(".view-product-chat-image").attr("src", $(this).attr("src"));
+        });
+
+    }
+
+    function appendImagesToChat(message ,filesList) {
+        message.find(".message").html("")
+        $(filesList).each(function () {
+            $($.parseHTML('<span class="chat-img-preview-container"><img src="' + this + '" class="chat-img-preview"/></span>')).appendTo(message.find(".message"));
+        });
+        console.log(message);
+        AddPreviewActionToChatMessages()
+        return message;
+    }
+
+
+        function openChatForm() {
+            if ($(window).width() < 992) {
+                $("#btnMobileChat").click();
+            } else {
+                if ($(".chat-popup").css("display") == "none") {
+                    $(".chat-shrink").click();
+                    //$(".chat-open").find(".notification-icon").remove();
+                    $(".chat-popup").css('display', 'flex');
+                    $(".chat-open").hide();
+                }
+            }
+    }
+
+        function closeChatForm() {
+            $(".chat-popup").css('display', 'none');
+            $(".chat-open").show();
+}
+
+    var imagesChatPreview = function (input, placeToInsertImagePreview) {
+
+        if (input.files) {
+            var index = 0;
+            $("#imageChatGallery").find(".chat-img-preview-container").each(function () {
+                $(this).attr("index", index);
+                index++;
+            });
+            var filesAmount = input.files.length;
+            var imageNumber = 0;
+
+            for (i = 0; i < filesAmount; i++) {
+                var reader = new FileReader();
+                var validDimentions = false;
+                reader.onload = function (event) {
+                    var image = new Image();
+                    validDimentions = false;
+                    //Set the Base64 string return from FileReader as source.
+                    image.src = event.target.result;
+
+                    //Validate the File Height and Width.
+                    image.onload = function () {
+
+                        var height = this.height;
+                        var width = this.width;
+
+                        var size = Math.round((input.files[imageNumber].size / 1024));
+                        if (width > imageMinwidth && width < imageMaxwidth && height > imageMinHeight && height < imageMaxHeight && size > 0 && size < imageMaxSize) {
+                            validDimentions = true;
+                        }
+
+                        if (input.files[imageNumber].type == "image/png" || input.files[imageNumber].type == "image/jpeg" || input.files[imageNumber].type == "image/jpg" || input.files[imageNumber].type == "image/jfif") {
+                            if (validDimentions) {
+                                $($.parseHTML('<span class="chat-img-preview-container" index="' + index + '"><span class="remove-img">x</span><img src="' + event.target.result + '" class="chat-img-preview"/></span>')).appendTo(placeToInsertImagePreview);
+                                SetRemoveImageEvent();
+                            }
+                            else {
+                                chatImagessList.pop();
+                                toastr.error("Please ensure that each image file has the following dimensions and file size: Width: \n Between" + imageMinwidth + " to " + imageMaxwidth + "px \n Height: Between " + imageMinHeight + " to " + imageMaxHeight + "px \n Size: Less than " + imageMaxSize + "KB");
+                            }
+                            index++;
+                        }
+                        imageNumber++;
+
+                    }
+                }
+
+
+                if (input.files[i].type == "image/png" || input.files[i].type == "image/jpeg" || input.files[i].type == "image/jpg" || input.files[i].type == "image/jfif") {
+                    chatImagessList.push(input.files[i]);
+                    reader.readAsDataURL(input.files[i]);
+
+                }
+                else {
+                    imageNumber++;
+                    toastr.error("Please upload files having extensions: <b>png, jpeg, jpg, jfif</b> only");
+                }
+                if (chatImagessList.length > 0) {
+                    $(".image-chat-gallery-div").show();
+                    $("#chatBody").find(".chat-history").css("max-height", "100px");
+                    $("#chatBody").find(".chat-history-mobile").css("max-height", "calc(100vh - 465px)");
+                }
+            }
+        }
+    };
+
+    function SetRemoveImageEvent() {
+        $(".remove-img").unbind().click(function () {
+            var index = $(this).parent(".chat-img-preview-container").attr("index");
+            $(this).parent(".chat-img-preview-container").remove();
+            chatImagessList.splice(index, 1);
+
+            var index = 0;
+            $(".gallery").find(".chat-img-preview-container").each(function () {
+                $(this).attr("index", index++);
+            });
+            if (chatImagessList.length == 0) {
+                $(".image-chat-gallery-div").hide();
+                $("#chatBody").find(".chat-history").css("max-height", "300px");
+                $("#chatBody").find(".chat-history-mobile").css("max-height", "calc(100vh - 333px)");
+            }
+        });
+    }
+
+    function SendMessage(chatToType) {
+        if ($("#txtMessage").val().trim() == '') {
+            toastr.clear();
+            toastr.error("Chat message is required");
+            return ;
+        }
+        $("#btnSendMessage").prop("disabled", true).addClass("disabled");
+        if (isChatCard && !isChatCardSend && $("#usersList > .clearfix.active").attr("user-name") == $(".shop-chat").attr("merchat-id")) {
+            var chatCard = createChatCard();
+
+            axios.post('@Configuration.GetSection("AppSettings").GetSection("App")["ChatAPIUrl"]' + "/api/SendMessage", {
+                Message: {
+                    Sender: "@ViewData["AccountEmail"]",
+                    Text: chatCard[0].outerHTML,
+                    TypeId: 1,
+                    IsCardMessage: 1,
+                }, UserId: $("#usersList > .clearfix.active").attr("user-name"),
+                TypeId: chatToType,
+                // for external products
+                UserName: typeof (shopName) == 'undefined' ? null : shopName,
+                UserImageUrl: typeof (shopImageUrl) == 'undefined' ? null : shopImageUrl
+            }).then(response => {
+                var message = $("#messegegeTemplate").children().first().clone();
+
+                message.find(".message-data").removeClass("message-data").addClass("message-card");
+                message.find(".message-data-time").html(moment().format("DD-MM-YYYY HH:mm"));
+                message.find(".message").html(chatCard[0].outerHTML);
+                $("#messagesList").append(message);
+                isChatCardSend = true;
+
+
+                axios.post('@Configuration.GetSection("AppSettings").GetSection("App")["ChatAPIUrl"]' + "/api/SendMessage", {
+                    Message: {
+                        Sender: "@ViewData["AccountEmail"]",
+                        Text: document.getElementById("txtMessage").value,
+                        TypeId: 1
+                    }, UserId: $("#usersList > .clearfix.active").attr("user-name"),
+                    TypeId: chatToType,
+                    // for external products
+                    UserName: typeof (shopName) == 'undefined' ? null : shopName,
+                    UserImageUrl: typeof (shopImageUrl) == 'undefined' ? null : shopImageUrl
+                });
+
+                var message = $("#messegegeTemplate").children().first().clone();
+
+                message.find(".message-data-time").html(moment().format("DD-MM-YYYY HH:mm"));
+                message.find(".message").html($("#txtMessage").val());
+                $("#txtMessage").val("");
+                $("#messagesList").append(message);
+                $("#btnSendMessage").prop("disabled", false).removeClass("disabled");
+                if (response.data.successful) {
+                    if ($(".clearfix.active").attr("data-id") == undefined) {
+                        $(".clearfix.active").attr("data-id", response.data.data);
+                    }
+                }
+            });
+
+
+        }
+        else {
+
+            axios.post('@Configuration.GetSection("AppSettings").GetSection("App")["ChatAPIUrl"]' + "/api/SendMessage", {
+                Message: {
+                    Sender: "@ViewData["AccountEmail"]",
+                    Text: document.getElementById("txtMessage").value,
+                    TypeId: 1
+                }, UserId: $("#usersList > .clearfix.active").attr("user-name"),
+                TypeId: chatToType,
+                // for external products
+                UserName: typeof (shopName) == 'undefined' ? null : shopName,
+                UserImageUrl: typeof (shopImageUrl) == 'undefined' ? null : shopImageUrl
+            }).then(response => {
+
+                var message = $("#messegegeTemplate").children().first().clone();
+
+                message.find(".message-data-time").html(moment().format("DD-MM-YYYY HH:mm"));
+                message.find(".message").html($("#txtMessage").val());
+                $("#txtMessage").val("");
+                $("#messagesList").append(message);
+                $("#btnSendMessage").prop("disabled", false).removeClass("disabled");
+                if (response.data.successful) {
+                    if ($(".clearfix.active").attr("data-id") == undefined) {
+                        $(".clearfix.active").attr("data-id", response.data.data);
+                    }
+                }
+            });
+        }
+        $('.chat-history').scrollTop($('.chat-history').find("#messagesList").height());
+    }
+
+    function SendFilesMessage(chatToType) {
+
+        var Message = {
+            "Sender": "@ViewData["AccountEmail"]",
+            "Text": document.getElementById("txtMessage").value,
+            "TypeId": 1
+        };
+        const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+        var UserId = $("#usersList > .clearfix.active").attr("user-name");
+        var TypeId = chatToType;
+        var formData = new FormData();
+        var totalfiles = chatImagessList.length;
+        for (var index = 0; index < totalfiles; index++) {
+            formData.append("files[]", chatImagessList[index]);
+        }
+
+        //formData.append("Message", Message);
+        formData.append("UserId", UserId);
+        formData.append("TypeId", TypeId);
+        formData.append("SenderTypeId", 1);
+        formData.append("Sender", "@ViewData["AccountEmail"]");
+
+        // for external products
+        formData.append("UserName", typeof (shopName) == 'undefined' ? null : shopName);
+        formData.append("UserImageUrl", typeof (shopImageUrl) == 'undefined' ? null : shopImageUrl);
+
+        forTest = formData;
+
+        $.ajax({
+            url: '@Configuration.GetSection("AppSettings").GetSection("App")["ChatAPIUrl"]' + "/api/SendFiles",
+            type: "POST",
+            async: false,
+            data: formData,
+            enctype: 'multipart/form-data',
+            processData: false,
+            contentType: false
+        }).done(function (response) {
+            chatImagessList = [];
+            appendImagesToChatFromPreview();
+            $("#imageChatGallery").html("");
+            if ($("#txtMessage").val().trim() != '') {
+                SendMessage(chatToType);
+            }
+            if (response.data.successful) {
+                if ($(".clearfix.active").attr("data-id") == undefined) {
+                    $(".clearfix.active").attr("data-id", response.data.data);
+                }
+            }
+        });
+        $("#chatBody").find(".chat-history").css("max-height", "300px");
+        $("#chatBody").find(".chat-history-mobile").css("max-height", "calc(100vh - 333px)");
+        $(".image-chat-gallery-div").hide();
+    }
+
+    function removeNoChatImg() {
+        $("#plist").find(".welcome-to-chat").hide();
+    }
+    function removeWelcomeToChatImg() {
+        $(".currently-no-chat").hide();
+        $("#chatBody").find(".chat-header").css('opacity', '1');
+        $("#chatBody").find(".chat-message").show();
+        //$(".chat >.chat-history").css("height", "calc( 100% - 170px )");
+    }
+    function showWelcomeToChatImg() {
+        $(".currently-no-chat").css('display','flex');
+        $("#messagesList").empty();
+        $("#chatBody").find(".chat-header").css('opacity', '0');
+        $("#chatBody").find(".chat-message").hide();
+    }
+
+    function showNoChatImg() {
+        $(".welcome-to-chat").show();
+    }
+
+    function deleteChat(groupId) {
+        if (groupId == undefined || groupId == "" || groupId == null) {
+            $(".deleted-chat").remove();
+            $("#deleteChatModal").modal("hide");
+            showWelcomeToChatImg();
+            if ($("#usersList").children().length == 0) {
+                showNoChatImg();
+            }
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            data: { chatGroupId: groupId },
+            url: '/chat/DeleteChat',
+            success: function (response) {
+                if (response.successful) {
+                    $("#deleteChatModal").modal("hide");
+                    $(".deleted-chat").remove();
+                    showWelcomeToChatImg();
+                    if ($("#usersList").children().length == 0) {
+                        showNoChatImg();
+                    }
+                } else {
+                    $("#deleteChatModal").modal("hide");
+                }
+            },
+            error: function (error) {
+                toastr.error(error);
+            }
+        });
+    }
+    function deleteChatAction() {
+        $(".btn-delete-chat").unbind().click(function () {
+            $("#deleteChatModal").modal("show");
+            $("#deleteChatModal").attr("data-id", $(this).parent().attr("data-id"));
+            $(".delete-chat-name").html($(this).parent().find(".name").html());
+            $(this).parent().addClass("deleted-chat");
+        });
+        $("#DeleteChat").unbind().click(function () {
+            deleteChat($("#deleteChatModal").attr("data-id"));
+        });
+    }
+    </script>
+
+
+    <script>
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '699978807723438',
+                cookie: true,
+                xfbml: true,
+                version: 'v4.0'
+            });
+
+            FB.AppEvents.logPageView();
+
+        };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) { return; }
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+
+        function getFBLoginStatus() {
+
+            FB.getLoginStatus(function (response) {
+                statusChangeCallback(response);
+            });
+        }
+
+        $(".vodusFacebookLogin").click(function () {
+            FB.getLoginStatus(function (response) {
+                console.log(response);
+
+                if (response.status !== 'connected') {
+                    //statusChangeCallback(response);
+                    FB.login(function (loginResponse) {
+                        console.log(loginResponse.authResponse);
+
+                        if (loginResponse.authResponse) {
+                            var accessToken = loginResponse.authResponse.accessToken;
+                            login('', '', 'facebook', accessToken);
+                        } else {
+                            console.log('User cancelled login or did not fully authorize.');
+                        }
+                    }, { scope: 'public_profile ,email' });
+
+                }
+                else {
+
+                    var accessToken = response.authResponse.accessToken;
+                    login('', '', 'facebook', accessToken);
+                }
+
+
+            });
+        })
+    </script>
+
+    @RenderSection("scripts", false)
+    @RenderSection("scriptsFooter", false)
+</body>
+</html>

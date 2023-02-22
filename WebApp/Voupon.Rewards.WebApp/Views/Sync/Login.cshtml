@@ -1,0 +1,160 @@
+﻿@{
+    ViewBag.Title = "Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .syncloginModal {
+        max-width: 400px;
+        box-shadow: 0 0 5px 0 #aaa;
+    }
+        .syncloginModal h2 {
+            font-weight: bold;
+        }
+</style>
+<div class="mt-3 container text-center">
+    <div class="row no-record-message" style="display:none;">
+        <h1 class="w-100"><b>We could not find your record.</b></h1>
+        <p class="mb-2 w-100">Already have a Vodus Account?</p>
+    </div>    
+    <div class="row col-12 justify-content-center">
+        <div class="syncloginModal top-purple-border">
+            <div class="row pb-3">
+                <div iclass="col-xs-12">
+                    <div class="row">
+                        <div id="divRewardSignupModal" class="col-md-12 px-md-2 px-0" style="display:none;">
+                            <div class="row">
+                                <div class="col-sm-12 text-left">
+                                    <h2 style="margin-top:10px;"><b class="i18next" data-i18n="common.sign-up">Sign up</b></h2>
+                                    <h4 style="font-family:'Open Sans'; font-weight:400; margin-bottom:10px;line-height:1.3em;">
+                                        <span class="i18next" data-i18n="common.get-rewarded-for-consuming-content">
+                                            Enjoy great rewards and discounts on your online shopping.
+                                        </span>
+                                    </h4>
+                                </div>
+                            </div>
+                            <form class="row">
+                                <div class="col-sm-12 sso-input-container">
+                                    <input placeholder="Email" type="email" class="form-control" autocomplete="new-username" id="vodusRewardSignupEmail">
+                                    <br>
+                                    <input placeholder="Password" type="password" style="margin-bottom:15px;" class="form-control" autocomplete="new-password" id="vodusRewardSignupPassword">
+                                    <div class="col-md-12 row align-items-center">
+                                        <input type="checkbox" id="agreeTerm" name="agreeTerm" style="margin-right:5px;">
+                                        <label style="margin:0;font-size: 14px;" for="agreeTerm"> I agree to the <a href="/TermsAndConditions" target="_blank">Terms &amp; Conditions</a></label><br>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 text-center" style="margin-top:15px;">
+                                    <button id="btnVodusRewardCreateAccount" class="btn wisteria-flat-button i18next" style="font-size: 16px; padding:5px 20px;" type="submit"><span class="i18next" data-i18n="common.register">Register</span></button>
+                                </div>
+                            </form>
+                            <div class="mt-2">
+                                <h5 class="or-divider">OR</h5>
+                                <div class="row">
+                                    <div class="col-12" style="text-align:center;">
+                                        <button class="vodusFacebookLogin wisteria-flat-button fb-btn btn btn-primary i18next" type="button"><span class="fa-brands fa-facebook-f">&nbsp;</span><span data-i18n="common.login-with-facebook">Login with Facebook</span></button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12" style="text-align:center;">
+                                        <button class="vodusGoogleLogin g_signin_btn wisteria-flat-button google-btn btn btn-primary i18next" type="button"><span class="fa-brands fa-google">&nbsp;</span><span data-i18n="common.login-with-google">Login with Google</span></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row" style="margin:0;">
+                                <div class="sso-alternative col d-flex justify-center text-right" style="line-height:1.3em;color:#999;">
+                                    <span class="i18next" data-i18n="common.already-signed-up">Already signed up?</span>
+                                    <b aria-hidden="true" class="i18next px-2 py-0" style="width:auto;cursor:pointer;" data-i18n="common.login" id="btnShowVodusRewardLogin">Login</b>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="divRewardLoginModal" class="col-md-12 px-md-2 px-0">
+                            <div class="row">
+                                <div class="col-sm-12 text-left">
+                                    <h2 style="margin-top:10px;"><b class="i18next" data-i18n="common.login">Login</b></h2>
+                                </div>
+                            </div>
+                            <form class="row">
+                                <div class="sso-input-container col-12">
+                                    <input placeholder="Email" type="email" class="form-control" autocomplete="username" id="vodusRewardLoginEmail">
+                                    <br>
+                                    <input placeholder="Password" type="password" class="form-control" autocomplete="current-password" id="vodusRewardLoginPassword">
+                                </div>
+                                <div class="col-12 text-center" style="margin-top:15px;">
+                                    <div class="row">
+                                        <div class="col-12 px-0">
+                                            <button id="btnVodusRewardLogin" class="btn wisteria-flat-button" type="submit" value="Login"><span class="i18next" data-i18n="common.login">Login</span></button>
+                                        </div>
+                                        <div class="col-12 d-flex align-items-left">
+                                            <a id="btnRewardForgotPW" target="_blank" href="/ForgetPassword" style="padding-top:5px">
+                                                <span class="i18next" data-i18n="common.forgot-password">Forgot password?</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <div>
+                                <h5 class="or-divider">OR</h5>
+                                <div class="row">
+                                    <div class="col-12" style="text-align:center;">
+                                        <button class="vodusFacebookLogin wisteria-flat-button fb-btn btn btn-primary i18next" type="button"><span class="fa-brands fa-facebook-f">&nbsp;</span><span data-i18n="common.login-with-facebook">Login with Facebook</span></button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12" style="text-align:center;">
+                                        <button id="vodusGoogleLogin" class="vodusGoogleLogin wisteria-flat-button google-btn btn btn-primary i18next" type="button"><span class="fa-brands fa-google">&nbsp;</span><span data-i18n="common.login-with-google">Login with Google</span></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row" style="margin:0;">
+                                <div class="sso-alternative col d-flex justify-center text-right" style="line-height:1.3em;color:#999;">
+                                    <span class="i18next" data-i18n="common.not-yet-signed-up">New to Vodus?</span>
+                                    <b aria-hidden="true" class="i18next px-2 py-0" style="width:auto;cursor:pointer;" data-i18n="common.sign-up" id="btnShowVodusRewardSignup">Sign up</b>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row col-xl-6 col-lg-6 col-md-8 col-12 justify-content-center mx-auto mt-3 mb-3">
+        <div class="col-xl-6 col-lg-6 col-md-6 col-12 py-1 px-2">
+            <a href="/" class="btn btn-primary w-100">Visit Vodus Rewards</a>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-6 col-12 py-1 px-2">
+            <a href="#" onclick="window.close();" class="btn btn-secondary w-100">Return to @ViewData["PartnerWebsiteName"]</a>
+        </div>
+    </div>
+</div>
+
+@section styles{
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css">
+}
+
+@section scripts{
+
+    <script>
+        $(function () {
+            var sync = getParameterByName("syncType");
+            if (sync == "1") {
+                $(".no-record-message").css("display", "block");
+            }
+            getDeviceProfile(false);
+        })
+
+        function closeMe() {
+            window.opener = self;
+            window.close();
+        }
+
+        $("#vodusRewardLoginModal").remove();
+        $(".reward-login-top-menu").remove();
+        $(".vouponLogin").prop("disabled", true);
+
+        initRewardGoogleLogin();
+    </script>
+}

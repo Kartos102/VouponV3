@@ -1,0 +1,603 @@
+﻿@using System.Security.Claims
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+@{
+    ViewData["Title"] = "Sales Transactions";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var identity = User.Identity as ClaimsIdentity;
+
+}
+
+<div class="dashboard-main-wrapper sales-summary">
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content no-padding">
+            <div class="row">
+                <div class="col-lg-12 mb-2">
+                    <h1 class="page-header">Sales Transactions</h1>
+                </div>
+            </div>
+            <div class="ecommerce-widget sales-history-table row">
+                <div class="row table-function col-lg-auto px-2 flex-wrap">
+                    <div class="col-12 col-md-auto d-flex px-0">
+                        <label class="col-form-label pr-2" style="width:150px;">Date Range: </label>
+                        <input type="date" class="mx-0" id="salesHistoryFrom" value="2017-06-01">
+                    </div>
+                    <div class="col-12 col-md-auto d-flex px-0">
+                        <label class="col-form-label px-2">to</label>
+                        <input class="mx-0" type="date" id="salesHistoryTo" value="2017-06-01">
+                        <button type="button" id="salesHistorySearch" class="btn btn-primary btn-sm salesSearchByDate">Search</button>
+                    </div>
+                </div>
+                <div class="row table-function col-lg px-2 flex-wrap">
+                    <div class="col-12 col-md-7 d-flex pr-2 pl-0">
+                        <label class="col-form-label" style="width:150px;">Order Id: </label>
+                        <input type="text" id="shortId" />
+                        <button type="button" id="salesHistorySearch" class="btn btn-primary btn-sm salesSearchByShortId">Search</button>
+                    </div>
+                    <div class="col-12 col-md-5 d-flex px-2" id="pageSize">
+                        <label>Entries per page:</label>
+                        <select id="selectpageSize" name="pageSize" aria-controls="pageSize" class="">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option selected="selected" value="100">100</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row my-2 w-100">
+                    <div class="d-flex mb-2 mr-auto px-2">
+                        <p class="px-2 m-0 align-center col" id="searchCriteria"></p>
+                        <button type="button" id="downloadTable" class="btn btn-primary btn-sm">Download Table</button>
+                    </div>
+
+                    <div class="col-lg-12" style="margin:20px auto;">
+                        <div class="flex">
+                            <div class="px-0 flex">
+                                <input type="email" class="mx-0" id="email" placeholder="Email to send csv to" style="width:300px;" autocomplete="off" /> <button type="button" id="generateCSV" class="btn btn-primary btn-sm">Generate and email CSV</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body p-0">
+
+                                <div class="table-responsive" style="overflow-x: hidden;">
+                                    <table class="table table-striped table-bordered table-hover" id="salesTable" style="text-align: center;">
+                                        <thead class="bg-light">
+                                            <tr class="border-0">
+                                                <th class="border-0" style="text-align: center;">Purchased Date</th>
+                                                <th class="border-0" style="text-align: center;">Order ID</th>
+                                                <th class="border-0" style="text-align: center;">Merchant</th>
+                                                <th class="border-0" style="text-align: center;">Item Order ID</th>
+                                                <th class="border-0" style="text-align: center;">Buyer Email</th>
+                                                <th class="border-0" style="text-align: center;">Item Name</th>
+                                                <th class="border-0" style="text-align: center;">Status</th>
+                                                <th class="border-0" style="text-align: center;">Qty</th>
+                                                <th class="border-0" style="text-align: center;">Total VPoints Disc. (RM)</th>
+                                                <th class="border-0" style="text-align: center;">Item Rev.(atf VPoints disc) (RM)</th>
+                                                <th class="border-0" style="text-align: center;">Details</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                    <div class="row salse-table-paging col-lg-12 col-md-12 mt-2">
+
+                                    </div>
+                                    <p class="alert alert-warning" id="noRefunds" style="display:none;">No refunds on selected date</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="card-body sales-history-card" style="display:none">
+                <div class="ecommerce-widget">
+                    <div class="row justify-content-between table-function">
+                        <div class="row">
+                            <label class="col-form-label">Date Range : </label>
+                            <input type="date" id="salesHistoryStartDate" value="2017-06-01"> to
+                            <input type="date" id="salesHistoryEndDate" value="2017-06-01">
+                            <br />
+                            <button type="button" id="salesHistorySearch" class="btn btn-primary btn-sm salesHistorySearch">Search</button>
+
+                        </div>
+                        <div>
+                            <button type="button" class="salesHistoryFullReport btn btn-primary btn-sm">View Full Report</button>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:30px;">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-body p-0">
+                                    <div class="table-responsive" style="overflow-x: hidden;">
+                                        <table class="table table-striped table-bordered table-hover" id="salesHistoryTable" style="text-align: center;">
+                                            <thead class="bg-light">
+                                                <tr class="border-0">
+                                                    <th class="border-0" style="text-align: center;">Product</th>
+                                                    <th class="border-0" style="text-align: center;">Type</th>
+                                                    <th class="border-0" style="text-align: center;">Revenue (RM)</th>
+                                                    <th class="border-0" style="text-align: center;">Transactions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="salesHistoryTableBody">
+                                                <tr style="display:none">
+                                                    <td>KLCC</td>
+                                                    <td>E-voucher</td>
+                                                    <td>859.20</td>
+                                                    <td>10</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade modal-list" id="showOrderItemDetailModal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle">Order Item Id: <span id="orderItemShortId"></span></h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <div class="col-3">
+                        <label for="message-text" class="col-form-label">Email</label>
+                    </div>
+                    <div class="col-9">
+                        <label type="text" class="col-form-label" id="orderEmail"></label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+
+                        <label for="message-text" class="col-form-label">Product name</label>
+                    </div>
+                    <div class="col-9">
+                        <label type="text" class="col-form-label" id="orderProductTitle"></label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+
+                        <label for="message-text" class="col-form-label">Purchased Date</label>
+                    </div>
+                    <div class="col-9">
+                        <label type="text" class="col-form-label" id="orderPurchasedDate"></label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+
+                        <label for="message-text" class="col-form-label">VPoints</label>
+                    </div>
+                    <div class="col-9">
+                        <label type="text" class="col-form-label" id="orderPoints"></label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+
+                        <label for="message-text" class="col-form-label">Price (RM)</label>
+                    </div>
+                    <div class="col-9">
+                        <label type="text" class="col-form-label" id="orderPrice"></label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+
+                        <label for="message-text" class="col-form-label">User's full name</label>
+                    </div>
+                    <div class="col-9">
+                        <label type="text" class="col-form-label" id="orderBuyerFullname"></label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+
+                        <label for="message-text" class="col-form-label">Phone number</label>
+                    </div>
+                    <div class="col-9">
+                        <label type="text" class="col-form-label" id="orderBuyerMobileNumber"></label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+
+                        <label for="message-text" class="col-form-label">Address</label>
+                    </div>
+                    <div class="col-9">
+                        <label style="white-space: unset;" type="text" class="col-form-label" id="orderBuyerAddress"></label>
+                    </div>
+                </div>
+                <div style="border-top: 1px solid #ddd; padding: 10px 0;margin-top: 10px;">
+                    <div class="form-group row">
+                        <div class="col-3">
+
+                            <label for="message-text" class="col-form-label">VPoints</label>
+                        </div>
+                        <div class="col-9">
+                            <label type="text" class="col-form-label" id="refundDiscount"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label for="refundAmount" class="col-form-label">Refund Amount</label>
+                        </div>
+                        <div class="col-9 d-flex align-items-center">
+                            <span class="mr-1">RM </span><input type="number" id="refundAmount" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label for="message-text" class="col-form-label">Refund Type</label>
+                        </div>
+                        <div class="col-9">
+                            <input type="radio" id="refundType_1" name="refundType" value="1" data-id="1"> <label for="refundType_1">Invalid points</label><br>
+                            <input type="radio" id="refundType_2" name="refundType" value="2" data-id="2"> <label for="refundType_2">Insufficient stock</label><br>
+                            <input type="radio" id="refundType_3" name="refundType" value="3" data-id="3"> <label for="refundType_2">Others</label><br>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label for="message-text" class="col-form-label">Refund Remark</label>
+                        </div>
+                        <div class="col-9">
+                            <textarea type="text" id="instoreRefundRemark" cols="20" style="width:400px;"></textarea>
+                            <button type="button" class="btn btn-primary refundAction" data-type="instore">Refund</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        var orders = "";
+        $(function () {
+            $("#navSales").addClass("show");
+            $("#navSalesControl").attr("aria-expanded", true);
+
+            $("#salesHistoryFrom").val(moment().subtract(7, 'd').format("YYYY-MM-DD"));
+            $("#salesHistoryTo").val(moment().format("YYYY-MM-DD"));
+
+            $(".salesSearchByDate").click(function () {
+                GetSalesByDate();
+            });
+
+            $(".salesSearchByShortId").click(function () {
+                GetSalesByShortId();
+            });
+
+
+            GetSalesByDate();
+
+            $("#selectpageSize").change(function () {
+                $(".pagination").remove();
+                GetSalesByDate();
+            });
+
+            $("#generateCSV").click(function () {
+                var email = $("#email").val();
+
+                if (email == null || email == "") {
+                    toastr.error("Email is required");
+                    return;
+                }
+
+                $("#generateCSV").prop('disabled', true).html('Generating...');
+                toastr.success("Started generating csv. You will receive an email when it's completed");
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    dataType: 'json',
+                    data: JSON.stringify({
+                        email: email,
+                        dateFrom: $("#salesHistoryFrom").val(),
+                        dateTo: $("#salesHistoryTo").val()
+                    }),
+                    url: '@Configuration.GetSection("AppSettings").GetSection("App")["ServerlessUrl"]api/ExportSalesCSV',
+                    success: function (response) {
+                        console.log(response);
+                        if (response.successful) {
+                            toastr.success("Sales generating completed");
+                        }
+                        else {
+                            toastr.error("Fail to generate csv. Please try again later");
+                        }
+                        $("#generateCSV").prop('disabled', false).html('Send CSV to Email');
+                    },
+                    error: function (error) {
+                        toastr.error(error);
+                        $("#generateCSV").prop('disabled', false).html('Send CSV to Email');
+                    }
+                });
+            });
+
+            $(".refundAction").click(function () {
+                var refundButton = $(this);
+                var type = $(this).attr('data-type');
+                var remark = "";
+                var refundType = "1";
+                var refundAmount = "";
+
+
+                remark = $("#externalRefundRemark").val();
+                refundType = $("input[type='radio'][name='refundType']:checked").val();
+                refundAmount = $("#refundAmount").val();
+
+                if (refundType == undefined) {
+                    toastr.clear();
+                    toastr.error("Please select a refund type");
+                    return;
+                }
+
+                if (confirm('Are you sure you want to refund this order?')) {
+                    $(refundButton).text("Processing...");
+                    $(refundButton).attr("disabled", true);
+                    $(refundButton).addClass("disabled");
+
+                   
+
+                    return;
+                    $.ajax({
+                        type: "POST",
+                        dataType: 'json',
+                        data: {
+                            orderItemId: selectedOrderItemId,
+                            refundType: refundType,
+                            remark: remark
+                        },
+                        url: '/Admin/Sales/Refund',
+                        success: function (response) {
+                            if (response.successful) {
+                                toastr.success(response.message);
+                                if (type == "order-external") {
+                                    $("#externalRefundRemark").val("");
+                                    $("#showDetailsModalExternalOrder").modal('hide');
+                                }
+                                $(refundButton).attr("disabled", false);
+                                $(refundButton).removeClass("disabled");
+                                $(refundButton).text("Refund");
+                                $(".order_item_id_" + selectedOrderItemShortId).hide();
+                                location.reload();
+                            }
+                            else {
+                                toastr.error(response.message);
+                                $(refundButton).attr("disabled", false);
+                                $(refundButton).removeClass("disabled");
+                                $(refundButton).text("Refund");
+                            }
+                        },
+                        error: function () {
+                            toastr.error("Something went wrong...");
+                            $(refundButton).attr("disabled", false);
+                            $(refundButton).removeClass("disabled");
+                            $(refundButton).text("Refund");
+                        }
+                    });
+
+                    return true;
+                } else {
+                    // Do nothing!
+                }
+            });
+        });
+
+        function GetSalesByDate() {
+            var from = moment($("#salesHistoryFrom").val()).format("YYYY-MM-DD");
+            var to = moment($("#salesHistoryTo").val()).format("YYYY-MM-DD");
+            var length = $("#pageSize").find(":selected").attr("value");
+            var start = "0"
+            if ($(".nav-order-page.active").length > 0)
+                start = parseInt($(".nav-order-page.active").attr("order")) * parseInt(length);
+
+            $("#searchCriteria").text("Search by date: " + from + " - " + to);
+
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                data: { start: start, length: length },
+                url: '/Admin/Sales/sales-by-date/' + from + "/" + to,
+                success: function (response) {
+                    if (response.successful) {
+                        if (response.data != null) {
+                            console.log(response.data);
+                            orders = response.data;
+                            GenerateRefundsView(response.data, false);
+                        } else {
+                            $("#noSales").show();
+                            $("#salesTable").hide();
+                        }
+                    }
+                    else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+
+        }
+
+        function GetSalesByShortId() {
+            toastr.clear();
+            var shortId = $("#shortId").val();
+
+            if (shortId == null || shortId == "") {
+                toastr.error("Please enter short id");
+                return;
+            }
+
+            $("#searchCriteria").text("Search by ShortId: " + shortId);
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/Admin/Sales/sales-by-short-id/' + shortId,
+                success: function (response) {
+                    if (response.successful) {
+                        if (response.data != null) {
+
+                            GenerateRefundsView(response, true);
+                        } else {
+                            $("#noSales").show();
+                            $("#salesTable").hide();
+                        }
+                    }
+                    else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+
+        }
+        var statusString = "";
+        function getStatusString(status) {
+            
+            switch(status){
+                case 1:
+                    statusString =  "Pending";
+                    break;
+                case 2:
+                    statusString = "Sent"
+                    break;
+                case 3:
+                    statusString = "Done"
+                    break;
+                case 4:
+                    statusString = "Refund in progress"
+                    break;
+                case 5:
+                    statusString = "Refunded";
+                    break;
+                case 6:
+                    statusString = "Completed"
+                case 7:
+                    statusString = "Pending payment"
+                    break;
+                case 8:
+                    statusString = "Pending refund"
+                    break;
+                case 9:
+                    statusString = "Refund rejected"
+                    break;
+            default: 
+            }
+            return statusString;
+        }
+
+        function GenerateRefundsView(data, isSearchById) {
+            var view = "";
+            $(data).each(function (index, item) {
+                view += '<tr>';
+                view += '<td>' + item.createdAtString + '</td>';
+                view += '<td>' + item.shortId + '</td>';
+                view += '<td>' + item.merchantName + '</td>';
+                view += '<td>' + (item.itemShortId != null && item.itemShortId != "" ? item.itemShortId : "") + '</td>';5
+                view += '<td>' + item.email + '</td>';
+                view += '<td>' + item.productTitle + '</td>';
+                view += '<td>' + getStatusString(item.orderItemStatus) + '</td>';
+                view += '<td>' + item.totalItems + '</td>';
+                view += '<td>' + item.totalPoints + '</td>';
+                view += '<td>' + item.totalPrice + '</td>';
+                view += '<td><button type="button" class="btn bn-primary showRefundModal" data-order-item-short-id="' + item.itemShortId + '">View more</button></td>';
+                view += '<tr>';
+            });
+            $("#salesTable > tbody").html(view);
+            $("#salesTable").show();
+            $("#noSales").hide();
+
+           $('.showRefundModal').click(function(){
+
+                var orderItemShortId = $(this).attr('data-order-item-short-id');
+                var orderItem = orders.filter(x => x.itemShortId == orderItemShortId)[0];
+                $("#showOrderItemDetailModal").modal('show')
+                $("#orderEmail").text(orderItem.email);
+                $("#orderProductTitle").text(orderItem.productTitle);
+                $("#orderPurchasedDate").text(orderItem.createdAtString);
+                $("#orderPoints").text(orderItem.totalPoints);
+                $("#orderItemShortId").text(orderItem.orderItemShortId);
+                $("#orderPrice").text(orderItem.totalPrice);
+                $("#orderBuyerAddress").text(orderItem.address);
+                $("#orderBuyerMobileNumber").text(orderItem.mobileNumber);
+                $("#orderBuyerFullname").text(orderItem.name);
+                $("#refundDiscount").text(orderItem.totalPrice);
+                $("#refundPoints").text(orderItem.totalPoints);
+                console.log(orderItem);
+           });
+
+            if (!isSearchById) {
+                if ($(".pagination").length == 0) {
+                    var pagingHtml = '<div class="pagination"><a class="prev-order-page" href="#">&laquo;</a> <a class="nav-order-page active" order="0" href="#" class="active">1</a>';
+                    var pagingNumber = 1;
+                    var recordsPerPage = parseInt($("#pageSize").find(":selected").attr("value"));
+                    for (index = 0; index < data.recordsTotal; index++) {
+                        if (index % recordsPerPage == 0 && index != 0)
+                            pagingHtml += ' <a class="nav-order-page" order="' + pagingNumber++ + '" href="#">' + parseInt(index / recordsPerPage + 1) + '</a>';
+                    }
+                    pagingHtml += '<a class="next-order-page" href="#">&raquo;</a></div>';
+                    $(".salse-table-paging").append(pagingHtml);
+                    createPagingActions();
+                }
+
+                $(".pagination-details").remove();
+                var from = parseInt($(".nav-order-page.active").attr("order")) * parseInt($("#pageSize").find(":selected").attr("value")) + 1;
+                var to = from + data.recordsFiltered - 1;
+                var pageDetails = '<div class="pagination-details">Showing ' + from + ' to ' + to + ' of ' + data.recordsTotal + ' entries</div>';
+                $(".salse-table-paging").append(pageDetails);
+            }
+            else {
+                $(".pagination-details").remove();
+                $(".pagination").remove();
+            }
+        }
+
+
+
+        function createPagingActions() {
+            $(".next-order-page").click(function () {
+                if ($(".nav-order-page.active").next().hasClass("nav-order-page"))
+                    $(".nav-order-page.active").removeClass("active").next().click().addClass("active");
+            });
+            $(".prev-order-page").click(function () {
+                if ($(".nav-order-page.active").prev().hasClass("nav-order-page"))
+                    $(".nav-order-page.active").removeClass("active").prev().click().addClass("active");
+            });
+
+            $(".nav-order-page").click(function () {
+                if (!$(this).hasClass("active")) {
+                    $(".nav-order-page.active").removeClass("active");
+                    $(this).addClass("active");
+                    var pageNumber = $(this).prevAll().length;
+                    GetSalesByDate();
+                }
+            });
+
+        }
+
+    </script>
+
+}

@@ -1,0 +1,531 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@model Voupon.Merchant.WebApp.Areas.Admin.ViewModels.PromoCode.IndexPageViewModel
+
+
+<div class="dashboard-main-wrapper">
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content ">
+            <div class="row">
+                <div class="page-header-container col-lg-12 d-flex justify-content-between align-items-center mb-2">
+                    <h1>Promo Code</h1>
+                </div>
+                <div class="row ecommerce-widget table-function">
+                    <button type="button" class="btn btn-primary pull-right" id="btnAddPromoCode" style="float:right;margin-left:10px;"><span class="fa fa-plus"></span>Add Promo Code</button>
+                </div>
+            </div>
+
+            <div class="row admin-users-table-card col-lg-12 col-md-12" style="display:none">
+                <div class="col-12 row search-row">
+                    <div class="input-group col-md-10 col-xl-10 col-lg-10 col-sm-12 col-12">
+                        <input class="form-control py-2 border-right-0 border" type="search" value="" placeholder="search..." id="user-search-input">
+                        <span class="input-group-append">
+                            <button class="btn btn-outline-secondary border-left-0 border" type="button" id="user-search-btn">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row products-card-row col-lg-12 col-md-12 px-0 mt-2">
+                <div class="row promoCodeCard col-lg-12 col-md-12">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div style="display:none">
+    <div class="row card-table-row card-table-template col-12 no-padding">
+        <div class="mobile-card-row product-row row col-12">
+            <div class="row col-xl-8 col-lg-8 col-md-8 col-12 no-padding">
+                <div class="row col-xl-6 col-lg-6 col-md-6 col-12 no-padding">
+                    <div class="row col-12 no-padding mt-2">
+                        <div class="row col-4 no-padding">
+
+                            <div class="promoCodeCode col-12 card-record-row product-order px-0">
+                                12
+                            </div>
+                            <div class="col-12 card-title-row px-0">
+                                Code
+                            </div>
+                        </div>
+                        <div class="row col-8 no-padding">
+                            <div class="col-12 card-record-row" style="align-items: start">
+                                <div class="promoCodeDescription product-title product-title-anchor">
+                                    Description
+                                </div>
+                                <div class="col-12 card-title-row px-0">
+                                    Description
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row col-xl-6 col-lg-6 col-md-6 col-12 mt-2 no-padding">
+                    <div class="row col-2 no-padding" style="display:none;">
+                        <div class="promoCodeDiscountType col-12 card-record-row product-category px-0 ellipsis">
+                        </div>
+                        <div class="col-12 card-title-row px-0">
+                            Discount Type
+                        </div>
+                    </div>
+                    <div class="row col-2 no-padding">
+                        <div class="promoCodeDiscountValue col-12 card-record-row px-0">
+                        </div>
+                        <div class="col-12 pr-0 card-title-row px-0">
+                            Discount Percentage
+                        </div>
+                    </div>
+                    <div class="row col-2 no-padding">
+                        <div class="promoCodeMaxDiscount col-12 card-record-row product-status pr-0 ellipsis px-0">
+                            Draft
+                        </div>
+                        <div class="col-12 card-title-row px-0">
+                            Discount
+                        </div>
+                    </div>
+                    <div class="row col-2 no-padding">
+                        <div class="promoCodeMinSpend col-12 card-record-row product-status pr-0 ellipsis px-0">
+                            Draft
+                        </div>
+                        <div class="col-12 card-title-row px-0">
+                            Min Spend
+                        </div>
+                    </div>
+                    <div class="row col-2 no-padding">
+                        <div class="promoCodeMaxDiscount col-12 card-record-row product-status pr-0 ellipsis px-0">
+                            Draft
+                        </div>
+                        <div class="col-12 card-title-row px-0">
+                            Max Discount
+                        </div>
+                    </div>
+                    <div class="row col-2 no-padding">
+                        <div class="promoCodeExpireOn col-12 card-record-row product-status pr-0 ellipsis px-0">
+                            Draft
+                        </div>
+                        <div class="col-12 card-title-row px-0">
+                            Expire On
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row col-xl-4 col-lg-4 col-md-4 col-12 card-record-row no-padding">
+                <div class="row col-xl-12 col-lg-12 col-md-12 col-12 no-padding mt-2">
+                    <div class="row col-2 no-padding ">
+                        <div class="promoCodeTotalRedeemed col-12 card-record-row product-status pr-0 ellipsis px-0">
+                            Draft
+                        </div>
+                        <div class="col-12 card-title-row px-0">
+                            Total Redeemed
+                        </div>
+                    </div>
+                    <div class="row col-2 no-padding">
+                        <div class="promoCodeTotalRedemptionAllowed col-12 card-record-row product-status pr-0 ellipsis px-0">
+                            Draft
+                        </div>
+                        <div class="col-12 card-title-row px-0">
+                            Total Redemption
+                        </div>
+                    </div>
+                    <div class="row col-2 no-padding">
+                        <div class="promoCodeTotalAllowedPerUser col-12 card-record-row product-status pr-0 ellipsis px-0">
+                            Draft
+                        </div>
+                        <div class="col-12 card-title-row px-0">
+                            Total Allowed/User
+                        </div>
+                    </div>
+                    <div class="row col-2 no-padding">
+                        <div class="promoCodeStatus col-12 card-record-row product-published-merchant align-center px-0">
+                            No
+                        </div>
+                        <div class="col-12 card-title-row px-0 text-center px-0">
+                            Is Active
+                        </div>
+                    </div>
+
+                    <div class="row col-2">
+                        <div class="col-12 px-0 card-record-row action-container product-action">
+                            <div class="promoCodeEdit"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addPromoCodeModal" data-id="0" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Promo Code</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="createForm" name="createForm" method="post">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label asp-for="AddPromoCodeViewModel.PromoCode" class="control-label"></label>
+                        <input asp-for="AddPromoCodeViewModel.PromoCode" class="form-control" />
+                        <span asp-validation-for="AddPromoCodeViewModel.PromoCode" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AddPromoCodeViewModel.Description" class="control-label"></label>
+                        <input asp-for="AddPromoCodeViewModel.Description" class="form-control" />
+                        <span asp-validation-for="AddPromoCodeViewModel.Description" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AddPromoCodeViewModel.DiscountValue " class="control-label">Dicount Percentage</label>
+                        <input asp-for="AddPromoCodeViewModel.DiscountValue " class="form-control" />
+                        <span asp-validation-for="AddPromoCodeViewModel.DiscountValue " class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AddPromoCodeViewModel.MinSpend" class="control-label"></label>
+                        <input asp-for="AddPromoCodeViewModel.MinSpend" class="form-control" />
+                        <span asp-validation-for="AddPromoCodeViewModel.MinSpend" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AddPromoCodeViewModel.MaxDiscountValue" class="control-label"></label>
+                        <input asp-for="AddPromoCodeViewModel.MaxDiscountValue" class="form-control" />
+                        <span asp-validation-for="AddPromoCodeViewModel.MaxDiscountValue " class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AddPromoCodeViewModel.TotalRedemptionAllowed" class="control-label"></label>
+                        <input asp-for="AddPromoCodeViewModel.TotalRedemptionAllowed" class="form-control" />
+                        <span asp-validation-for="AddPromoCodeViewModel.TotalRedemptionAllowed  " class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AddPromoCodeViewModel.TotalAllowedPerUser" class="control-label"></label>
+                        <input asp-for="AddPromoCodeViewModel.TotalAllowedPerUser" class="form-control" />
+                        <span asp-validation-for="AddPromoCodeViewModel.TotalAllowedPerUser  " class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AddPromoCodeViewModel.IsFirstTimeUserOnly" class="control-label"></label>
+                        <input asp-for="AddPromoCodeViewModel.IsFirstTimeUserOnly" class="form-control" />
+                        <span asp-validation-for="AddPromoCodeViewModel.IsFirstTimeUserOnly   " class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AddPromoCodeViewModel.IsNewSignupUserOnly" class="control-label"></label>
+                        <input asp-for="AddPromoCodeViewModel.IsNewSignupUserOnly" class="form-control" />
+                        <span asp-validation-for="AddPromoCodeViewModel.IsNewSignupUserOnly" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="AddPromoCodeViewModel.IsSelectedUserOnly" class="control-label"></label>
+                        <input asp-for="AddPromoCodeViewModel.IsSelectedUserOnly" class="form-control" />
+                        <span asp-validation-for="AddPromoCodeViewModel.IsSelectedUserOnly" class="text-danger"></span>
+                    </div>
+
+
+                    
+                    <div class="form-row">
+                        <div class="col-9">
+                            <label asp-for="AddPromoCodeViewModel.IsShipCostDeduct" class="control-label font-weight-bold">Apply Promocode discount to checkout value (including shipping)</label>
+
+                        </div>
+
+                        <div class="col-3">
+                            <input asp-for="AddPromoCodeViewModel.IsShipCostDeduct" class="form-control" />
+
+                         </div>
+
+                        <span asp-validation-for="AddPromoCodeViewModel.IsShipCostDeduct" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="AddPromoCodeViewModel.ExpireOn" class="control-label"></label>
+                        <input asp-for="AddPromoCodeViewModel.ExpireOn" class="form-control" />
+                        <span asp-validation-for="AddPromoCodeViewModel.ExpireOn" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="btnCreatePromoCode">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editPromoCodeModal" data-id="0" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Promo Code</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="editForm" name="editForm" method="post">
+
+                <input type="hidden" name="EditPromoCodeViewModel.GeneratedId" id="EditPromoCodeViewModel_Id" />
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label asp-for="EditPromoCodeViewModel.PromoCode" class="control-label"></label>
+                        <input asp-for="EditPromoCodeViewModel.PromoCode" class="form-control" />
+                        <span asp-validation-for="EditPromoCodeViewModel.PromoCode" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="EditPromoCodeViewModel.Description" class="control-label"></label>
+                        <input asp-for="EditPromoCodeViewModel.Description" class="form-control" />
+                        <span asp-validation-for="EditPromoCodeViewModel.Description" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="EditPromoCodeViewModel.DiscountValue " class="control-label">Discount Percentage</label>
+                        <input asp-for="EditPromoCodeViewModel.DiscountValue " class="form-control" />
+                        <span asp-validation-for="EditPromoCodeViewModel.DiscountValue " class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="EditPromoCodeViewModel.MinSpend" class="control-label"></label>
+                        <input asp-for="EditPromoCodeViewModel.MinSpend" class="form-control" />
+                        <span asp-validation-for="EditPromoCodeViewModel.MinSpend" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="EditPromoCodeViewModel.MaxDiscountValue" class="control-label"></label>
+                        <input asp-for="EditPromoCodeViewModel.MaxDiscountValue" class="form-control" />
+                        <span asp-validation-for="EditPromoCodeViewModel.MaxDiscountValue " class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="EditPromoCodeViewModel.TotalRedemptionAllowed" class="control-label"></label>
+                        <input asp-for="EditPromoCodeViewModel.TotalRedemptionAllowed" class="form-control" />
+                        <span asp-validation-for="EditPromoCodeViewModel.TotalRedemptionAllowed  " class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="EditPromoCodeViewModel.TotalAllowedPerUser" class="control-label"></label>
+                        <input asp-for="EditPromoCodeViewModel.TotalAllowedPerUser" class="form-control" />
+                        <span asp-validation-for="EditPromoCodeViewModel.TotalAllowedPerUser  " class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="EditPromoCodeViewModel.IsFirstTimeUserOnly" class="control-label"></label>
+                        <input asp-for="EditPromoCodeViewModel.IsFirstTimeUserOnly" class="form-control" />
+                        <span asp-validation-for="EditPromoCodeViewModel.IsFirstTimeUserOnly   " class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="EditPromoCodeViewModel.IsNewSignupUserOnly" class="control-label"></label>
+                        <input asp-for="EditPromoCodeViewModel.IsNewSignupUserOnly" class="form-control" />
+                        <span asp-validation-for="EditPromoCodeViewModel.IsNewSignupUserOnly" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="EditPromoCodeViewModel.IsSelectedUserOnly" class="control-label"></label>
+                        <input asp-for="EditPromoCodeViewModel.IsSelectedUserOnly" class="form-control" />
+                        <span asp-validation-for="EditPromoCodeViewModel.IsSelectedUserOnly" class="text-danger"></span>
+                    </div>
+
+
+                    <div class="form-row">
+                        <div class="col-9">
+                            <label asp-for="EditPromoCodeViewModel.IsShipCostDeduct" class="control-label font-weight-bold">Apply Promocode discount to checkout value (including shipping)</label>
+
+                        </div>
+
+                        <div class="col-3">
+                            <input asp-for="EditPromoCodeViewModel.IsShipCostDeduct" class="form-control" />
+
+                         </div>
+
+                        <span asp-validation-for="EditPromoCodeViewModel.IsShipCostDeduct" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="EditPromoCodeViewModel.ExpireOn" class="control-label"></label>
+                        <input asp-for="EditPromoCodeViewModel.ExpireOn" class="form-control" />
+                        <span asp-validation-for="EditPromoCodeViewModel.ExpireOn" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="btnUpdatePromoCode">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        var promoCodes = [];
+        var table = null;
+        $(document).ready(function() {
+            $("#promoCodeSubMenu").addClass("show");
+            getPromoCodeList();
+
+            $("#btnAddPromoCode").click(function() {
+                $("#addPromoCodeModal").modal('show');
+            });
+
+            $("#btnCreatePromoCode").click(function(e) {
+                e.preventDefault();
+                if ($("#createForm").valid()) {
+                    $("#btnCreatePromoCode").prop("disabled", true).text("Creating...");
+                    $.post("/admin/promocode/create", $("#createForm").serialize())
+                        .done(function(response) {
+                            console.log(response);
+                            $("#btnCreatePromoCode").prop("disabled", false).text("Create");
+
+                            if (response.successful) {
+                                $("#addPromoCodeModal").modal('hide');
+                                toastr.success(response.message);
+                                getPromoCodeList();
+                            }
+                            else { toastr.error(response.message); }
+
+                        })
+                        .fail(function(data) {
+                            console.log(data);
+                            toastr.error("Fail to create. Please try again later");
+                            $("#btnLogin").prop("disabled", false).text("Sign In");
+                        });
+                }
+            });
+
+            $("#btnUpdatePromoCode").click(function(e) {
+                e.preventDefault();
+                if ($("#editForm").valid()) {
+                    $("#btnUpdatePromoCode").prop("disabled", true).text("Updating...");
+                    $.post("/admin/promocode/update", $("#editForm").serialize())
+                        .done(function(response) {
+                            console.log(response);
+                            $("#btnUpdatePromoCode").prop("disabled", false).text("Update");
+
+                            if (response.successful) {
+                                $("#editPromoCodeModal").modal('hide');
+                                toastr.success(response.message);
+                                getPromoCodeList();
+                            }
+                            else { toastr.error(response.message); }
+
+                        })
+                        .fail(function(data) {
+                            console.log(data);
+                            toastr.error("Fail to update. Please try again later");
+                            $("#btnUpdatePromoCode").prop("disabled", false).text("Update");
+                        });
+                }
+            });
+        });
+
+        function getPromoCodeList() {
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: '/Admin/PromoCode/List',
+                success: function(response) {
+                    console.log(response);
+                    if (response.pageCount > 0) {
+                        $(".promoCodeCard").html("");
+                        promoCodes = response.items;
+                        $(response.items).each(function(index, item) {
+                            var statushtml = "";
+                            if (item.status == 1) {
+                                statushtml = "<span class='badge badge-light'>" + item.statusType;
+                            }
+                            else {
+                                statushtml = "<span class='badge badge-danger'>" + item.statusType;
+                            }
+
+                            var template = $(".card-table-template");
+                            template.find(".product-title").html("<a class='btn-edit' data-id='" + item.id + "'href='/Admin/Products/Edit/" + item.id + "' >" + item.title + "</a>");
+                            template.find(".promoCodeCode").html(item.promoCode);
+
+                            template.find(".promoCodeDescription").html(item.description);
+                            template.find(".promoCodeMaxDiscount").html("RM" + parseFloat(item.maxDiscountValue).toFixed(2));
+                            template.find(".promoCodeDiscountType").html(item.discountType);
+                            template.find(".promoCodeDiscountValue").html(parseFloat(item.discountValue).toFixed(2) + "%");
+                            template.find(".promoCodeMinSpend").html("RM" + parseFloat(item.minSpend).toFixed(2));
+                            template.find(".promoCodeExpireOn").html(new Date(item.expireOn).toLocaleDateString());
+                            template.find(".promoCodeTotalRedeemed").html(item.totalRedeemed);
+                            template.find(".promoCodeTotalRedemptionAllowed").html(item.totalRedemptionAllowed);
+                            template.find(".promoCodeTotalAllowedPerUser").html(item.totalAllowedPerUser);
+
+                            if (item.status == 1) {
+                                template.find(".promoCodeStatus").html("<div class='switch-button switch-button-success'>" +
+                                    "<input class='activatedStatusMerchant' onchange='updatePromoCodeStatus(this);' type='checkbox' checked='' name='switchMobileMerchant_" + item.id + "' data-id='" + item.id + "' id='switchMobileMerchant_" + item.id + "'><span>" +
+                                    " <label for='switchMobileMerchant_" + item.id + "'></label> " +
+                                    "</span><span class='d-none publish-status-merchant'>ACTIVE</span> </div>");
+                            }
+                            else {
+                                template.find(".promoCodeStatus").html("<div class='switch-button switch-button-success'>" +
+                                    "<input class='activatedStatusMerchant' onchange='updatePromoCodeStatus(this);' type='checkbox'  name='switchMobileMerchant_" + item.id + "' data-id='" + item.id + "' id='switchMobileMerchant_" + item.id + "'><span>" +
+                                    " <label for='switchMobileMerchant_" + item.id + "'></label> " +
+                                    "</span><span class='d-none publish-status-merchant'>IN-ACTIVE</span> </div>");
+                            }
+
+                            template.find(".promoCodeEdit").html('<button type="button" class="btn btn-primary edit" data-id="' + item.id + '">Edit</button>');
+
+                            $(".promoCodeCard").append(template.html());
+                        });
+
+                        $(".edit").click(function() {
+                            var id = $(this).attr('data-id');
+                            var promo = promoCodes.find(x => x.id == id);
+                            if (promo != null) {
+                                $("#EditPromoCodeViewModel_PromoCode").val(promo.promoCode);
+                                $("#EditPromoCodeViewModel_Id").val(id);
+                                $("#EditPromoCodeViewModel_Description").val(promo.description);
+                                $("#EditPromoCodeViewModel_DiscountValue").val(promo.discountValue);
+                                $("#EditPromoCodeViewModel_MinSpend").val(promo.minSpend);
+                                $("#EditPromoCodeViewModel_MaxDiscountValue").val(promo.maxDiscountValue);
+                                $("#EditPromoCodeViewModel_TotalRedemptionAllowed").val(promo.totalRedemptionAllowed);
+
+                                $("#EditPromoCodeViewModel_IsFirstTimeUserOnly").prop('checked', promo.isFirstTimeUserOnly);
+                                $("#EditPromoCodeViewModel_IsNewSignupUserOnly").prop('checked', promo.isNewSignupUserOnly);
+                                $("#EditPromoCodeViewModel_IsSelectedUserOnly").prop('checked', promo.isSelectedUserOnly);
+
+                                //1781
+                                $("#EditPromoCodeViewModel_IsShipCostDeduct").prop('checked', promo.isShipCostDeduct);
+
+
+                                $("#EditPromoCodeViewModel_ExpireOn").val(new Date(promo.expireOn).toISOString().split('T')[0]);
+                                $("#editPromoCodeModal").modal('show');
+                            }
+                        });
+
+                    }
+                },
+                error: function(error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function updatePromoCodeStatus(input) {
+            var id = $(input).attr("data-id");
+            var status = $(input).is(":checked");
+
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    id: id, status: status
+                },
+                url: '/Admin/PromoCode/UpdateStatus',
+                success: function(response) {
+                    if (response.successful)
+                        toastr.success(response.message);
+                    else
+                        toastr.error(response.message);
+                },
+                error: function(error) {
+                    toastr.error(error);
+                }
+            });
+
+        }
+    </script>
+
+}
+
+

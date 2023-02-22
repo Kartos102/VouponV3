@@ -1,0 +1,419 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using  Voupon.Rewards.WebApp.Infrastructures.Constants
+@model Voupon.Rewards.WebApp.Services.Profile.Page.EditPageViewModel
+
+<style>
+    @@media (min-width: 1024px) {
+        footer {
+            display: none;
+        }
+    }
+</style>
+<div class="user-page">
+    <div class="user-page-left-spacing">
+    </div>
+    <div class="user-page-right row">
+        <form id="editProfileForm" name="editProfileForm">
+
+            @if (TempData[VD.Alert.Success] != null)
+            {
+                <p class="alert alert-success alert-dismissable">@TempData[VD.Alert.Success]<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></p>
+            }
+            @if (TempData[VD.Alert.Error] != null)
+            {
+                <p class="alert alert-success alert-dismissable">@TempData[VD.Alert.Error]<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></p>
+            }
+            <div class="align-center mb-3">
+                <h2>My Profile</h2>
+            </div>
+            @if (Model.TotalIncompletedDemographics > 0)
+            {
+                <div class="align-center mb-3" style="display:none;">
+                    <h3>Complete your profile to get @Model.TotalIncompletedDemographics VPoints</h3>
+                </div>
+            }
+            <div class="row">
+                <div class="col-12 no-padding" style="margin-bottom:50px;">
+                    <div class="row">
+                        <div class="row col-12">
+                            <div class="form-group col-md-12 pr-md-5">
+                                <label><span class="i18next" data-i18n="common.email">Email</span></label>
+                                @Html.TextBoxFor(x => x.Email, new { @class = "form-control col-md-6", style = "cursor:default;", disabled = "disabled" })
+                                @Html.ValidationMessageFor(x => x.Email, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label><span class="i18next" data-i18n="common.first-name">First name</span></label>
+                                @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.FirstName, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label><span class="i18next" data-i18n="common.last-name">Last name</span></label>
+                                @Html.TextBoxFor(x => x.LastName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.LastName, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label><span class="i18next" data-i18n="common.date-of-birth">Date of birth</span></label>
+                                <div class="row">
+                                    <div class="col-4">
+                                        @Html.DropDownListFor(x => x.DateOfBirthDay, Model.DayList, new { @class = "form-control", style = "cursor:default;" })
+                                        @Html.ValidationMessageFor(x => x.DateOfBirthDay, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-4">
+                                        @Html.DropDownListFor(x => x.DateOfBirthMonth, Model.MonthList, new { @class = "form-control", style = "cursor:default;" })
+                                        @Html.ValidationMessageFor(x => x.DateOfBirthMonth, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-4">
+                                        @Html.DropDownListFor(x => x.DateOfBirthYear, Model.YearList, new { @class = "form-control", style = "cursor:default;" })
+                                        @Html.ValidationMessageFor(x => x.DateOfBirthYear, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row col-12">
+
+                            <div class="contact-details-form col-md-6">
+                                <div class="form-group" style="margin-bottom: 5px;">
+                                    <label class="i18next" data-i18n="common.home-address">Home Address</label>
+                                    @Html.TextBoxFor(x => x.AddressLine1, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(x => x.AddressLine1, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.TextBoxFor(x => x.AddressLine2, new { @class = "form-control" })
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-6">
+                                        <label class="i18next" data-i18n="common.postcode">Postcode</label>
+                                        @Html.TextBoxFor(x => x.Postcode, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(x => x.Postcode, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label class="i18next" data-i18n="common.city">City</label>
+                                        @Html.TextBoxFor(x => x.City, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(x => x.City, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-6">
+                                        <label class="i18next" data-i18n="common.state">State</label>
+                                        @Html.DropDownListFor(x => x.DemographicStateId, Model.StateList, "--Please select--", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(x => x.State, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label class="i18next" data-i18n="common.country">Country</label>
+                                        @Html.DropDownListFor(x => x.CountryId, Model.CountryList, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(x => x.CountryId, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-6 row final-form-div">
+                                <div class="form-group mb-md-5 pb-md-1">
+                                    <label><span class="i18next" data-i18n="common.phone-number">Mobile number</span></label>
+                                    <div class="input-group">
+                                        <span>+</span>
+                                        @Html.TextBoxFor(x => x.MobileCountryCode, new { @class = "form-control mr-2", style = "max-width:30px;width:20%;padding:6px 0;text-align:center;opacity:5 !important", Value = "60", placeholder = "60 (MY)", maxlength = "2",@readonly="true" })
+                                        @Html.TextBoxFor(x => x.MobileNumber, new { @class = "form-control", style = "width:80%;", placeholder = "eg: 0123456789",maxlength = "12" })
+                                    </div>
+                                    @Html.ValidationMessageFor(x => x.MobileCountryCode, "", new { @class = "text-danger" })
+                                    @Html.ValidationMessageFor(x => x.MobileNumber, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    <label><span class="i18next" data-i18n="common.gender">Gender</span></label>
+                                    <select id="DemographicGenderId" name="DemographicGenderId" class="form-control">
+                                        @if (Model.DemographicGenderId.ToString() == "0")
+                                        {
+                                            <option value="0" selected="selected" class="i18next" data-i18n="common.please-select">--Please select--</option>
+                                        }
+                                        @foreach (var item in Model.GenderList)
+                                        {
+                                            if (item.Value == Model.DemographicGenderId.ToString())
+                                            {
+                                                <option selected="selected" value="@item.Value" class="i18next" data-i18n="common.@item.Text.Replace(" ","").ToLower()"></option>
+                                            }
+                                            else if (item.Value == "0")
+                                            {
+                                                <option value="@item.Value" selected="selected" class="i18next" data-i18n="common.@item.Text.Replace(" ","").ToLower()"></option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.Value" class="i18next" data-i18n="common.@item.Text.Replace(" ","").ToLower()"></option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label><span class="i18next" data-i18n="common.preferred-language">Preferred language</span></label>
+                                    <select id="PreferLanguage" name="PreferLanguage" class="form-control">
+                                        @foreach (var item in Model.LanguageList)
+                                        {
+                                            if (Model.PreferLanguage != null)
+                                            {
+                                                if (item.Value == Model.PreferLanguage.ToString())
+                                                {
+                                                    if (item.Value == "0")
+                                                    {
+                                                        <option selected="selected" value="@item.Value" class="i18next" data-i18n="common.please-select"></option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option selected="selected" value="@item.Value">@item.Text</option>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    if (item.Value == "0")
+                                                    {
+                                                        <option value="@item.Value" class="i18next" data-i18n="common.please-select"></option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (item.Value == "0")
+                                                {
+                                                    <option value="@item.Value" class="i18next" data-i18n="common.please-select"></option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@item.Value">@item.Text</option>
+                                                }
+                                            }
+
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row text-center mt-2">
+                        <div class="col-lg-12">
+                            <button type="button" class="btn btn-primary" id="btnUpdateProfile"><span class="i18next" data-i18n="common.update">Update profile</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4"></div>
+            </div>
+        </form>
+    </div>
+</div>
+@section scripts
+{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+                var redirectUrl = '';
+                var totalItemsInCart = @Model.TotalItemsInCart;
+                    $(function () {
+
+                    var from = getParameterByName("from");
+                    if (from != "" && from != null) {
+                        if (from.indexOf("cart") !== -1) {
+                            redirectUrl = "/cart";
+                            $("#btnUpdateProfile").html("Proceed to Checkout");
+                        }
+                        else if (from.indexOf("producttestregister") !== -1) {
+                            $("#btnUpdateProfile").html("Proceed test Registration");
+                            redirectUrl = '/hut/product-test-registration/' + getParameterByName("productid") + "/" + getParameterByName("email");
+                        }
+                        else {
+                            redirectUrl = "";
+                        }
+                    }
+
+                    if ($("#CountryId").val() === "") {
+                        $("#CountryId").val("160");
+                    }
+                    localizePage();
+
+                    var lang = docCookies.getItem("Vodus.Language");
+                    if (lang != "") {
+                        $(".languageSelector").each(function () {
+                            var language = this;
+                            if (lang == $(language).attr('data-code')) {
+                                $("#selectedLanguage").html('<img src="' + $(language).attr('data-image') + '" style="width:30px;" /> ' + $(language).attr('data-name'));
+                                $(this).click();
+                                console.log('done language sync');
+                            }
+                        });
+                    }
+                    else {
+                        $(".languageSelector").each(function () {
+                            var language = this;
+                            if (lang == "en") {
+                                $("#selectedLanguage").html('<img src="' + $(language).attr('data-image') + '" style="width:30px;" /> ' + $(language).attr('data-name'));
+                                $(this).click();
+                                console.log('done language sync');
+                            }
+                        });
+                    }
+                    $("#btnUpdateProfile").click(function () {
+
+                        if ($("#editProfileForm").valid()) {
+
+                            if ($("#DateOfBirthDay option:selected").val() == "0" ||
+                                $("#DateOfBirthMonth option:selected").val() == "0" ||
+                                $("#DateOfBirthYear option:selected").val() == "0") {
+                                toastr.error("Please update your date of birth");
+                                return false;
+                            }
+
+                            if ($("#DemographicGenderId option:selected").val() == "0") {
+                                toastr.error("Please select your gender");
+                                return false;
+                            }
+
+                          /* if ($("#DemographicEthnicityId option:selected").val() == "0") {
+                                toastr.error("Please select your ethnicity");
+                                return false;
+                            }
+
+                            if ($("#DemographicEducationId option:selected").val() == "0") {
+                                toastr.error("Please select your education level");
+                                return false;
+                            }
+
+                            if ($("#DemographicMaritalStatusId option:selected").val() == "0") {
+                                toastr.error("Please select your marital status");
+                                return false;
+                            }
+
+                            if ($("#DemographicMonthlyIncomeId option:selected").val() == "0") {
+                                toastr.error("Please select your monthly income");
+                                return false;
+                            }
+
+                            if ($("#DemographicMonthlyHouseHoldIncomeId option:selected").val() == "0") {
+                                toastr.error("Please select your household income");
+                                return false;
+                            }
+
+                            //if ($("#DemographicRuralUrbanId option:selected").val() == "0") {
+                            //    toastr.error("Please select your rural/urban status");
+                            //    return false;
+                            //}
+                            
+                            if ($("#DemographicGenderId option:selected").val() == "0" ||
+                                $("#DemographicEthnicityId option:selected").val() == "0" ||
+                                $("#DemographicEducationId option:selected").val() == "0" ||
+                                $("#DemographicMaritalStatusId option:selected").val() == "0" ||
+                                $("#DemographicMonthlyIncomeId option:selected").val() == "0" ||
+                                $("#DemographicMonthlyHouseHoldIncomeId option:selected").val() == "0")//|| $("#DemographicRuralUrbanId option:selected").val() == "0")
+                            {
+                                toastr.error("Please update all your profile details above");
+                                return false;
+                            }
+                            */
+                            var data = $("#editProfileForm").serialize();
+
+                            toastr.warning("Loading...");
+                            $.ajax({
+                                global: false,
+                                type: 'POST',
+                                dataType: 'json',
+                                data: data,
+                                url: "/profile/update-profile",
+                                success: function (response) {
+                                    if (response.successful) {
+                                        toastr.warning("Loading...");
+                                        toastr.success(response.message);
+                                        if (response.data != "") {
+                                            docCookies.setItem("Rewards.Temporary.Points", response.data, 36000);
+                                            $(".userPoints").html(response.data + " VPoints");
+                                        }
+
+                                        docCookies.setItem("Vodus.Language", $("#PreferLanguage option:selected").val(), 36000);
+                                        $(".languageSelector").each(function () {
+                                            var language = this;
+                                            if ($(language).attr('data-code') == $("#PreferLanguage option:selected").val()) {
+                                                $("#selectedLanguage").html('<img src="' + $(language).attr('data-image') + '" style="width:30px;" /> ' + $(language).attr('data-name'));
+                                            }
+                                        });
+
+                                        localizePage();
+                                        $(".toast-warning").remove();
+                                        /*if (parseInt(totalItemsInCart) > 0) {
+                                            toastr.success("Redirecting to checkout page");
+                                            location.href = "/cart";
+                                        }*/
+                                        if (redirectUrl != "") {
+                                            if (redirectUrl == '/cart') {
+                                                toastr.success("Redirecting to checkout page");
+                                            } else {
+                                                toastr.success("Redirecting to product test registration");
+                                            }
+                                            location.href = redirectUrl;
+                                        }
+                                    }
+                                    else {
+                                        $(".toast-warning").remove();
+                                        toastr.clear();
+                                        toastr.error(response.message);
+                                    }
+                                },
+                                error: function () {
+                                    $(".toast-warning").remove();
+                                }
+                            });
+                        }
+                        else {
+                            toastr.error("Please update all your profile details");
+                        }
+
+                    });
+
+                    if ($("#MobileCountryCode").val() == "") {
+                        $("#MobileCountryCode").val("60");
+                    }
+                });
+
+                function getParameterByName(name, url) {
+                    if (!url) url = window.location.href.toLowerCase();
+                    name = name.replace(/[\[\]]/g, "\\$&");
+                    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                        results = regex.exec(url);
+                    if (!results) return null;
+                    if (!results[2]) return '';
+                    return decodeURIComponent(results[2].replace(/\+/g, " "));
+                }
+
+                if ($(window).width() > 1023) {
+                    $("#profile-menu").addClass("widescreen-profile-menu");
+                    $("#page-wrapper").css("min-height", $(".widescreen-profile-menu").css("height"));
+                }
+
+
+     var inputFieldIds = ['MobileCountryCode', 'MobileNumber'];
+
+      inputFieldIds.forEach(function(id) {
+        $('#' + id).keyup(function() {
+          validateInput(id);
+        });
+      });
+
+    function validateInput(id) {
+      var input = $('#' + id).val();
+      if (/\D/.test(input)) {
+        // The input contains something other than a number
+        // Remove everything except the numbers
+        input = input.replace(/\D/g, '');
+      }
+      if (/^0/.test(input)) {
+        // The input starts with a zero
+        // Remove the leading zero
+        input = input.slice(1);
+      }
+      $('#' + id).val(input);
+    }
+
+
+    </script>
+}

@@ -1,0 +1,1837 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@{
+    ViewData["Title"] = "Cart Checkout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+
+    .no-color-change:hover,
+    .no-color-change:active {
+        /* Button styles when hovered or clicked */
+        color: white !important /* Same as default color, so the color does not change on hover or click */
+    }
+
+</style>
+
+<div class="row mt-0" id="cartAvailable" style="">
+    <div class="col-lg-12 mt-3">
+        <h1 class="mb-0 ml-lg-3">
+            <strong class="i18next" data-i18n="common.my-cart">
+                Your Shopping Cart
+            </strong>
+        </h1>
+    </div>
+    <div class="col-lg-12 px-0 px-lg-2">
+        <div class="ibox mt-md-0">
+            <div class="ibox-content" style="overflow: auto;border: none;">
+                <div class="row mx-2">
+                    <div class="col-md-7 col-lg-8 col-xl-8">
+                        <h4 class="empty-cart watermark" style="display:none;">
+                            <i>
+                                Your cart is empty.<br />
+                                Do a search to keep exploring.
+                            </i>
+                        </h4>
+                        <div class="row" style="overflow: auto;">
+                            <div class="col-lg-12">
+                                <div class="table" id="cartTable">
+                                    <div id="cartItems">
+                                        <div class="row" id="noCartItem">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="shoppingCartItems">
+                        </div>
+                    </div>
+                    <div class="col-md-5 col-lg-4 col-xl-4">
+                        <div class="mycart-modal-title">
+                            <h2 class="text-left"><strong class="i18next" data-i18n="common.my-cart">Order Summary</strong></h2>
+                        </div>
+                        <div class="top-purple-border text-center cart-summary">
+                            <div class="row">
+                                <div hidden class="order-summary-subdiv">
+                                    <span>
+                                        Billing address
+                                    </span>
+                                    <a i id="ChangeBillingAddress">
+                                        <h3 class="pull-right ">
+                                            Change
+                                        </h3>
+                                    </a>
+                                </div>
+                                <br />
+                                <div hidden class="order-summary-subdiv card-details" style="height:100px">
+                                    <span id="billingAddressNote" class="pull-left" style="width:100%;text-align:left;">
+                                        Please select billing address
+                                    </span>
+                                    <div id="showBillingAddress" style="display:none">
+                                        <div class="pull-left" style="width:100%;text-align:left;">
+                                            <span id="billingFirstName">Kelvin</span>&nbsp;<span id="billingLastName">Goh</span>
+                                        </div>
+                                        <br />
+                                        <div class="pull-left" style="width:100%;text-align:left;">
+                                            +(<span id="billingMobileCountryCode">60</span>)<span id="billingMobileNumber">164214841</span>
+                                        </div>
+                                        <br />
+                                        <div class="pull-left" style="width:100%;text-align:left;">
+                                            <span id="billingAddressLine1">ShippingAddressLine1</span>
+                                        </div>
+                                        <div class="pull-left" style="width:100%;text-align:left;">
+                                            <span id="billingAddressLine2">ShippingAddressLine2</span>
+                                        </div>
+                                        <br />
+                                        <div class="pull-left" style="width:100%;text-align:left;">
+                                            <span id="billingCity">Petaling Jaya</span>&nbsp;<span id="billingPostcode">46200</span>
+                                        </div>
+                                        <br />
+                                        <div class="pull-left" style="width:100%;text-align:left;">
+                                            <span id="billingState">Selangor</span>&nbsp;<span id="billingCountry">Malaysia</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cartpage-icon">
+                                    <img src="~/images/Shopping_Cart_location.svg" />
+                                </div>
+                                <div class="order-summary-subdiv">
+                                    <span class="pull-left">
+                                        Shipping Details
+                                    </span>
+                                    <a>
+                                        <h3 class="pull-right " id="ChangeShippingAddress">
+                                            Change
+                                        </h3>
+                                    </a>
+                                </div>
+                                <br />
+                                <div class="cartpage-icon">
+                                </div>
+                                <div class="order-summary-subdiv">
+                                    <div>
+                                        <span id="shippingAddressNote" class="pull-left" style="width:100%;text-align:left;">
+                                            Please select shipping address
+                                        </span>
+                                        <div id="showShippingAddress" style="display:none">
+                                            <span class="pull-left" style="width:100%;text-align:left;">
+                                                <span id="shippingFirstName">Kelvin</span>&nbsp;<span id="shippingLastName">Goh</span>
+                                            </span>
+                                            <span class="pull-left" style="width:100%;text-align:left;">
+                                                +(<span id="shippingMobileCountryCode">60</span>)<span id="shippingMobileNumber">164214841</span>
+                                            </span>
+                                            <span class="pull-left" style="width:100%;text-align:left;">
+                                                <span id="shippingAddressLine1">ShippingAddressLine1</span>
+                                            </span>
+                                            <span class="pull-left" style="width:100%;text-align:left;">
+                                                <span id="shippingAddressLine2">ShippingAddressLine2 </span>
+                                            </span>
+                                            <span class="pull-left" style="width:100%;text-align:left;">
+                                                <span id="shippingCity">Petaling Jaya</span>&nbsp;<span id="shippingPostcode">46200</span>
+                                            </span>
+                                            <span class="pull-left" style="width:100%;text-align:left;">
+                                                <span id="shippingState">Selangor</span>&nbsp;<span id="shippingCountry">Malaysia</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="order-summary-subdiv subtotal" style="width:100%;align-items:center;padding-left:28px;margin-top:12px;">
+                                    <span class="pull-left w-100" style="align-items:center;display:flex; ">
+                                        <input type="text" class="form-control" placeholder="Gift or Promo Code" id="promoCode" style="font-size:14px;" />
+                                    </span>
+                                    <h3 style="width:auto;max-width:200px;min-width:100px;">
+                                        <button class="btn btn-secondary" type="button" id="btnApplyPromoCode" style="width:100%;font-size:16px;padding-top:4px;padding-bottom:4px;">Apply</button>
+                                    </h3>
+                                </div>
+                                <div class="order-summary-subdiv subtotal" style="width:100%;align-items:center">
+                                    <p id="promoCodeText" class="" data-i18n="">
+                                    </p>
+                                </div>
+                                <hr />
+                                <div class="cartpage-icon">
+                                    <img src="~/images/Shopping_Cart_ticket.svg" />
+                                </div>
+                                <div class="order-summary-subdiv">
+                                    <span>
+                                        Order Total (<b id="totalItemsCount"></b>)
+                                    </span>
+                                    <h3>
+                                        RM <span id="totalPrice"></span>
+                                    </h3>
+                                </div>
+                                <br />
+                                <div class="cartpage-icon">
+                                </div>
+                                <div class="order-summary-subdiv">
+                                    <span>
+                                        Total VPoints Cost
+                                    </span>
+                                    <h3>
+                                        <span id="totalVPoints"></span>
+                                    </h3>
+                                </div>
+                                <br />
+                                <div class="cartpage-icon">
+                                </div>
+                                <div class="order-summary-subdiv">
+                                    <span>
+                                        VPoints Discount
+                                    </span>
+                                    <h3>
+                                        -RM <span id="totalVPointsDiscount"></span>
+                                    </h3>
+                                </div>
+                                <br />
+                                <div class="cartpage-icon">
+                                </div>
+                                <div class="order-summary-subdiv">
+                                    <span>
+                                        Promo Discounts
+                                    </span>
+                                    <h3>
+                                        -RM <span id="promoCodeDiscount">0.00</span>
+                                    </h3>
+                                </div>
+                                <br />
+                                <div class="order-summary-subdiv subtotal" style="width:100%;align-items:center;padding-left:28px;margin-top:12px;display:none;" id="vPointsMultiplierContainer">
+                                    <p class="alert alert-warning"> 2x VPoints Discount promo is active @*<a href="/tnc/dvp" style="text-decoration:underline;">Read T&C</a>*@</p>
+                                </div>
+                                <br />
+                                <div class="cartpage-icon"></div>
+                                <div class="order-summary-subdiv">
+                                    <span>
+                                        Shipping Cost
+                                    </span>
+                                    <h3>
+                                        RM <span id="shippingCost"></span>
+                                    </h3>
+                                </div>
+                                <br />
+                                <hr />
+                                <div class="order-summary-subdiv d-none" style="width:100%;">
+                                    <span class="pull-left" style="width:60%;text-align:left;padding-left:30px;">
+                                        Subtotal (Inc. Tax)
+                                    </span>
+                                    <h3 style="color: #8C37F6;float: right;text-align:right;">
+                                        RM <span id="amountPayable">0.00</span>
+                                    </h3>
+                                </div>
+                                <div class="order-summary-subdiv subtotal" style="margin-top:15px;width:100%;">
+                                    <span class="pull-left" style="width:60%;padding-left:30px;text-align:left;">
+                                        Total (Inc. Tax)
+                                    </span>
+                                    <h3 style="color: #8C37F6;float:right;text-align:right;">
+                                        RM <span id="amountPayableAfterDiscount">0.00</span>
+                                    </h3>
+                                </div>
+                                <button id="btnCheckOut" type-="button" class="btn btn-primary btn-lg mt-3 full-width i18next" data-i18n="common.checkout">CHECKOUT</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ShippingAddressModal" status-id="0" remarks="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content top-purple-border">
+            <div>
+                <div class="modal-header">
+                    <h3 class="modal-title">Edit Shipping Address</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body order-detail-body pt-2">
+                    <div hidden>
+                        <input type="radio" name="shippingAddressType" value="profile" id="RetrieveProfileShippingDetail">
+                        <label for="male">From Profile</label><br>
+                        <input type="radio" name="shippingAddressType" value="manually">
+                        <label for="female">Manual Enter</label><br>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 px-1">
+                            <div class="form-group">
+                                <label for="inputText3" class="col-form-label" style="width:100%; text-align:left">First Name</label>
+                                <input id="EditShippingFirstName" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6 px-1">
+                            <div class="form-group">
+                                <label for="inputText3" class="col-form-label" style="width:100%; text-align:left">Last Name</label>
+                                <input id="EditShippingLastName" type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-md-6 px-1">
+                            <div class="form-group">
+                                <label for="inputText3" class="col-form-label" style="width:100%; text-align:left">Mobile Number</label>
+                                <div class="d-flex align-items-center">
+                                    <input id="EditShippingMobileCountryCode" type="text" class="form-control mr-1 text-center" value="60" style="width: 50px;opacity:5 !important" readonly>
+                                    <input id="EditShippingMobileNumber" type="text" class="form-control" onblur="removeLeadingZeros(this)">
+                                    <input id="orignal_number" type="hidden" class="form-control">
+                                    <input id="orignal_number_cc" type="hidden" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-md-6 px-1">
+                            <div class="form-group">
+                                <label for="inputText3" class="col-form-label" style="width:100%; text-align:left">Address 1</label>
+                                <input id="EditShippingAddressLine1" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 px-1">
+                            <div class="form-group">
+                                <label for="inputText3" class="col-form-label" style="width:100%; text-align:left">Address 2</label>
+                                <input id="EditShippingAddressLine2" type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 px-1">
+                            <div class="form-group">
+                                <label for="inputText3" class="col-form-label" style="width:100%; text-align:left">Postcode</label>
+                                <input id="EditShippingPostcode" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6 px-1">
+                            <div class="form-group">
+                                <label for="inputText3" class="col-form-label" style="width:100%; text-align:left">City</label>
+                                <input id="EditShippingCity" type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 px-1">
+                            <div class="form-group">
+                                <label for="inputText3" class="col-form-label" style="width:100%; text-align:left">State</label>
+                                <select class="form-control" id="EditShippingStateSelect">
+                                </select>
+                                @*<input id="EditShippingState" type="text" class="form-control">*@
+                            </div>
+                        </div>
+                        <div class="col-6 px-1">
+                            <div class="form-group">
+                                <label for="inputText3" class="col-form-label" style="width:100%; text-align:left">Country</label>
+                                <input id="EditShippingCountry" type="text" class="form-control disabled" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnShippingConfirm">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="BillingAddressModal" status-id="0" remarks="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Select Billing Address</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div hidden>
+                    <input type="radio" name="billingAddressType" value="profile" id="RetrieveProfileBillingDetail">
+                    <label for="male">From Profile</label><br>
+                    <input type="radio" name="billingAddressType" value="manually">
+                    <label for="female">Manual Enter</label><br>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="inputText3" class="col-form-label" style="width:100%; text-align:left">First Name</label>
+                            <input id="EditBillingFirstName" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="inputText3" class="col-form-label" style="width:100%; text-align:left">Last Name</label>
+                            <input id="EditBillingLastName" type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="inputText3" class="col-form-label" style="width:100%; text-align:left">Mobile Country Code</label>
+                            <input id="EditBillingMobileCountryCode" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="inputText3" class="col-form-label" style="width:100%; text-align:left">Mobile Number</label>
+                            <input id="EditBillingMobileNumber" type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="inputText3" class="col-form-label" style="width:100%; text-align:left">Address 1</label>
+                            <input id="EditBillingAddressLine1" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="inputText3" class="col-form-label" style="width:100%; text-align:left">Address 2</label>
+                            <input id="EditBillingAddressLine2" type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="inputText3" class="col-form-label" style="width:100%; text-align:left">Postcode</label>
+                            <input id="EditBillingPostcode" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="inputText3" class="col-form-label" style="width:100%; text-align:left">City</label>
+                            <input id="EditBillingCity" type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="inputText3" class="col-form-label" style="width:100%; text-align:left">State</label>
+                            <input id="EditBillingState" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="inputText3" class="col-form-label" style="width:100%; text-align:left">Country</label>
+                            <input id="EditBillingCountry" type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnBillingConfirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="mdlOtpVerify" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header ml-4">
+                <h2 class="modal-title font-weight-bold">Verify your mobile number</h2>
+            </div>
+            <div class="modal-body  ml-4">
+
+                <div class="form-group">
+                    <label for="mobileNumber" class="text-muted">Mobile Number</label><br>
+                    <div style="display:flex; align-items:center;">
+                        +<input type="text" class="form-control font-weight-bold" id="otpCountryPrefix" name="otpCountryPrefix" placeholder="+60" value="60" maxlength="2" style="width:40px; margin-right:10px;opacity:5 !important" readonly>
+                        <input type="text" class="form-control font-weight-bold" id="otpNumber" name="otpNumber" placeholder="eg:123456789" style="width:auto; margin-right:10px;">
+                        <button type="button" id="btnRequestOtp" class="btn btn-dark ml-4 btn-block no-color-change">Request OTP</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="text" class="text-muted">OTP</label>
+
+                    <div class="form-inline">
+                        <input id="otpInput1" name="otpInput" type="text" class="form-control mx-1 col-1  font-weight-bold" maxlength="1" size="1">
+                        <input id="otpInput2" name="otpInput" type="text" class="form-control mx-1 col-1  font-weight-bold" maxlength="1" size="1">
+                        <input id="otpInput3" name="otpInput" type="text" class="form-control mx-1 col-1  font-weight-bold" maxlength="1" size="1">
+                        <input id="otpInput4" name="otpInput" type="text" class="form-control mx-1 col-1  font-weight-bold" maxlength="1" size="1">
+                        <input id="otpInput5" name="otpInput" type="text" class="form-control mx-1 col-1  font-weight-bold" maxlength="1" size="1">
+                        <input id="otpInput6" name="otpInput" type="text" class="form-control mx-1 col-1  font-weight-bold" maxlength="1" size="1">
+
+                        <label for="text" class="col-form-label text-danger" id="otpMsg"></label>
+
+                    </div>
+                </div>
+
+
+                <div class="form-group row mt-3">
+
+
+
+                    <button name="button" type="button" id="btnVeifyOtp" class="btn btn-primary btn-block  col-6">OK</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="cartRowTemplate" style="display:none;">
+    <div class="checkbox-product checkbox-item">
+        <input class="checkbox-cart" id="62" data-val="true" type="checkbox" value="true">
+        <div class="checkbox-label">
+            <div class="cart-item-row cart-row col-12 row" id="62">
+                <div class="col-lg-7 row">
+                    <div class="cart-product-img cart-column col-4">
+                        <img src="" class="img-responsive">
+                    </div>
+                    <div class="cart-column col-8">
+                        <a href="/product/62" class="cartItemTitle">
+                            <h2 class="cart-item-title ellipsis-2">Beetroot Cold pressed juice</h2>
+                        </a>
+                        <div class="row">
+                            <div class="col-12">
+                                <span class="cartItemOriPrice">RM 12.00</span>
+                                <span class="cartItemPrice">RM 10.00 </span>
+                                <br>
+                            </div>
+                            <div class="col-12 cart-variations-column">
+                                <div class="cart-variations-content flex-wrap flex-lg-nowrap">
+                                    <span class="cart-Item-Variation-Text ml-0">Variations:</span>
+                                    <span class="cart-item-Variation ellipsis-3 mx-0 mx-lg-2"></span>
+                                </div>
+                            </div>
+                            <div>
+                                <span class="badge badge-success cart-item-discount">17 % off</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5 row cart-detail-col">
+                    <div class="cart-column col-12">
+                        <div class="detailTable">
+                            <div class="cart-product-detail">
+                                <div class="cart-row row">
+                                    <div class="cart-column col-5 d-flex align-items-center pl-4" style="margin-bottom:10px;">Quantity</div>
+                                    <div class="cart-column order-quantity col-7">
+                                        <div class="input-group w-100 d-flex justify-content-between">
+                                            <div class="row">
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-default btn-number" data-type="minus" data-field="quant[1]">
+                                                        <span class="fas fa-minus" aria-hidden="true"></span>
+                                                    </button>
+                                                </span>
+                                                <input type="text" id="orderQuantity_1" name="quant[1]" class="form-control input-number orderQuantity" value="2" min="1" max="10" id-number="9999">
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-default btn-number" data-type="plus" data-field="quant[1]">
+                                                        <span class="fas fa-plus" aria-hidden="true"></span>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                            <button type="button" class="removeFromCart">
+                                                <i class="fas fa-trash" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cart-row row">
+                                    <div class="cart-column col-6 pl-4">
+                                        <p>VPoints</p>
+                                        <h3 class="cart-vpoints" id="Vpoints_1">0</h3>
+                                    </div>
+                                    <div class="cart-column col-6">
+                                        <p>Net Price</p>
+                                        <h3 class="cart-netprice" id="cart_nett_price_1">RM 20.00</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="cartMerchantTemplate" style="display:none;">
+    <div class="checkbox-merchant checkbox-item mt-2">
+        <input class="checkbox-cart" merchant="Vodus" data-val="true" type="checkbox" value="true">
+        <h3 class="cartItemMerchant checkbox-label"><a class="cartItemShop" href="/">Creative Juices</a></h3>
+    </div>
+</div>
+@section styles{
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css">
+}
+@section scripts
+    {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.js"></script>
+    <script>
+        const multiTireVpointThreshold = 3;
+        var isLoggedIn = @(String.IsNullOrEmpty(User.Identity.Name) ? "false" : "true");
+        var cartDataObject = [];
+        var orderShipping = [];
+        var promoCodeValue = "";
+        var hasVPointsMultiplier = false;
+
+        const button = document.querySelector('#btnRequestOtp');
+        let sec = 30;
+        let countdown = null;
+
+        $(button).click(function () {
+
+            if ($("#otpNumber").val() == "" || $("#otpCountryPrefix").val() == "") {
+
+                $("#otpMsg").html("Please enter both mobile number and country code").fadeIn().delay(2000).fadeOut(1000);
+
+            }
+
+
+            else if (validateMobileNumber($("#otpNumber").val(), $("#otpCountryPrefix").val()) == true) {
+
+                requestOtp()
+                button.disabled = true;
+                updateButton();
+                countdown = setInterval(function () {
+                    updateButton();
+                }, 1000);
+            }
+
+            else {
+                $("#otpMsg").html("Please enter valid mobile number").fadeIn().delay(2000).fadeOut(1000);
+            }
+
+
+
+
+        });
+
+
+
+        function updateButton() {
+
+            button.innerHTML = `Please wait ${sec}s`;
+
+            if (sec === 0) {
+                clearInterval(countdown);
+                sec = 30;
+                button.innerHTML = 'Request OTP';
+                button.disabled = false;
+                return;
+            }
+
+            sec--;
+        }
+
+        function requestOtp() {
+
+
+
+            console.log()
+
+
+            $.ajax({
+                type: 'POST',
+                dataType: 'JSON',
+                url: "/profile/otp-request",
+                async: false,
+                data: {
+
+                    "MobileCountryCode": $("#otpCountryPrefix").val(),
+                    "MobileNumber": $("#otpNumber").val(),
+
+                },
+                success: function (value) {
+
+
+
+                },
+
+                error: function (error) {
+                    console.log(error.responseText)
+                    $("#otpMsg").html(error.responseText).fadeIn().delay(2000).fadeOut(1000);
+
+                }
+            });
+        }
+
+
+
+
+
+        $("#btnVeifyOtp").click(function () {
+
+            if (getOtpValue() == "") {
+
+                $("#otpMsg").html("Please enter OTP").fadeIn().delay(2000).fadeOut(1000);
+
+            }
+
+
+            else {
+
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    url: "/profile/otp-verify",
+                    async: false,
+                    data: {
+
+                        "MobileCountryCode": $("#otpCountryPrefix").val(),
+                        "MobileNumber": $("#otpNumber").val(),
+                        "otpInput": getOtpValue()
+
+                    },
+                    success: function (value) {
+
+                        $("#mdlOtpVerify").modal('hide');
+
+                        $("#shippingMobileCountryCode").html($("#otpCountryPrefix").val());
+                        $("#shippingMobileNumber").html($("#otpNumber").val().replace(/^0+/, ''));
+
+                        $("#EditShippingMobileCountryCode").val($("#otpCountryPrefix").val());
+                        $("#EditShippingMobileNumber").val($("#otpNumber").val().replace(/^0+/, ''));
+
+                        $("#orignal_number_cc").val($("#otpCountryPrefix").val());
+                        $("#orignal_number").val($("#otpNumber").val().replace(/^0+/, ''));
+
+
+
+
+
+                        Swal.fire(
+                            'OTP Verification',
+                            'Mobile number verified',
+                            'success'
+                        )
+
+                    },
+
+                    error: function (error) {
+                        console.log(error.responseText)
+
+                        $("#otpMsg").html(error.responseText).fadeIn().delay(2000).fadeOut(1000);
+                    }
+                });
+            }
+
+        });
+
+
+
+
+        function applyPromoCode(promoCode) {
+            toastr.clear();
+
+            //if (hasVPointsMultiplier) {
+            //    toastr.warning("Sorry some of your items uses double VPoints promo. No other promo code can be used");
+            //    return;
+            //}
+
+            //var promoCode = $("#promoCode").val();
+            var subTotal = $("#amountPayable").html();
+            subTotal = parseFloat(subTotal) - parseFloat($("#shippingCost").html());
+            if (promoCode == null || promoCode == "") {
+                toastr.error("Promo code is required");
+                return;
+            }
+            if (subTotal == null || subTotal == "" || subTotal == "0.00") {
+                toastr.error("Promo code only applicable for orders more than 0.00");
+                return;
+            }
+
+            var productList = [];
+            var selectedIDs = [];
+            var items = vodusCart.getCartJson();
+            $(JSON.parse(items)).each(function () {
+                var productId = this.id;
+                var externalId = this.externalId;
+                if (productId == 0) {
+                    var isExternalItemSelected = document.querySelectorAll("[data-externalid='" + externalId + "']");
+                    if (isExternalItemSelected != null) {
+                        var productCheckbox = $(isExternalItemSelected).prop('checked');
+                        if (productCheckbox == true) {
+                            this.shippingCost = orderShipping.filter(x => x.externalItemId == this.externalItemId)[0].orderShippingCost;
+                            //orderShipping
+                            productList.push(this);
+                            selectedIDs.push(productId);
+                        }
+                    }
+                }
+                else {
+                    var productCheckbox = $('.checkbox-product .checkbox-cart[id="' + productId + '"]').prop('checked');
+                    if (productCheckbox == true) {
+
+                        if (orderShipping.filter(x => x.id == this.externalItemId)[0] != null) {
+                            this.shippingCost = orderShipping.filter(x => x.id == this.externalItemId)[0].orderShippingCost;
+                        }
+                        productList.push(this);
+                        selectedIDs.push(productId);
+                    }
+                }
+                //var variationId = this.variationId;
+                //[variationid="' + variationId + '"]
+
+            });
+            var request = $.ajax({
+                url: "/api/v1/promocode/discount",
+                method: "POST",
+                dataType: "json",
+                data: {
+                    promoCode: promoCode,
+                    productList: productList,
+                    subTotal: subTotal
+                }
+            });
+
+            request.done(function (res) {
+                if (res.successful) {
+                    promoCodeValue = promoCode.toLowerCase();
+                    $("#promoCode").val("");
+                    $("#promoCodeDiscount").html(parseFloat(res.data).toFixed(2));
+                    $("#promoCodeText").text(res.message);
+
+                    $('#promoCodeDiscount').parent().css('color', "#07B6C7")
+                    if (promoCodeValue == "2xpromo" || promoCodeValue == "everywednesday2xdiscount") {
+                        $("#vPointsMultiplierContainer").show();
+                        $("#vPointsMultiplierContainer").click(function () {
+                            window.open('/tnc/dvp', '_blank');
+                        });
+                    }
+                    else {
+                        $("#vPointsMultiplierContainer").hide();
+                    }
+                    $("#amountPayableAfterDiscount").html((parseFloat(subTotal) - parseFloat(res.data)).toFixed(2));
+                }
+                else {
+                    toastr.error(res.message);
+                }
+            });
+
+            request.fail(function (jqXHR, textStatus) {
+                alert("Request failed: " + textStatus);
+            });
+        }
+
+        $(document).ready(function () {
+            GetProvinceListForShipping(1);
+            getProfile();
+
+
+
+            //$("#cartRowTemplate").remove();
+
+            $("#btnApplyPromoCode").click(function () {
+                toastr.clear();
+
+                //if (hasVPointsMultiplier) {
+                //    toastr.warning("Sorry some of your items uses double VPoints promo. No other promo code can be used");
+                //    return;
+                //}
+
+                var promoCode = $("#promoCode").val();
+                applyPromoCode(promoCode)
+                /*var subTotal = $("#amountPayable").html();
+                subTotal = parseFloat(subTotal) - parseFloat($("#shippingCost").html());
+                if (promoCode == null || promoCode == "") {
+                    toastr.error("Promo code is required");
+                    return;
+                }
+                if (subTotal == null || subTotal == "" || subTotal == "0.00") {
+                    toastr.error("Promo code only applicable for orders more than 0.00");
+                    return;
+                }
+
+                var productList = [];
+                var selectedIDs = [];
+                var items = vodusCart.getCartJson();
+                $(JSON.parse(items)).each(function () {
+                    var productId = this.id;
+                    var externalId = this.externalId;
+                    if (productId == 0) {
+                        var isExternalItemSelected = document.querySelectorAll("[data-externalid='" + externalId + "']");
+                        if (isExternalItemSelected != null) {
+                            var productCheckbox = $(isExternalItemSelected).prop('checked');
+                            if (productCheckbox == true) {
+                                console.log(orderShipping.filter(x => x.externalItemId == this.externalItemId));
+                                this.shippingCost = orderShipping.filter(x => x.externalItemId == this.externalItemId)[0].orderShippingCost;
+                                //orderShipping
+                                productList.push(this);
+                                selectedIDs.push(productId);
+                            }
+                        }
+                    }
+                    else {
+                        var productCheckbox = $('.checkbox-product .checkbox-cart[id="' + productId + '"]').prop('checked');
+                        if (productCheckbox == true) {
+                            console.log(orderShipping.filter(x => x.id == this.id));
+                            if (orderShipping.filter(x => x.id == this.externalItemId)[0] != null) {
+                                this.shippingCost = orderShipping.filter(x => x.id == this.externalItemId)[0].orderShippingCost;
+                            }
+                            productList.push(this);
+                            selectedIDs.push(productId);
+                        }
+                    }
+                    //var variationId = this.variationId;
+                    //[variationid="' + variationId + '"]
+
+                });
+                var request = $.ajax({
+                    url: "/api/v1/promocode/discount",
+                    method: "POST",
+                    dataType: "json",
+                    data: {
+                        promoCode: promoCode,
+                        productList: productList,
+                        subTotal: subTotal
+                    }
+                });
+
+                request.done(function (res) {
+                    console.log(res);
+                    if (res.successful) {
+                        promoCodeValue = promoCode;
+                        $("#promoCode").val("");
+                        $("#promoCodeDiscount").html(parseFloat(res.data).toFixed(2));
+                        $("#promoCodeText").text(res.message);
+        if(promoCodeValue == "2XPROMO"){
+        $("#vPointsMultiplierContainer").show();
+         $("#vPointsMultiplierContainer").click(function(){
+         window.open('/tnc/dvp', '_blank');
+
+        });
+
+        }
+        else{
+        $("#vPointsMultiplierContainer").hide();
+        }
+                        $("#amountPayableAfterDiscount").html((parseFloat(subTotal) - parseFloat(res.data)).toFixed(2));
+                    }
+                    else {
+                        toastr.error(res.message);
+                    }
+                });
+
+                request.fail(function (jqXHR, textStatus) {
+                    alert("Request failed: " + textStatus);
+                });*/
+            });
+
+            function recalculateAmountPayableAfterDiscount() {
+
+            }
+
+            $("#RetrieveProfileShippingDetail").change(function () {
+
+            });
+
+            //$("#RetrieveProfileShippingDetail").click();
+            $("#btnShippingConfirm").click(function () {
+                if ($("#EditShippingMobileNumber").val().length < 9) {
+                    toastr.error("Kindly input a valid mobile number. Mobile number should be 9 to 10 digits long");
+                    $("#EditShippingMobileNumber").focus();
+                    return;
+                }
+                $("#shippingFirstName").html($("#EditShippingFirstName").val());
+                $("#shippingLastName").html($("#EditShippingLastName").val());
+
+
+
+
+                if ($("#EditShippingMobileCountryCode").val($("#EditShippingMobileCountryCode").val().trim()) == $("#orignal_number_cc").val($("#orignal_number_cc").val().trim()) && $("#EditShippingMobileNumber").val($("#EditShippingMobileNumber").val().trim()) == $("#orignal_number").val($("#orignal_number").val().trim())) {
+
+                    $("#shippingMobileCountryCode").html($("#EditShippingMobileCountryCode").val($("#EditShippingMobileCountryCode").val().trim()));
+                    $("#shippingMobileNumber").html($("#EditShippingMobileNumber").val($("#EditShippingMobileNumber").val().trim()));
+                }
+
+                else {
+
+                    $("#shippingMobileCountryCode").html($("#orignal_number_cc").val());
+                    $("#shippingMobileNumber").html($("#orignal_number").val());
+                }
+
+
+                $("#shippingAddressLine1").html($("#EditShippingAddressLine1").val());
+                $("#shippingAddressLine2").html($("#EditShippingAddressLine2").val());
+                $("#shippingPostcode").html($("#EditShippingPostcode").val());
+                $("#shippingCity").html($("#EditShippingCity").val());
+                $("#shippingState").html($("#EditShippingStateSelect option:selected").text());
+                $("#shippingCountry").html($("#EditShippingCountry").val());
+                $("#ShippingAddressModal").modal("hide");
+                $("#shippingAddressNote").hide();
+                if ($('#shippingAddressLine2').html() == "") {
+                    $('#shippingAddressLine2').parent().hide()
+                }
+                $("#showShippingAddress").show();
+                $('.input-number').first().change();
+
+                //OTP Reverification if
+
+
+
+
+                //debugger;
+                var request = $.ajax({
+                    url: "/profile/update-address",
+                    method: "POST",
+                    data: {
+                        AddressLine1: $("#shippingAddressLine1").html(),
+                        AddressLine2: $("#shippingAddressLine2").html(),
+                        City: $("#shippingCity").html(),
+                        State: $("#shippingState").html(),
+                        Postcode: $("#shippingPostcode").html(),
+                        FirstName: $("#shippingFirstName").html(),
+                        LastName: $("#shippingLastName").html(),
+                        MobileCountryCode: $("#shippingMobileCountryCode").html(),
+                        MobileNumber: $("#shippingMobileNumber").html(),
+                    },
+                    dataType: "json"
+                });
+
+                request.done(function (res) {
+
+                    var fullNumber = $("#EditShippingMobileCountryCode").val() + $("#EditShippingMobileNumber").val()
+                    var fullNumOriginal = $("#orignal_number_cc").val() + $("#orignal_number").val();
+
+                    if (fullNumber != fullNumOriginal) {
+
+
+                        $("#otpCountryPrefix").val($("#EditShippingMobileCountryCode").val());
+                        $("#otpNumber").val($("#EditShippingMobileNumber").val().replace(/^0+/, ''));
+                        $("#otpInput").val("");
+
+                        $("#mdlOtpVerify").modal('show');
+
+                    }
+
+
+
+                });
+
+
+
+                GetShippingCostForCartProducts($("#amountPayableAfterDiscount").html());
+            });
+
+            $("#btnBillingConfirm").click(function () {
+
+                $("#billingFirstName").html($("#EditBillingFirstName").val());
+                $("#billingLastName").html($("#EditBillingLastName").val());
+                $("#billingMobileCountryCode").html($("#EditBillingMobileCountryCode").val());
+                $("#billingMobileNumber").html($("#EditBillingMobileNumber").val());
+                $("#billingAddressLine1").html($("#EditBillingAddressLine1").val());
+                $("#billingAddressLine2").html($("#EditBillingAddressLine2").val());
+                $("#billingPostcode").html($("#EditBillingPostcode").val());
+                $("#billingCity").html($("#EditBillingCity").val());
+                $("#billingState").html($("#EditBillingState").val());
+                $("#billingCountry").html($("#EditBillingCountry").val());
+                $("#BillingAddressModal").modal("hide");
+                $("#billingAddressNote").hide();
+                $("#showBillingAddress").show();
+
+
+            });
+
+            $("#ChangeBillingAddress").click(function (e) { $("#BillingAddressModal").modal("show"); });
+
+            $("#ChangeShippingAddress").click(function (e) { $("#ShippingAddressModal").modal("show"); });
+
+            $("#btnCheckOut").click(function () {
+                if (!isLoggedIn) {
+                    $('#navLogin').click();
+                    return;
+                }
+                if ($("#shippingMobileNumber").html().length < 9) {
+                    toastr.error("Kindly update your phone number to a valid mobile number. A minimum of 9 characters is required");
+                    $("#ShippingAddressModal").modal("show");
+                    $("#EditShippingMobileNumber").focus();
+                    return;
+                }
+                //if ($("#billingAddressNote").css('display') != "none") {
+                //     toastr.error("Kindly select billing address");
+                //    return;
+                //}
+                if ($("#shippingAddressNote").css('display') != "none") {
+                    toastr.error("Kindly select shipping address");
+                    return;
+                }
+                if (vodusCart.haveDeliveryItems()) {
+                    console.log('shipping');
+                }
+                else {
+                    console.log('no shipping');
+                }
+
+                var items = vodusCart.getCartJson();
+
+                var productList = [];
+                var selectedIDs = [];
+                shippingCostModel = getShippingCostModel();
+
+                $(JSON.parse(items)).each(function () {
+                    var productId = this.id;
+                    var externalId = this.externalId;
+                    if (productId == 0) {
+                        var isExternalItemSelected = document.querySelectorAll("[data-externalid='" + externalId + "']");
+                        if (isExternalItemSelected != null) {
+                            var productCheckbox = $(isExternalItemSelected).prop('checked');
+                            if (productCheckbox == true) {
+
+                                this.shippingCost = orderShipping.filter(x => x.externalItemId == this.externalItemId)[0].orderShippingCost;
+                                var newItem = this;
+                                $(productList.filter(x => x.externalItemId == this.externalItemId)).each(function () {
+                                    if (this.shippingCost >= newItem.shippingCost) {
+                                        newItem.shippingCost = 0;
+                                    }
+                                });
+                                //orderShipping
+                                productList.push(newItem);
+                                selectedIDs.push(productId)
+
+                            }
+                        }
+                    }
+                    else {
+                        var productCheckbox = $('.checkbox-product .checkbox-cart[id="' + productId + '"]').prop('checked');
+                        if (productCheckbox == true) {
+
+                            if (orderShipping.filter(x => x.id == this.externalItemId)[0] != null) {
+                                this.shippingCost = orderShipping.filter(x => x.id == this.externalItemId)[0].orderShippingCost;
+                            }
+                            productList.push(this);
+                            selectedIDs.push(productId)
+                        }
+                    }
+                });
+
+                if (productList.length > 0) {
+                    $("#btnCheckOut").prop("disabled", true).text('Checking out...');
+                    var request = $.ajax({
+                        url: "/cart/create-order",
+                        method: "POST",
+                        data: {
+                            BillingAddressLine1: $("#shippingAddressLine1").html(),
+                            BillingAddressLine2: $("#shippingAddressLine2").html(),
+                            BillingCity: $("#shippingCity").html(),
+                            BillingState: $("#shippingState").html(),
+                            BillingPostcode: $("#shippingPostcode").html(),
+                            BillingCountry: $("#shippingCountry").html(),
+                            BillingPersonFirstName: $("#shippingFirstName").html(),
+                            BillingPersonLastName: $("#shippingLastName").html(),
+                            BillingMobileCountryCode: $("#shippingMobileCountryCode").html(),
+                            BillingMobileNumber: $("#shippingMobileNumber").html(),
+                            ShippingAddressLine1: $("#shippingAddressLine1").html(),
+                            ShippingAddressLine2: $("#shippingAddressLine2").html(),
+                            ShippingCity: $("#shippingCity").html(),
+                            ShippingState: $("#shippingState").html(),
+                            ShippingPostcode: $("#shippingPostcode").html(),
+                            ShippingCountry: $("#shippingCountry").html(),
+                            ShippingPersonFirstName: $("#shippingFirstName").html(),
+                            ShippingPersonLastName: $("#shippingLastName").html(),
+                            ShippingMobileCountryCode: $("#shippingMobileCountryCode").html(),
+                            ShippingMobileNumber: $("#shippingMobileNumber").html(),
+                            PromoCode: promoCodeValue,
+                            ProductList: productList,
+                            ShippingCostModel: shippingCostModel
+                        },
+                        dataType: "json",
+                    });
+
+                    request.done(function (res) {
+                        $("#btnCheckOut").prop("disabled", false).text('CHECKOUT');
+                        localStorage.removeItem("vodus_cart");
+                        Swal.fire({
+                            title: 'Almost There!',
+                            text: res.message,
+                            icon: 'success',
+                            confirmButtonText: 'Ok'
+
+                        }).then((result) => {
+                            if (res.data.orderStatus == 2) {
+                                location.href = "/order/history";
+                            } else {
+                                location.href = "/checkout/payment/" + res.data.orderId;
+                            }
+                        });
+                    });
+
+                    request.fail(function (res) {
+                        console.log(res);
+                        if (res.responseText == "Invalid request [010]") {
+                            Swal.fire({
+                                title: 'Fail to create order',
+                                icon: 'error',
+                                text: "You don't have enough VPoints to proceed with checkout. Free up your VPoints by removing your orders that are pending payment.",
+                                showDenyButton: true,
+                                confirmButtonText: 'Ok',
+                                denyButtonText: 'View My Pending Payment Orders',
+                                denyButtonColor: '#6c757d'
+                            }).then((result) => {
+                                if (result.isDenied) {
+                                    location.href = "/Order/Pending"
+                                }
+                            });
+                        }
+                        else {
+
+                            Swal.fire({
+                                title: 'Fail to create order',
+                                text: "Something is not right. Please try again later or contact support",
+                                icon: 'error',
+                                confirmButtonText: 'Ok'
+
+                            });
+                        }
+
+                    });
+                    //$("#checkoutModal").modal("show");
+                } else {
+                    Swal.fire({
+                        title: 'No items to checkout',
+                        text: 'Please select the items you that you wish to checkout.',
+                        icon: 'info',
+                        confirmButtonText: 'Close'
+                    })
+                }
+            });
+        });
+
+        function selectAll(merchantName) {
+            var merchantCheckbox = $('.checkbox-merchant .checkbox-cart[merchant="' + merchantName + '"]').prop("checked");
+            if (merchantCheckbox) {
+                $('.checkbox-product .checkbox-cart[merchant="' + merchantName + '"]').prop("checked", true);
+            } else {
+                $('.checkbox-product .checkbox-cart[merchant="' + merchantName + '"]').prop("checked", false);
+            }
+            updateOrderSummary();
+        }
+
+        function selectProduct(merchantName) {
+            var totalCheckedProducts = $('.checkbox-product .checkbox-cart:checked[merchant="' + merchantName + '"]').length;
+            var totalProducts = $('.checkbox-product .checkbox-cart[merchant="' + merchantName + '"]').length;
+            if (totalCheckedProducts == totalProducts) {
+                $('.checkbox-merchant .checkbox-cart[merchant="' + merchantName + '"]').prop("checked", true);
+            } else {
+                $('.checkbox-merchant .checkbox-cart[merchant="' + merchantName + '"]').prop("checked", false);
+            }
+            updateOrderSummary();
+        }
+
+        function getProfile() {
+            var request = $.ajax({
+                url: "/cart/profile-for-checkout",
+                method: "GET",
+                dataType: "json",
+            });
+
+            request.done(function (res) {
+                if (res.successful) {
+
+                    $("#EditShippingMobileCountryCode").val((res.data.mobileCountryCode != null ? res.data.mobileCountryCode : ""));
+                    $("#EditShippingMobileNumber").val((res.data.mobileNumber != null ? res.data.mobileNumber : ""));
+
+                    //Orignal number
+                    $("#orignal_number_cc").val((res.data.mobileCountryCode != null ? res.data.mobileCountryCode : ""));
+                    $("#orignal_number").val((res.data.mobileNumber != null ? res.data.mobileNumber : ""));
+
+
+                    $("#EditShippingFirstName").val((res.data.firstName != null ? res.data.firstName : ""));
+                    $("#EditShippingLastName").val((res.data.lastName != null ? res.data.lastName : ""));
+                    $("#EditShippingAddressLine1").val((res.data.addressLine1 != null ? res.data.addressLine1 : ""));
+                    $("#EditShippingAddressLine2").val((res.data.addressLine2 != null ? res.data.addressLine2 : ""));
+                    $("#EditShippingPostcode").val((res.data.postcode != null ? res.data.postcode : ""));
+                    $("#EditShippingCity").val((res.data.city != null ? res.data.city : ""));
+                    $("#EditShippingStateSelect").val((res.data.stateId != null && res.data.stateId != 0 ? res.data.stateId : 14));
+                    $("#EditShippingCountry").val("Malaysia");
+
+                    $("#shippingFirstName").html($("#EditShippingFirstName").val());
+                    $("#shippingLastName").html($("#EditShippingLastName").val());
+
+                    $("#shippingMobileCountryCode").html($("#EditShippingMobileCountryCode").val());
+                    $("#shippingMobileNumber").html($("#EditShippingMobileNumber").val());
+
+                    $("#shippingAddressLine1").html($("#EditShippingAddressLine1").val());
+                    $("#shippingAddressLine2").html($("#EditShippingAddressLine2").val());
+                    $("#shippingPostcode").html($("#EditShippingPostcode").val());
+                    $("#shippingCity").html($("#EditShippingCity").val());
+                    $("#shippingState").html($("#EditShippingStateSelect option:selected").text());
+                    $("#shippingCountry").html($("#EditShippingCountry").val());
+                    $("#shippingAddressNote").hide();
+                    $("#showShippingAddress").show();
+                    cartDataObject = vodusCart.populateCart();
+
+                    $(".cart-vpoints").each(function (item) {
+                        if ($(item).data("vpoints-multiplier") != "" && $(item).data("vpoints-multiplier") != "0") {
+                        }
+                    });
+
+
+
+                    //To show OTP Verification
+                    if (res.data.mobileVerified != "Y") {
+
+                        $("#otpCountryPrefix").val(res.data.mobileCountryCode);
+                        $("#otpNumber").val(res.data.mobileNumber.replace(/^0+/, ''));
+
+                        $("#mdlOtpVerify").modal('show');
+                    }
+
+                    if (res.data.promoCode) {
+                        //$("#promoCode").val(res.data.promoCode)
+                        //applyPromoCode(res.data.promoCode)
+                    }
+                }
+            });
+
+            request.fail(function (jqXHR, textStatus) {
+                alert("Request failed: " + textStatus);
+            });
+        }
+
+        function updateValues(discount, inputIdNumber, productId, valueCurrent, variationid, externalItemId, externalShopId, externalTypeId, externalVariationText) {
+            if (inputIdNumber == "9999") {
+                return;
+            }
+            var totalPrice = 0;
+            var totalVPoints = 0;
+            var totalAdditionalDiscounts = 0;
+            var totalItmesCount = 0;
+            var orderQuantity = parseInt($("#orderQuantity_" + inputIdNumber).val());
+            var cartNetPrice = $("#cart_nett_price_" + inputIdNumber);
+            var cartVpoints = $("#Vpoints_" + inputIdNumber);
+            if (productId == 0) {
+                var matchingProducts = cartDataObject.filter(x => x.externalItemId === externalItemId && x.externalShopId == externalShopId && x.externalTypeId == externalTypeId && x.variationText == externalVariationText);
+            }
+            else {
+                var matchingProducts = cartDataObject.filter(x => x.productId === productId);
+            }
+            var productInfo = matchingProducts.filter(x => x.variationId === variationid);
+
+            productInfo[0].orderQuantity = valueCurrent;
+            if (externalVariationText != null && externalVariationText != "") {
+                productInfo[0].variationText = externalVariationText;
+            }
+            discount = productInfo[0].additionalDiscount != null ? productInfo[0].additionalDiscount.type : undefined;
+            if (discount == "1") {
+
+                if (productInfo[0].typeId == 1) {
+                    productInfo[0].subTotal = (productInfo[0].actualPriceForVpoints * orderQuantity).toFixed(2);
+                    productInfo[0].totalPrice = ((productInfo[0].actualPriceForVpoints - (productInfo[0].actualPriceForVpoints * (productInfo[0].additionalDiscount.value / 100)).toFixed(2)) * orderQuantity).toFixed(2);
+                    if (productInfo[0].totalPrice < 0)
+                        productInfo[0].totalPrice = 0;
+                    $(cartNetPrice).text("RM " + productInfo[0].totalPrice);
+                }
+                else if (productInfo[0].typeId == 2) {
+                    productInfo[0].subTotal = (productInfo[0].discountedPrice * orderQuantity).toFixed(2);
+                    productInfo[0].totalPrice = ((productInfo[0].discountedPrice - (productInfo[0].discountedPrice * (productInfo[0].additionalDiscount.value / 100)).toFixed(2)) * orderQuantity).toFixed(2);
+                    if (productInfo[0].totalPrice < 0)
+                        productInfo[0].totalPrice = 0;
+                    $(cartNetPrice).text("RM " + productInfo[0].totalPrice);
+                }
+
+            }
+            else if (discount == "2") {
+                if (productInfo[0].typeId == 1) {
+                    productInfo[0].subTotal = (productInfo[0].actualPriceForVpoints * orderQuantity).toFixed(2);
+                    productInfo[0].totalPrice = (((productInfo[0].discountedPrice - (productInfo[0].additionalDiscount.value)) * orderQuantity).toFixed(2));
+                    if (productInfo[0].totalPrice < 0)
+                        productInfo[0].totalPrice = 0;
+                    $(cartNetPrice).text("RM " + productInfo[0].totalPrice);
+                }
+                else if (productInfo[0].typeId == 2) {
+                    productInfo[0].subTotal = (productInfo[0].discountedPrice * orderQuantity).toFixed(2);
+                    productInfo[0].totalPrice = (((productInfo[0].discountedPrice - (productInfo[0].additionalDiscount.value)) * orderQuantity).toFixed(2));
+                    if (productInfo[0].totalPrice < 0)
+                        productInfo[0].totalPrice = 0;
+                    $(cartNetPrice).text("RM " + productInfo[0].totalPrice);
+                }
+
+
+            }
+            else if (discount != undefined) {
+                if (productInfo[0].typeId == 1) {
+                    productInfo[0].subTotal = (productInfo[0].actualPriceForVpoints * orderQuantity).toFixed(2);
+                    productInfo[0].totalPrice = (((productInfo[0].discountedPrice - (productInfo[0].additionalDiscount.value)) * orderQuantity).toFixed(2));
+                    if (productInfo[0].totalPrice < 0)
+                        productInfo[0].totalPrice = 0;
+                    $(cartNetPrice).text("RM " + productInfo[0].totalPrice);
+                }
+                else if (productInfo[0].typeId == 2) {
+                    productInfo[0].subTotal = (productInfo[0].discountedPrice * orderQuantity).toFixed(2);
+                    productInfo[0].totalPrice = (((productInfo[0].discountedPrice - (productInfo[0].additionalDiscount.value)) * orderQuantity).toFixed(2));
+                    if (productInfo[0].totalPrice < 0)
+                        productInfo[0].totalPrice = 0;
+                    $(cartNetPrice).text("RM " + productInfo[0].totalPrice);
+                }
+
+
+            }
+            else {
+                productInfo[0].subTotal = (productInfo[0].discountedPrice.toFixed(2) * orderQuantity).toFixed(2);
+                productInfo[0].totalPrice = (productInfo[0].discountedPrice.toFixed(2) * orderQuantity).toFixed(2);
+
+                if (productInfo[0].totalPrice < 0)
+                    productInfo[0].totalPrice = 0;
+                $(cartNetPrice).text("RM " + productInfo[0].totalPrice);
+            }
+
+            //$(cartVpoints).text((parseInt(productInfo[0].additionalDiscount != null ? productInfo[0].additionalDiscount.pointsRequired : 0) /*+ parseInt(productInfo[0].pointsRequired)*/) * Math.ceil(orderQuantity / multiTireVpointThreshold));
+            //
+
+
+            if (productInfo[0].additionalDiscount != null) {
+
+                if (productInfo[0].additionalDiscount.type == 1) {
+
+                    //Change of appending total VPOINTS As per logic in 1783
+                    var vpointsMultiplier = Math.ceil(orderQuantity / 2);
+                    $(cartVpoints).text((parseInt(productInfo[0].additionalDiscount.pointsRequired != null ? productInfo[0].additionalDiscount.pointsRequired : 0)) * vpointsMultiplier);
+
+                }
+
+                else {
+
+                    $(cartVpoints).text((parseInt(productInfo[0].additionalDiscount != null ? productInfo[0].additionalDiscount.pointsRequired : 0) * orderQuantity));
+
+
+                }
+
+            }
+
+            else {
+
+                $(cartVpoints).text((parseInt(productInfo[0].additionalDiscount != null ? productInfo[0].additionalDiscount.pointsRequired : 0) * orderQuantity));
+
+            }
+
+
+
+
+
+            vodusCart.addToCart(productInfo[0], false, true);
+
+
+            $(cartDataObject).each(function () {
+                if (this.cartProductType == 1) {
+                    totalPrice += parseFloat(parseFloat(this.subTotal).toFixed(2));
+
+                    totalVPoints += (parseInt(this.additionalDiscount != null ? this.additionalDiscount.pointsRequired : 0)) * this.orderQuantity;
+                    //totalAdditionalDiscounts += ((this.additionalDiscount != null ? this.additionalDiscount.pointsRequired : 0) * this.discountedPrice / 100).toFixed(2) * this.orderQuantity;
+
+
+                    totalAdditionalDiscounts += parseFloat((this.additionalDiscount != null ? this.subTotal - this.totalPrice : 0));
+
+                    totalItmesCount += parseInt(this.orderQuantity);
+                }
+
+            });
+
+
+            updateOrderSummary();
+
+
+        }
+
+        function GetProvinceListForShipping(countryId) {
+            if (countryId == 0) {
+                var options = "<option value='0'>Choose State</option>";
+                $("#shippingProvinceSelect").html();
+                $("#shippingProvinceSelect").html(options);
+                return;
+            }
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                async: false,
+                url: '/GetProvinceList/' + countryId,
+                success: function (response) {
+                    var options = "";
+                    $("#EditShippingStateSelect").html();
+                    if (response.successful) {
+                        if (response.data != null) {
+                            $(response.data).each(function (index, item) {
+                                options += "<option value=" + item.id + ">" + item.name + "</option>";
+                            });
+                            $("#EditShippingStateSelect").html(options);
+
+                        }
+                    } else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function GetShippingCostForCartProducts(totalCost) {
+
+            shippingCostModel = getShippingCostModel();
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                async: false,
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(shippingCostModel),
+                url: '/cart/get-shipping-cost-for-cart-products',
+                traditional: true,
+                success: function (response) {
+                    if (response.successful) {
+                        if (response.data != null) {
+                            var totalShippingCost = response.data.totalShippingCost.toFixed(2);
+                            $("#shippingCost").text(parseFloat(totalShippingCost).toFixed(2));
+                            $("#amountPayable").text(((parseFloat(totalCost) + parseFloat(totalShippingCost))).toFixed(2));
+                            $("#amountPayableAfterDiscount").text(((parseFloat(totalCost) + parseFloat(totalShippingCost))).toFixed(2));
+                            if (response.data.orderShippingCosts != null && response.data.orderShippingCosts.length > 0) {
+                                orderShipping = response.data.orderShippingCosts;
+                            }
+
+                            /*
+                            if (response.data.orderShippingCosts != null && response.data.orderShippingCosts.length > 0) {
+
+                                $(response.data.orderShippingCosts).each(function () {
+                                    var ship = this;
+                                    $(cartDataObject).each(function (e) {
+                                        if (this.externalItemId == e.externalItemId) {
+                                            this.shipping = ship;
+                                            console.log(ship);
+                                        }
+                                    });
+
+                                });
+                            }
+                          */
+                        }
+                    } else
+                        toastr.error(response.message);
+                },
+                error: function (error) {
+                    toastr.error(error);
+                }
+            });
+        }
+
+        function getShippingCostModel() {
+            var selectedProductIds = []
+            var selectedExternalProductIds = []
+            var selectedProductVariationIds = []
+            var shippingCostModel = {};
+
+            $('.checkbox-product .checkbox-cart:checked').each(function () {
+                var objProductIdAndVariation = new Object();
+                var product = $(this).parent();
+                selectedProductIds.push(parseInt(product.find(".cart-item-row").attr("productid")));
+
+
+                if (product.find(".cart-item-row").attr("externalItemId") != null && product.find(".cart-item-row").attr("externalItemId") != "") {
+                    objProductIdAndVariation.ExternalItemId = product.find(".cart-item-row").attr("externalItemId");
+                    objProductIdAndVariation.ExternalShopId = product.find(".cart-item-row").attr("externalShopId");
+                    objProductIdAndVariation.ExternalTypeId = parseInt(product.find(".cart-item-row").attr("externalTypeId"));
+                    objProductIdAndVariation.ProductPrice = parseInt(product.find(".cart-item-row").attr("productPrice"));
+                    objProductIdAndVariation.ProductTitle = product.find(".cart-item-title").text();
+                    objProductIdAndVariation.Quantity = parseInt(product.find(".orderQuantity").val());
+                    //selectedExternalProductIds.push(product.find(".cart-item-row").attr("externalItemId") + "~" + product.find(".cart-item-row").attr("externalShopId") + "~" + product.find(".cart-item-row").attr("externalTypeId"))
+
+                }
+                else {
+                    objProductIdAndVariation.ProductId = parseInt(product.find(".cart-item-row").attr("productid"));
+                    objProductIdAndVariation.VariationId = parseInt(product.find(".cart-item-row").attr("variationid"));
+                    objProductIdAndVariation.ProductPrice = parseInt(product.find(".cart-item-row").attr("productPrice"));
+                }
+
+                selectedProductVariationIds.push(objProductIdAndVariation);
+            });
+
+            shippingCostModel = {
+                ProvinceId: parseInt($("#EditShippingStateSelect").val()),
+                ProductIds: selectedProductIds,
+                ProductVariationIds: selectedProductVariationIds
+            };
+            return shippingCostModel;
+        }
+
+        function updateOrderSummary() {
+            var totalProductPrice = 0;
+            var totalNetPrice = 0;
+            var totalVpoints = 0;
+            var totalVpointsDiscount = 0;
+            hasVPointsMultiplier = false;
+            $('.checkbox-product .checkbox-cart:checked').each(function () {
+                var product = $(this).parent();
+                var productPrice = product.find('.cart-netprice').text().replace('RM ', "")
+                //console.log(product);
+                totalProductPrice = totalProductPrice + parseFloat(product.find('.cart-netprice').text().replace('RM ', ""));
+                totalNetPrice = totalNetPrice + parseFloat(product.find('.cart-netprice').text().replace('RM ', ""));
+                var subTotal = 0;
+                if (product.find('.cart-netprice').attr("data-subtotal") != null) {
+                    subTotal = parseFloat(product.find('.cart-netprice').attr("data-single-subtotal"));
+                }
+
+                //totalProductPrice = parseFloat(product.find('.cart-netprice').attr("data-subtotal") != null ? product.find('.cart-netprice').attr("data-subtotal") : parseFloat(product.find('.cart-netprice').text().replace('RM ', "")));
+                //totalNetPrice = parseFloat(product.find('.cart-netprice').attr("data-subtotal") != null ? product.find('.cart-netprice').attr("data-subtotal") : parseFloat(product.find('.cart-netprice').text().replace('RM ', "")));
+
+
+                totalVpoints = totalVpoints + parseFloat(product.find('.cart-vpoints').text());
+
+
+                //totalVpointsDiscount = totalVpointsDiscount + parseFloat(product.find('.cart-vpoints').attr('vpoints-discount'));
+                let dsc = product.find('.cart-vpoints').attr('vpoints-discount')
+                let discountType = product.find('.cart-vpoints').attr('vpoints-discount-type');
+                if (discountType != null && discountType != undefined) {
+                    if (discountType == 1) {
+                        var tempVPoints = ((subTotal * (parseFloat(dsc / 100)))) * ($(this).parent().find('.orderQuantity').val());
+                        totalVpointsDiscount += (tempVPoints < 0 ? -tempVPoints : tempVPoints);
+                    } else {
+                        var tempVPoints = (subTotal) * $(this).parent().find('.orderQuantity').val()
+                        totalVpointsDiscount += (tempVPoints < 0 ? -tempVPoints : tempVPoints);
+                    }
+                }
+
+                $(".cart-vpoints").each(function (item) {
+                    if ($(item).data("vpoints-multiplier") != "" && $(item).data("vpoints-multiplier") != "0") {
+                        //hasVPointsMultiplier = true;
+                    }
+                });
+            })
+
+            //if (hasVPointsMultiplier) {
+            //    $("#vPointsMultiplierContainer").show();
+            //}
+            //else {
+            //    $("#vPointsMultiplierContainer").hide();
+            //}
+
+            $("#totalPrice").text((totalProductPrice + (totalVpointsDiscount < 0 ? -totalVpointsDiscount : totalVpointsDiscount)).toFixed(2));
+            $("#amountPayable").text(totalNetPrice.toFixed(2));
+
+            //  Reset promocode
+            $("#promoCodeDiscount").html("0.00");
+            $("#promoCodeText").text("");
+            $("#amountPayableAfterDiscount").text(totalNetPrice.toFixed(2));
+            $("#vPointsMultiplierContainer").hide();
+
+
+            $("#totalVPoints").text(totalVpoints);
+            $("#totalVPointsDiscount").text(totalVpointsDiscount.toFixed(2));
+            $("#totalItemsCount").text($('.checkbox-product .checkbox-cart:checked').length);
+            //Need to fix this GetShippingCostForCartProducts input parameter to deliver correct shipping cost.
+            //GetShippingCostForCartProducts((totalProductPrice - totalVpointsDiscount).toFixed(2));
+            GetShippingCostForCartProducts((totalProductPrice).toFixed(2));
+            $("#amountPayable").text(parseFloat(totalNetPrice + parseFloat($('#shippingCost').text())).toFixed(2));
+
+            //  temp disabled
+            //$("#amountPayableAfterDiscount").text(parseFloat(totalNetPrice + parseFloat($('#shippingCost').text())).toFixed(2));
+
+        }
+
+        function bindCartProductsActions() {
+            $('.btn-number').click(function (e) {
+                e.preventDefault();
+
+                fieldName = $(this).attr('data-field');
+                type = $(this).attr('data-type');
+                var input = $("input[name='" + fieldName + "']");
+                var currentVal = parseInt(input.val());
+                if (!isNaN(currentVal)) {
+                    if (type == 'minus') {
+
+                        if (currentVal > input.attr('min')) {
+                            var newValue = currentVal - 1;
+                            input.val(newValue).change();
+                            input.val(newValue)
+                        }
+                        if (parseInt(input.val()) == input.attr('min')) {
+                            $(this).attr('disabled', true);
+                        }
+
+                    } else if (type == 'plus') {
+
+                        if (currentVal < input.attr('max')) {
+                            var newValue = currentVal + 1;
+                            input.val(newValue).change();
+                            input.val(newValue)
+                        }
+                        if (parseInt(input.val()) == input.attr('max')) {
+                            $(this).attr('disabled', true);
+                        }
+
+                    }
+                } else {
+                    input.val(0);
+                }
+            });
+            $('.input-number').focusin(function () {
+                $(this).data('oldValue', $(this).val());
+            });
+            $('.input-number').change(function () {
+                if ($(this).attr("id-number") == "9999") {
+                    return;
+                }
+                minValue = parseInt($(this).attr('min'));
+                maxValue = parseInt($(this).attr('max'));
+                valueCurrent = parseInt($(this).val());
+                inputIdNumber = $(this).attr("id-number");
+                productId = parseInt($(this).closest(".cart-item-row").attr("productid"));
+                externalItemId = $(this).closest(".cart-item-row").attr("externalItemId");
+                externalShopId = $(this).closest(".cart-item-row").attr("externalShopId");
+                externalTypeId = $(this).closest(".cart-item-row").attr("externalTypeId");
+                productPrice = $(this).closest(".cartItemPrice").attr("productPrice");
+                externalVariationText = $(this).closest(".cart-item-row").attr("externalVariationText");
+                variationid = parseInt($(this).closest(".cart-item-row").attr("variationid"));
+                name = $(this).attr('name');
+                if (valueCurrent >= minValue) {
+                    $(".btn-number[data-type='minus'][data-field='" + name + "']").removeAttr('disabled')
+                } else {
+                    Swal.fire({
+                        title: "Order quantity issue",
+                        text: "Sorry, the minimum quantity required is 1",
+                        icon: 'error',
+                        confirmButtonText: 'Ok'
+                    });
+                    $(this).val($(this).data('oldValue'));
+                    return false;
+                }
+                if (valueCurrent <= maxValue) {
+                    $(".btn-number[data-type='plus'][data-field='" + name + "']").removeAttr('disabled')
+                } else {
+                    Swal.fire({
+                        title: "Order quantity issue",
+                        text: "Sorry, the maximum quantity is reached",
+                        icon: 'error',
+                        confirmButtonText: 'Ok'
+                    });
+                    $(this).val($(this).data('oldValue'));
+                    return false;
+                }
+
+                //$('input[name="additionalDiscount"]:checked').val();
+                //console.log($('input[name="additionalDiscount"]:checked').val());
+
+                //$('input[name="additionalDiscount"]:checked').val()
+                updateValues('0', inputIdNumber, productId, valueCurrent, variationid, externalItemId, externalShopId, externalTypeId, externalVariationText);
+
+            });
+            $(".input-number").keydown(function (e) {
+                // Allow: backspace, delete, tab, escape, enter and .
+                if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
+                    // Allow: Ctrl+A
+                    (e.keyCode == 65 && e.ctrlKey === true) ||
+                    // Allow: home, end, left, right
+                    (e.keyCode >= 35 && e.keyCode <= 39)) {
+                    // let it happen, don't do anything
+                    return;
+                }
+                // Ensure that it is a number and stop the keypress
+                if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                    e.preventDefault();
+                }
+            });
+
+        }
+
+
+        //List of Country Codes
+        const countryCodeLengths = {
+            "60": [9, 10]
+        };
+
+        function validateMobileNumber(number, countryCode) {
+
+            console.log(countryCode)
+            // Check if the country code is in the map
+            if (!countryCodeLengths[countryCode.trim()]) {
+                return false; // If the country code is not recognized, return false
+            }
+
+            // Check the length of the number against the expected length for the given country code
+            return countryCodeLengths[countryCode].includes(number.length);
+        }
+
+
+        function removeLeadingZeros(input) {
+            input.value = input.value.replace(/^0+/, '');
+        }
+
+        // Select all OTP input fields
+        const otpInputs = document.querySelectorAll('input[name="otpInput"]');
+
+        // Add a keyup event listener to each OTP input field
+        otpInputs.forEach(input => {
+            input.addEventListener('keyup', handleKeyUp);
+        });
+
+        function handleKeyUp(event) {
+            // Get the current input field
+            const input = event.target;
+
+            // Check if the field's value is empty
+            if (input.value === '') {
+                // If the field's value is empty, move the focus to the previous field
+                // if the backspace key was pressed, or do nothing if any other key was pressed
+                if (event.keyCode === 8) {
+                    const previousInput = input.previousElementSibling;
+                    if (previousInput) {
+                        previousInput.focus();
+                    }
+                }
+            } else {
+                // If the field's value is not empty, move the focus to the next field
+                // if the user has typed a single character (maxlength is 1) and any key was pressed
+                if (input.value.length === 1) {
+                    const nextInput = input.nextElementSibling;
+                    if (nextInput) {
+                        nextInput.focus();
+                    }
+                }
+            }
+        }
+
+
+        function getOtpValue() {
+
+            // Select all OTP input fields
+            const otpInputs = document.querySelectorAll('input[name="otpInput"]');
+
+            // Get the values of all the OTP input fields
+            const otpValues = Array.from(otpInputs).map(input => input.value);
+
+            // Concatenate the values into a single string
+            const otp = otpValues.join('');
+
+            // Use the otp variable to access the concatenated value
+            return otp;
+        }
+
+
+        $("#mdlOtpVerify").on("hide.bs.modal", function () {
+
+            $('input[name="otpInput"]').val('').removeAttr('value');
+
+        });
+
+
+        var inputFieldIds = ['otpCountryPrefix', 'otpNumber', 'EditShippingMobileCountryCode', 'EditShippingMobileNumber'];
+
+        inputFieldIds.forEach(function (id) {
+            $('#' + id).keyup(function () {
+                validateInput(id);
+            });
+        });
+
+        function validateInput(id) {
+            var input = $('#' + id).val();
+            if (/\D/.test(input)) {
+                // The input contains something other than a number
+                // Remove everything except the numbers
+                input = input.replace(/\D/g, '');
+            }
+            if (/^0/.test(input)) {
+                // The input starts with a zero
+                // Remove the leading zero
+                input = input.slice(1);
+            }
+            $('#' + id).val(input);
+        }
+
+
+
+
+    </script>
+
+    }

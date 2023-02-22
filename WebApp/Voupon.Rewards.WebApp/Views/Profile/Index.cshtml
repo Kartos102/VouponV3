@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="profile-index-body row">
+    <div class="col-lg-12">
+        <div class="text-center align-center">
+            <div class="col-12">
+                <div class="profile-pic">
+                    <span class="fas fa-user fa-2x"></span>
+                </div>                
+                <h1><strong>@User.Identity.Name</strong></h1>
+                <h2 style="margin-bottom:0;"><span class="i18next" data-i18n="common.you-have"></span> @ViewData["AvailablePoints"] VPoints</h2>
+            </div>
+            <div class="col-12 profile-index-buttons m-t-lg">
+                <a href="/profile/edit" class="btn btn-primary i18next" data-i18n="common.update-profile">Update Profile</a>
+                <a href="/profile/change-password" class="btn btn-primary i18next" data-i18n="common.change-password">Change Password</a>
+                <a href="/order/history" class="btn btn-primary i18next" data-i18n="common.order-history">My Purchases</a>
+                <a href="/order/refunds" class="btn btn-primary i18next">Return History</a>
+                <a href="/profile/points" class="btn btn-primary i18next">VPoints History</a>
+                <a href="/" class="btn btn-primary i18next" data-i18n="common.back-to-home">Back to Home</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,227 @@
+﻿.product-info-key > div {
+    padding: 0;
+}
+
+#imageGallery, #variationimageGallery {
+    display: flex;
+    flex-wrap: wrap;
+    max-height: 400px;
+    overflow: auto;
+}
+
+.product-img-preview {
+    border: 2px solid;
+    padding: 1px;
+    cursor: pointer;
+    height: 150px;
+    max-width: 150px;
+    object-fit: contain;
+}
+
+.remove-img, .remove-variation-img {
+    display: block;
+    background: #444;
+    border: 1px solid black;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+}
+
+    .remove-img:hover, .remove-variation-img:hover {
+        background: white;
+        color: black;
+    }
+
+.remove-img-url, .remove-variation-img-url {
+    display: block;
+    background: #444;
+    border: 1px solid black;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+}
+
+.product-img-preview-container, .product-variation-img-preview-container {
+    display: flex;
+    flex-direction: column;
+    margin: 5px 5px 0 0;
+    height: min-content;
+    width: min-content;
+}
+
+.form-control {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+
+.form-group .col-form-label {
+    font-weight: 600;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+    font-size: 15px;
+}
+
+#EditImage, #EditVariationImage {
+    display: none;
+}
+
+.remove-outlet-img:hover {
+    background: white;
+    color: black;
+}
+
+.remove-outlet-img {
+    display: block;
+    background: #444;
+    border: 1px solid black;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+}
+
+.outlet-img-preview {
+    border: 2px solid;
+    padding: 1px;
+    cursor: pointer;
+    width: 150px;
+    height: 150px;
+}
+
+.outlet-img-preview-container {
+    display: inline-block;
+    margin: 10px 10px 0 0;
+}
+
+
+.btn-outlet-file {
+    position: relative;
+    overflow: hidden;
+    font-size: 17px;
+    cursor: pointer;
+}
+
+#EditOutletImage {
+    display: none;
+}
+
+.btn_apply_all {
+    font-size: smaller;
+    padding: 6px 6px;
+    height: fit-content;
+}
+
+.add-working-day, .remove-working-day {
+    font-size: 25px;
+    cursor: pointer
+}
+
+.card-working-hours input,
+.card-working-hours select {
+    padding: 2px 6px;
+    border: none;
+    border-bottom: 1px solid #fff;
+    border-radius: none;
+    box-sizing: border-box;
+    background-color: transparent;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-align: center !important
+}
+
+input:focus,
+select:focus {
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    border-bottom: 1px solid #00C853;
+    outline-width: 0
+}
+
+select option:focus {
+    background-color: #00C853 !important
+}
+
+button:focus {
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    outline-width: 0
+}
+
+.exit {
+    border: 1px solid #9E9E9E;
+    color: #9E9E9E;
+    background-color: transparent
+}
+
+    .exit:hover {
+        border: 1px solid #9E9E9E;
+        color: #000 !important;
+        background-color: #9E9E9E
+    }
+
+.open-day {
+    font-size: 14px;
+    letter-spacing: 1px;
+    min-width: 33px;
+}
+
+.from-date {
+    margin-right: 30px;
+}
+
+.disabled-day {
+    color: #cdcdd6;
+}
+
+.ql-container.ql-snow {
+    height: fit-content;
+}
+
+.alert-pending-revision {
+    color: #856404;
+    background-color: #d4f5fa;
+    border-color: #ffeeba;
+}
+.meesage-time {
+    float: right
+}
+
+#productRemarks {
+    height: auto;
+    max-height: 100px;
+    overflow: auto;
+}
+#productReviewRemarks{
+    width: auto;
+    height: auto;
+    max-height: 200px;
+    border: 1px solid #ccc;
+    padding: 5px;
+    overflow: auto
+}
+
+#productReviewRemarks .meesage-time {
+        float: right
+}
+
+.ui-tooltip {
+    position: absolute;
+    background: #fffdc2;
+    z-index: 10;
+    width: 300px;
+    max-width: 100%;
+    font-size: 0.875em;
+    border-radius: 20px;
+    background-color: #fff;
+    color: #707070;
+    text-shadow: 1px 1px #ffffff;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 2px solid #d2d2e4
+}

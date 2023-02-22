@@ -1,0 +1,1548 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="rewards-landing-page">
+    <div class="row">
+        <div class="col-12 col-sm-12 col-lg-6 col-xl-6 insights-message-container">
+            <div class="header-title intro" style="text-align:left;">
+                <div class="landing-title-container intro">
+                      <h2>Online Shopping Reinvented</h2>
+                      <p>Rewarding you for your opinion with discounts and vouchers.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-12 col-lg-6 header-img ml-lg-auto">
+            <div class="rewards-banner" style="background-size:cover;background-repeat:no-repeat;" />
+        </div>
+    </div>
+
+</div>
+
+<section class="ads-Banner slider" style="display:none;" id="hotAdsBanner">
+    <img data-src="images/ad-banner1.jpeg" class="lazyload" />
+    <img data-src="images/imagesad-banner22.jpeg" class="lazyload" />
+    <img data-src="images/ad-banner1.jpeg" class="lazyload" />
+    <img data-src="images/imagesad-banner22.jpeg" class="lazyload" />
+</section>
+
+
+<div class="row categories mb-2 mt-lg-2">
+    <div id="category"></div>
+    <div class="item-type-filter" id="productCategoryFilter" style="width: 100%; text-align: center ">
+        @*<button type="button" class="prod-type-btn selectedProductType" data-type-id="0"><span class="i18next " data-i18n="common.all"><img src="~/images/beauty.png" /><br />All</span></button>*@
+        <a class="prod-type-btn" href="#women-fashion-carousel">
+            <div class="img-container">
+                <img src="/images/women-fashion-img.webp" class="lazyload" />
+            </div>
+            <span>Women's Fashion</span>
+        </a>
+        <a class="prod-type-btn" href="#men-fashion-carousel">
+            <div class="img-container">
+                <img src="/images/men-fashion-img.webp" class="lazyload" />
+            </div>
+            <span>Men's Fashion</span>
+        </a>
+        <a class="prod-type-btn" href="#groceries-carousel">
+            <div class="img-container">
+                <img src="/images/grocery-img.webp" class="lazyload" />
+            </div>
+            <span>Beauty, Health & Groceries</span>
+        </a>
+        <a class="prod-type-btn" href="#gadget-carousel">
+            <div class="img-container">
+                <img src="/images/gadget-img.webp" class="lazyload" />
+            </div>
+            <span>
+                Gadgets & Accessories
+            </span>
+        </a>
+        <a class="prod-type-btn" href="#home-family-carousel">
+            <div class="img-container">
+                <img src="/images/home-family-img.webp" class="lazyload" />
+            </div>
+            <span>Home & Family</span>
+        </a>
+        <a class="prod-type-btn" href="#entertainment-carousel">
+            <div class="img-container">
+                <img src="/images/leisure-img.webp" class="lazyload" />
+            </div>
+            <span>Leisure & Entertainment</span>
+        </a>
+        <a class="prod-type-btn" href="#sports-carousel">
+            <div class="img-container">
+                <img src="/images/homepage-categorytab-sports&outdoorv2.webp" class="lazyload" />
+            </div>
+            <span>Sports & Outdoor</span>
+        </a>
+        <a class="prod-type-btn" href="#vouchers-carousel">
+            <div class="img-container">
+                <img src="/images/vouchers-img.webp" class="lazyload" />
+            </div>
+            <span>Vouchers & Others</span>
+        </a>
+    </div>
+</div>
+
+<div class="row products-row mt-3">
+    <div class="col-lg-12 product-highlights">
+        <div class="product-highlights-title">
+            <h3>
+                FEATURED PRODUCTS
+            </h3>
+            with the best value for money
+        </div>
+        <div id="carouselProductControls" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+            </ol>
+            <div class="carousel-inner" id="carouselProductList">
+            </div>
+        </div>
+
+        <section class="slickhotProductList slider" id="hotProductList">
+        </section>
+
+        <div class="col-lg-12 text-center" id="displayNoItems" style="display:none"><span class="i18next" data-i18n="common.no-more">You have reached the end.<br> Do a search to keep exploring!</span></div>
+
+        <div id="noProduct" style="display:none;">
+            <div class="col-lg-12">
+                <div class="text-center">
+                    <h1><span class="fas fa-gift fa-4x"></span></h1>
+                    <h1><strong>Hmm...</strong></h1>
+                    <h2 style="margin-bottom:0;">No product to redeem for this category yet</h2>
+                    <h2 style="margin-top:10px;">Redeem product from other category first</h2>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h2 class="popular-brands">
+    Featured Brands
+</h2>
+
+<section class="customer-logos slider" id="hotMerchantList" style="display:none">
+    @*<a class="slick-slide slick-active" data-slick-index="6" aria-hidden="false" tabindex="-1" role="option" aria-describedby="slick-slide06" style="width: 145px;"> <img data-src="~/images/Big-apple-logo.jpg" class="img-thumbnail lazyloaded" alt="Responsive image" src="~/images/Big-apple-logo.jpg"></a>
+        <a class="slick-slide slick-active" data-slick-index="6" aria-hidden="false" tabindex="-1" role="option" aria-describedby="slick-slide06" style="width: 145px;"> <img data-src="~/images/Sushi-king-logo1.png" class="img-thumbnail lazyloaded" alt="Responsive image" src="~/images/Sushi-king-logo1.png"></a>
+        <a class="slick-slide slick-active" data-slick-index="6" aria-hidden="false" tabindex="-1" role="option" aria-describedby="slick-slide06" style="width: 145px;"> <img data-src="~/images/tealive-logo.png" class="img-thumbnail lazyloaded" alt="Responsive image" src="~/images/tealive-logo.png"></a>
+
+        <a class="slick-slide slick-active" data-slick-index="6" aria-hidden="false" tabindex="-1" role="option" aria-describedby="slick-slide06" style="width: 145px;"> <img data-src="~/images/Big-apple-logo.jpg" class="img-thumbnail lazyloaded" alt="Responsive image" src="~/images/Hokkaido-back-cheese-tart-logo.png"></a>
+        <a class="slick-slide slick-active" data-slick-index="6" aria-hidden="false" tabindex="-1" role="option" aria-describedby="slick-slide06" style="width: 145px;"> <img data-src="~/images/llao-llao-logo.jpg" class="img-thumbnail lazyloaded" alt="Responsive image" src="~/images/llao-llao-logo.jpg"></a>
+        <a class="slick-slide slick-active" data-slick-index="6" aria-hidden="false" tabindex="-1" role="option" aria-describedby="slick-slide06" style="width: 145px;"> <img data-src="~/images/tealive-logo.png" class="img-thumbnail lazyloaded" alt="Responsive image" src="~/images/Aeon-logo2.png"></a>
+        <a class="slick-slide slick-active" data-slick-index="6" aria-hidden="false" tabindex="-1" role="option" aria-describedby="slick-slide06" style="width: 145px;"> <img data-src="~/images/tealive-logo.png" class="img-thumbnail lazyloaded" alt="Responsive image" src="~/images/Parkson-logo.jpg"></a>*@
+</section>
+
+<div class="mt-5" style="max-width:unset;">
+    <h2 class="our-deals">
+        Discover Daily Deals
+    </h2>
+    <div class="row" style="width:100%">
+        <div class="featured-categories row col-12">
+            <div id="women-fashion-carousel" class="row col-12">
+                <h3>
+                    Women's Fashion
+                    <a class="selectedProductType" data-type-id="1" data-type-name="Women's Fashion" style="z-index: 8;">
+                        SEE MORE
+                    </a>
+                </h3>
+                <div class="product-by-category-1 product-by-category"></div>
+            </div>
+            <div id="men-fashion-carousel" class="row col-12">
+                <h3>
+                    Men's Fashion
+                    <a class="selectedProductType" data-type-id="2" data-type-name="Men's Fashion" style="z-index: 7;">
+                        SEE MORE
+                    </a>
+                </h3>
+                <div class="product-by-category-2 product-by-category"></div>
+            </div>
+            <div id="groceries-carousel" class="row col-12">
+                <h3>
+                    Beauty, Health and Groceries
+                    <a class="selectedProductType" data-type-id="6" data-type-name="Beauty, Health and Groceries" style="z-index: 6;">
+                        SEE MORE
+                    </a>
+                </h3>
+                <div class="product-by-category-6 product-by-category"></div>
+            </div>
+            <div id="gadget-carousel" class="row col-12">
+                <h3>
+                    Gadgets and Accessories
+                    <a class="selectedProductType" data-type-id="3" data-type-name="Gadgets and Accessories" style="z-index: 5;">
+                        SEE MORE
+                    </a>
+                </h3>
+                <div class="product-by-category-3 product-by-category"></div>
+            </div>
+            <div id="home-family-carousel" class="row col-12">
+                <h3>
+                    Home and Family
+                    <a class="selectedProductType" data-type-id="4" data-type-name="Home and Family" style="z-index: 4;">
+                        SEE MORE
+                    </a>
+                </h3>
+                <div class="product-by-category-4 product-by-category"></div>
+            </div>
+            <div id="entertainment-carousel" class="row col-12">
+                <h3>
+                    Leisure and Entertainment
+                    <a class="selectedProductType" data-type-id="5" data-type-name="Leisure and Entertainment" style="z-index: 3;">
+                        SEE MORE
+                    </a>
+                </h3>
+                <div class="product-by-category-5 product-by-category"></div>
+            </div>
+            <div id="sports-carousel" class="row col-12">
+                <h3>
+                    Sports and Outdoor
+                    <a class="selectedProductType" data-type-id="7" data-type-name="Sports and Outdoor" style="z-index: 2;">
+                        SEE MORE
+                    </a>
+                </h3>
+                <div class="product-by-category-7 product-by-category"></div>
+            </div>
+            <div id="vouchers-carousel" class="row col-12">
+                <h3>
+                    Vouchers and Others
+                    <a class="selectedProductType" data-type-id="8" data-type-name="Vouchers and Others" style="z-index: 1;">
+                        SEE MORE
+                    </a>
+                </h3>
+                <div class="product-by-category-8 product-by-category"></div>
+            </div>
+        </div>
+        <div id="homepage-guide">
+            <div class="row">
+                <div class="col-lg-6">
+                </div>
+                <div class="col-md-6 guide-title">
+                    <h2>STEP BY STEP GUIDE</h2>
+                </div>            
+            </div>
+            <div class="row guide-content">
+                <div class="col-lg-6 margin-auto intro-video align-center">
+                    <iframe src="https://www.youtube.com/embed/63gpHDWYf-Y?rel=0&amp;modestbranding=1&amp;showinfo=0;" title="YouTube video player" frameborder="0" allow="autoplay; clipboard-write; encrypted-media;picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="row col-lg-6 margin-auto guide-steps">
+                    <div class="row guide-step-row">
+                        <div class="icon">
+                            <img src="~/images/webapp_home_stepbystep_signup.svg" />
+                        </div>
+                        <div class="guide-step-text">
+                            <h4>
+                                Step 1 :
+                            </h4>
+                            <p>
+                                Sign up for a Vodus account
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row guide-step-row">
+                        <div class="icon">
+                            <img src="~/images/webapp_home_stepbystep_survey.svg" />
+                        </div>
+                        <div class="guide-step-text light-purple-bg">
+                            <h4>
+                                Step 2 :
+                            </h4>
+                            <p>
+                                Click "Gain VPoints" to participate in surveys
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row guide-step-row">
+                        <div class="icon">
+                            <img src="~/images/webapp_home_stepbystep_vpoint.svg" />
+                        </div>
+                        <div class="guide-step-text">
+                            <h4>
+                                Step 3 :
+                            </h4>
+                            <p>
+                                Earn VPoints for every survey question answered
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row guide-step-row">
+                        <div class="icon">
+                            <img src="~/images/webapp_home_stepbystep_discount.svg" />
+                        </div>
+                        <div class="guide-step-text light-purple-bg">
+                            <h4>
+                                Step 4 :
+                            </h4>
+                            <p>
+                                Use your VPoints to gain discounts on popular brands
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>        
+        </div>
+    </div>
+</div>
+
+<div id="newProductTemplate" style="display:none;">
+    <div>
+        <div class="card" style="max-width:430px;border:unset;">
+
+            <div class="row no-gutters">
+                <a href="#" class="product-link col-5 col-lg-6 col-xl-6">
+                    <div class="col-auto">
+                        <div class="badge-parent-div">
+                            <span class="badge badge-danger">15 % OFF</span>
+                        </div>
+                        <div class="product-image-parent-div">
+                            <img src="" class="img-fluid product-image" alt="">
+                        </div>
+                    </div>
+                </a>
+                <div class="col-7 col-lg-6 col-xl-6">
+                    <div class="card-block">
+                        <h3 class="card-title">Title</h3>
+                        @*<p class="card-category">Category</p>*@
+                        <p style="width:100%;text-align:left" class="product-price">200 VPoints</p>
+                        <h4 class="card-merchant">Store Name</h4>
+                        <span class="product-rating" style="display:none;">
+                            <i class="color-rating fas fa-star" name="star1"></i>
+                            <i class="color-rating fas fa-star" name="star2"></i>
+                            <i class="color-rating fas fa-star" name="star3"></i>
+                            <i class="color-rating fas fa-star" name="star4"></i>
+                            <i class="color-rating fas fa-star" name="star5"></i>
+                            <span class="product-rating-score">4.30</span>
+                        </span>
+                        <h5 style="display:none" class="card-location">location</h5>
+                        <a style="margin-top:10px" href="#" class="btn btn-primary btn-addtocart">VIEW MORE</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="productTemplate" style="display:none;">
+    <div class="listItem">
+        <div class="ibox">
+            <div class="ibox-content product-box">
+                <a href="/Product/Detail/74" class="product-link">
+                    <div class="product-imitation">
+                        <img class="product-img lazyload">
+                    </div>
+                    <div class="product-discount" style="display:none;">
+                        <span class="badge badge-danger">15% OFF</span>
+                    </div>                    <div class="product-desc">
+                        <div class="merchant-dealtype-div">
+                            <div class="merchant-name"></div>
+                        </div>
+                        <h4 class="product-name">Aeon RM10 Cash Voucher</h4>
+                    </div>
+                    <p class="product-price">70 VPoints</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+    <script src="/lib/owlcarousel2/owl.carousel.min.js"></script>
+
+    <script>
+    $(document).ready(function () {
+        getProductsByCategory(1);
+        
+        getProductsByCategory(2);
+        getProductsByCategory(3);
+        getProductsByCategory(4);
+        getProductsByCategory(5);
+        getProductsByCategory(6);
+        getProductsByCategory(7);
+        getProductsByCategory(8);
+        
+        /*
+        var promoPopup = readCookie('vodus_promo_popup');
+
+        var isGainVPoints = getParameterByName("gainvpoints");
+        if (isGainVPoints == null) {
+
+            if (promoPopup == null) {
+                $("#promoCodeModal").modal('show');
+            }
+            else {
+                if (new Date().getTime() > new Date(promoPopup).getTime()) {
+                    $("#promoCodeModal").modal('show');
+                }
+            }
+        }
+       
+
+        $('#promoCodeModal').on('shown.bs.modal', function (e) {
+            $("#subsriberEmail").focus();
+        })
+
+        $('#promoCodeModal').on('hidden.bs.modal', function (e) {
+            vodusRewardCreateCookie('vodus_promo_popup', new Date().getTime() + (7 * 24 * 60 * 60 * 1000),30);
+        })
+         */
+
+        $(".rewards-banner").css("background-image", "url('/images/banners/chef-adu-2.webp')");
+        var banners = [
+            {
+                'imageUrl': '/images/banners/chef-adu-2.webp',
+                'showPromoCodePopUp': false,
+                'redirectTo': '/shop/98'
+            },
+            {
+                'imageUrl': '/images/banners/double-points-wednesday.png',
+                'showPromoCodePopUp': false,
+                'redirectTo': '/tnc/double-discounts-wednesday'
+            }, 
+            {
+                'imageUrl': '/images/banners/vodus-promo-banner-1.webp',
+                'showPromoCodePopUp': true,
+                'redirectTo': ''
+            }, 
+            {
+                'imageUrl': '/images/banners/dvd-promo.webp',
+                'showPromoCodePopUp': false,
+                'redirectTo': '/tnc/dvp'
+            }
+        ];
+        var currentPromoBanner = 0;
+        setInterval(myTimer, 3000);
+
+        function myTimer() {
+            $(".rewards-banner").fadeIn(1500).css("background-image", "url('" + banners[currentPromoBanner].imageUrl + "')");
+            $(".rewards-banner").unbind();
+            var redirectTo = banners[currentPromoBanner].redirectTo;
+            if (banners[currentPromoBanner].showPromoCodePopUp) {
+                $(".rewards-banner").click(function () {
+                    $("#promoCodeModal").modal('show');
+                });
+            }
+            if (redirectTo != '') {
+                $(".rewards-banner").click(function () {
+                    location.href = redirectTo;
+                });
+            }
+
+            currentPromoBanner++;
+            if (currentPromoBanner >= banners.length) {
+                currentPromoBanner = 0;
+            }
+        }
+
+        $('.promoBanner').slick({
+            adaptiveHeight: true,
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            autoplay: true,
+            autoplaySpeed: 3000,
+            arrows: false,
+            dots: false,
+            pauseOnHover: false,
+            responsive: [{
+                breakpoint: 1750,
+                settings: {
+                    slidesToShow: 1
+                }
+            }, {
+                breakpoint: 1349,
+                settings: {
+                    slidesToShow: 1
+                }
+            }, {
+                breakpoint: 927,
+                settings: {
+                    slidesToShow: 1
+                }
+            }]});
+
+
+        $('.ads-Banner').slick({
+            slidesToShow: 4,
+            slidesToScroll: 1,
+            autoplay: true,
+            autoplaySpeed: 3000,
+            arrows: false,
+            dots: false,
+            pauseOnHover: false,
+            responsive: [{
+                breakpoint: 1750,
+                settings: {
+                    slidesToShow: 3
+                }
+            }, {
+                breakpoint: 1349,
+                settings: {
+                    slidesToShow: 2
+                }
+            }, {
+                breakpoint: 927,
+                settings: {
+                    slidesToShow: 1
+                }
+            }]
+        });
+
+        $(".featured-categories a").each(function () {
+           
+            var url = "https://" + document.location.host +  "/search?keyword=" + $(this).attr('data-type-name').replace("-", " ")/* + "?location=" + $("#provinceSelect option[selected=selected]").text().replace(" ", "-")*/;
+            $(this).attr("href", url)
+        });
+
+        
+        $("#provinceSelect").on("change", function () {
+            GetProductList();
+            $(".featured-categories a").each(function () {
+                var url = "https://" + document.location.host + "/" + $(this).attr('data-type-name').replace(" ", "-")/* + "?location=" + $("#provinceSelect option[selected=selected]").text().replace(" ", "-")*/;
+                $(this).attr("href", url)
+            });
+        });
+
+
+        GetProductList();
+
+        
+
+        var scrollPosition = 0;
+        var scrollDirection;
+        $(window).scroll(function () {
+            scrollDirection = (document.body.getBoundingClientRect()).top > scrollPosition ? 'up' : 'down';
+            scrollPosition = (document.body.getBoundingClientRect()).top;
+            if ($(window).scrollTop() + $(window).height() >= $("#productList").height()) {
+                if (scrollDirection == "down") {
+                    $("#btnLoadMore").click();
+                }
+            }
+        });
+
+        $("#btnLoadMore").on("click", function () {
+            var lastProductId = parseInt($('#productList').children().last().attr("product-id"));
+            var showNext10Products = false;
+            var counter = 0;
+            $.each(allProductList, function (i, item) {
+                if (item.id == lastProductId) {
+                    showNext10Products = true
+                    return true;
+                }
+                if (showNext10Products) {
+                    if (counter < 10) {
+                        var url = "/product/" + item.id;
+                        var template = $("#productTemplate").children().clone();
+                        template.attr("product-id", item.id);
+
+                        template.find('.product-img').attr('data-src', item.imageFolderUrl[0]).attr('alt', item.title).addClass("lazyload");
+                        if (item.dealTypeId == 1)
+                            template.find('.product-price').html(item.pointsRequired + " VPoints");
+                        else if (item.dealTypeId == 2) {
+                            if (item.discountRate == 0) {
+                                 template.find('.product-price').html("RM" + item.discountedPrice.toFixed(2));
+                            }
+                            else {
+                                template.find('.product-price').html("<del>RM" + item.price.toFixed(2) + "</del> RM" + item.discountedPrice.toFixed(2));
+                                template.find('.badge').html(item.discountRate + " % OFF");
+                                template.find('.product-discount').show();
+                            }
+                        }
+                        template.find('.product-name').html(item.title);
+                        template.find('.product-link').attr('href', url);
+                        template.find('.product-type-name').html(item.productSubCategory);
+                        //template.find('.product-description').html(item.description);
+
+                        template.find('.merchant-name').html(item.merchantName);
+
+                        template.find('.addtocart-btn').attr('data-id', item.id);
+                        template.find('.addtocart-btn').attr('data-summary', item.ProductSummary);
+                        template.find('.addtocart-btn').attr('data-points', item.PointsRequired);
+                        template.find('.addtocart-btn').attr('data-name', item.Name);
+                        template.find('.addtocart-btn').attr('data-thumbnail-photo', item.ProductThumbnailImageUrl);
+                        template.find('.addtocart-btn').attr('data-type-name', item.ProductTypeName);
+                        template.find('.addtocart-btn').attr('data-type', item.ProductType);
+                        $('#productList').append(template);
+                        counter++;
+                    }
+                }
+            });
+            if (lastProductId == parseInt($('#productList').children().last().attr("product-id"))) {
+                $("#btnLoadMore").css("display", "none");
+                $("#btnNoMore").css("display", "inline-block");
+            }
+            $(".addtocart-btn").unbind().click(function () {
+                location.href = "/product/" + $(this).attr('data-id');
+            });
+
+        });
+
+    });
+
+        var allProductList = [];
+        var allFilteredProductList = [];
+        var productListFirstLoad = true;
+    $(".selectedProductType").click(function () {
+        document.location ="/search?keyword=" + $(this).attr('data-type-name').replace(" ", "%20") /*+ "?location=" + $("#provinceSelect option:selected").text().replace(" ", "-")*/;
+    });
+
+        $("#orderSorting").change(function () {
+            $(".selectedProductType").each(function () {
+                if ($(this).hasClass('active')) {
+                    currentPage = 0;
+                    clearList = true;
+                    getProductListByType($(this).attr('data-type-id'));
+                }
+            });
+        });
+        GetMerchantList();
+        //$(".selectedProductType").first().trigger('click');
+
+    var hotProductsHtml = "";
+        function GetProductList() {
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                data: {provinceId : vodusUser_config.getUserProvince()},
+                url: '@Url.Action("GetProductListByProvince", "Home")',
+                success: function (response) {
+                    if (response.successful) {
+                        if (response.data != null) {
+                            if (response.data.length > 0) {
+                                var count = 0;
+                                if ($(window).width() > 1482) {
+                                    numberOfItemsShown = 3
+                                }
+                                else {
+                                    numberOfItemsShown = 2
+                                }
+
+                                var productGroup = [""];
+                                hotProductsHtml = "";
+                                $.each(response.data, function (i, item) {
+                                    allProductList = response.data;
+                                    var productlist = "";
+                                    if (count < numberOfItemsShown) {
+                                        productlist = productGroup[productGroup.length - 1];
+                                    }
+                                    else {
+                                        count = 0;
+                                        productGroup.push(productlist);
+                                    }
+                                    var url = "/product/" + item.id;
+                                    var template = $("#newProductTemplate").children().clone();
+
+                                    template.find('.no-gutters').attr("product-id", item.id);
+                                    template.find('.img-fluid').attr('data-src', item.imageFolderUrl[0]).attr('alt', item.title).addClass("lazyload");
+
+                                    template.find('.card-title').html(item.title);
+                                    template.find('.btn-addtocart').attr('href', url);
+                                    template.find('.card-category').html(item.productCategory);
+
+                                    if (item.dealTypeId == 1)
+                                        template.find('.product-price').html(item.pointsRequired + " VPoints");
+                                    else if (item.dealTypeId == 2) {
+                                        if (item.discountRate == 0) {
+                                            template.find('.product-price').html("RM" + item.discountedPrice.toFixed(2));
+                                        }
+                                        else {
+                                            template.find('.product-price').html("<del>RM" + item.price.toFixed(2) + "</del> RM" + item.discountedPrice.toFixed(2));
+                                            template.find('.badge').html(item.discountRate + " % OFF");
+                                            template.find('.product-discount').show();
+                                        }
+                                    }
+                                    template.find('.card-merchant').html(item.merchantName);
+                                    if (item.totalOutlets == 1) {
+                                        template.find('.card-location').html('<i class="fas fa-map-marker" aria-hidden="true"></i>' + item.outletName[0]);
+                                    }
+                                    else {
+                                        template.find('.card-location').html('<i class="fas fa-map-marker" aria-hidden="true"></i>' + "Available in " + item.totalOutlets + " locations");
+                                    }
+                                    template.find('.product-link').attr('href', url);
+                                    hotProductsHtml = hotProductsHtml + $(template).html();
+                                    productlist = productlist + $(template).html();
+                                    productGroup[productGroup.length - 1] = productlist;
+                                    count++;
+                                });
+
+                                $("#displayNoItems").hide();
+
+                                // for our Deals
+                                var counter = 0;
+                                $("#productList").html("");
+                                $.each(response.data, function (i, item) {
+                                    allFilteredProductList = response.data;
+                                    if (counter < 10) {
+                                        var productlist = "";
+                                        var url = "/product/" + item.id;
+                                        var template = $("#productTemplate").children().clone();
+
+                                        template.attr("product-id", item.id);
+                                        template.find('.product-img').attr('data-src', item.imageFolderUrl[0]).attr('alt', item.title).addClass("lazyload");
+                                        //template.find('.product-price').html("<del>RM" + item.price.toFixed(2) + "</del><br />Only RM" + item.discountedPrice);
+                                        if (item.dealTypeId == 1)
+                                            template.find('.product-price').html(item.pointsRequired + " VPoints");
+                                        else if (item.dealTypeId == 2) {
+                                            if (item.discountRate == 0) {
+                                                template.find('.product-price').html("RM" + item.discountedPrice.toFixed(2));
+                                            }
+                                            else {
+                                                template.find('.product-price').html("<del>RM" + item.price.toFixed(2) + "</del> RM" + item.discountedPrice.toFixed(2));
+                                                template.find('.badge').html(item.discountRate + " % OFF");
+                                                template.find('.product-discount').show();
+                                            }
+                                        }
+                                        template.find('.product-name').html(item.title);
+                                        template.find('.product-link').attr('href', url);
+                                        template.find('.product-type-name').html(item.productSubCategory);
+                                        //template.find('.product-description').html(item.description);
+                                        template.find('.merchant-name').html(item.merchantName);
+                                        //if (item.ProductType == 2) {
+                                        //    template.find('.product-description').html("Draw date: " + moment(item.LuckyDrawDate).format('DD-MM-YYYY') + "<br/>" + "Tickets issued: " + item.LuckyDrawTicketIssued);
+                                        //}
+                                        //else {
+                                        //    template.find('.product-description').html(item.ProductSummary);
+                                        //}
+
+                                        //template.find('.viewDetail').attr('href', newUrl);
+                                        template.find('.addtocart-btn').attr('data-id', item.id);
+                                        template.find('.addtocart-btn').attr('data-summary', item.ProductSummary);
+                                        template.find('.addtocart-btn').attr('data-points', item.PointsRequired);
+                                        template.find('.addtocart-btn').attr('data-name', item.Name);
+                                        template.find('.addtocart-btn').attr('data-thumbnail-photo', item.ProductThumbnailImageUrl);
+                                        template.find('.addtocart-btn').attr('data-type-name', item.ProductTypeName);
+                                        template.find('.addtocart-btn').attr('data-type', item.ProductType);
+                                        //template.find('.addtocart-btn').attr('href', url);
+                                        //$('#productList').append(template);
+                                        counter++;
+                                    }
+                                });
+                                $(".addtocart-btn").click(function () {
+                                    location.href = "/product/" + $(this).attr('data-id');
+                                });
+                                $("#btnLoadMore").css("display", "inline-block");
+                                $("#btnNoMore").css("display", "none");
+                            }
+                        }
+                        else {
+                            $("#carouselProductControls").hide();
+                            $("#displayNoItems").show();
+                        }
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+            GetRewardsAdsProductList();
+            //GetRewardsAdsAIProductList();
+     }
+        function GetRewardsAdsProductList() {
+            $("#carouselProductControls").hide();
+            $("#carouselProductList").html("");
+            $(".carousel-indicators").html("");
+            $('.carousel').carousel();
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                url: '@Url.Action("GetRewardsAdsProductList", "Home")',
+                success: function (response) {
+                    if (response.successful) {
+                        if (response.data != null) {
+                            if (response.data.length > 0) {
+                                var count = 0;
+                                if ($(window).width() > 1482) {
+                                    numberOfItemsShown = 4
+                                } else if ($(window).width() > 1100) {
+                                    numberOfItemsShown = 3
+                                } else {
+                                    numberOfItemsShown = 2
+                                }
+
+                                var productGroup = [""];
+                                // hotProductsHtml = "";
+                                $.each(response.data, function (i, item) {
+                                    var productlist = "";
+                                    if (count < numberOfItemsShown) {
+                                        productlist = productGroup[productGroup.length - 1];
+                                    }
+                                    else {
+                                        count = 0;
+                                        productGroup.push(productlist);
+                                    }
+                                    var url = "/product/" + item.id;
+                                    var template = $("#newProductTemplate").children().clone();
+
+                                    template.find('.no-gutters').attr("product-id", item.id);
+                                    template.find('.img-fluid').attr('data-src', item.imageFolderUrl[0]).attr('alt', item.title).addClass("lazyload");
+                                    template.find('.card-title').html(item.title);
+                                    template.find('.btn-addtocart').attr('href', url);
+                                    template.find('.card-category').html(item.productCategory);
+                                    if (item.rating == 0.00)
+                                        template.find('.product-rating').hide();
+                                    else
+                                        template.find('.product-rating-score').html(item.rating.toFixed(1));
+                                    if (item.dealTypeId == 1)
+                                        template.find('.product-price').html(item.pointsRequired + " VPoints");
+                                    else if (item.dealTypeId == 2) {
+                                        if (item.discountRate == 0) {
+                                            template.find('.product-price').html("RM" + item.discountedPrice.toFixed(2));
+                                        }
+                                        else {
+                                            template.find('.product-price').html("<del>RM" + item.price.toFixed(2) + "</del> RM" + item.discountedPrice.toFixed(2));
+                                            template.find('.badge').html(item.discountRate + " % OFF");
+                                            template.find('.product-discount').show();
+                                        }
+                                    }
+                                    template.find('.card-merchant').html(item.merchantName);
+                                    if (item.totalOutlets == 1) {
+                                        template.find('.card-location').html('<i class="fas fa-map-marker" aria-hidden="true"></i>' + item.outletName[0]);
+                                    }
+                                    else {
+                                        template.find('.card-location').html('<i class="fas fa-map-marker" aria-hidden="true"></i>' + "Available in " + item.totalOutlets + " locations");
+                                    }
+                                    template.find('.product-link').attr('href', url);
+                                    //  hotProductsHtml = hotProductsHtml+$(template).html();
+                                    productlist = productlist + $(template).html();
+                                    productGroup[productGroup.length - 1] = productlist;
+                                    count++;
+                                });
+                                var carouselString = "";
+                                $.each(productGroup, function (i, item) {
+                                    if (i == 0) {
+                                        carouselString = carouselString + "<div class='carousel-item active'> <div class='card-deck'>" +
+                                            item + "</div></div>";
+                                        $(".carousel-indicators").append('<li data-target="#carouselProductControls" data-slide-to="0" class="active"></li>');
+                                    }
+                                    else {
+                                        carouselString = carouselString + "<div class='carousel-item'> <div class='card-deck' >" +
+                                            item + "</div></div>";
+                                        $(".carousel-indicators").append('<li data-target="#carouselProductControls" data-slide-to="' + i + '"></li>');
+                                    }
+                                });
+
+                                //  $("#displayNoItems").hide();
+                                $("#carouselProductControls").show();
+                                $("#carouselProductList").html(carouselString);
+                                $('.carousel').carousel({
+                                    responsive: {
+                                        0: {
+                                            items: 1,
+                                            nav: true
+                                        },
+                                        600: {
+                                            items: 3,
+                                            nav: false
+                                        },
+                                        1000: {
+                                            items: 5,
+                                            nav: true,
+                                            loop: false
+                                        }
+                                    }
+                                });
+
+                                $(".addtocart-btn").click(function () {
+                                    location.href = "/product/" + $(this).attr('data-id');
+                                });
+                                $("#btnLoadMore").css("display", "inline-block");
+                                $("#btnNoMore").css("display", "none");
+                            }
+                        }
+                        else {
+                            $("#carouselProductControls").hide();
+                            $("#displayNoItems").show();
+                        }
+                    } 
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+     }
+        function GetRewardsAdsAIProductList() {
+            $("#carouselProductControls").hide();
+            $("#carouselProductList").html("");
+            $(".carousel-indicators").html("");
+            $('.carousel').carousel();
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                data: { provinceId: vodusUser_config.getUserProvince() },
+                url: '@Url.Action("GetProductListFromRewardsAdsAI", "Home")',
+                success: function (response) {
+                    if (response.successful) {
+                        if (response.data != null) {
+                            if (response.data.length > 0) {
+                                var count = 0;
+                                if ($(window).width() > 1482) {
+                                    numberOfItemsShown = 3
+                                }
+                                else {
+                                    numberOfItemsShown = 2
+                                }
+
+                                var productGroup = [""];
+                                // hotProductsHtml = "";
+                                $.each(response.data, function (i, item) {
+                                    allProductList = response.data;
+                                    var productlist = "";
+                                    if (count < numberOfItemsShown) {
+                                        productlist = productGroup[productGroup.length - 1];
+                                    }
+                                    else {
+                                        count = 0;
+                                        productGroup.push(productlist);
+                                    }
+                                    var url = "/product/" + item.id;
+                                    var template = $("#newProductTemplate").children().clone();
+
+                                    template.find('.no-gutters').attr("product-id", item.id);
+                                    template.find('.img-fluid').attr('data-src', item.imageFolderUrl[0]).addClass("lazyload");
+                                    template.find('.card-title').html(item.title);
+                                    template.find('.btn-addtocart').attr('href', url);
+                                    template.find('.card-category').html(item.productCategory);
+                                    if (item.rating == 0.00)
+                                        template.find('.product-rating').hide();
+                                    else
+                                        template.find('.product-rating-score').html(item.rating.toFixed(1));
+                                    if (item.dealTypeId == 1)
+                                        template.find('.product-price').html(item.pointsRequired + " VPoints");
+                                    else if (item.dealTypeId == 2) {
+                                        if (item.discountRate == 0) {
+                                            template.find('.product-price').html("RM" + item.discountedPrice.toFixed(2));
+                                        }
+                                        else {
+                                            template.find('.product-price').html("<del>RM" + item.price.toFixed(2) + "</del> RM" + item.discountedPrice.toFixed(2));
+                                            template.find('.badge').html(item.discountRate + " % OFF");
+                                            template.find('.product-discount').show();
+                                        }
+                                    }
+                                    template.find('.card-merchant').html(item.merchantName);
+                                    if (item.totalOutlets == 1) {
+                                        template.find('.card-location').html('<i class="fas fa-map-marker" aria-hidden="true"></i>' + item.outletName[0]);
+                                    }
+                                    else {
+                                        template.find('.card-location').html('<i class="fas fa-map-marker" aria-hidden="true"></i>' + "Available in " + item.totalOutlets + " locations");
+                                    }
+                                    template.find('.product-link').attr('href', url);
+                                    //  hotProductsHtml = hotProductsHtml+$(template).html();
+                                    productlist = productlist + $(template).html();
+                                    productGroup[productGroup.length - 1] = productlist;
+                                    count++;
+                                });
+                                var carouselString = "";
+                                $.each(productGroup, function (i, item) {
+                                    if (i == 0) {
+                                        carouselString = carouselString + "<div class='carousel-item active'> <div class='card-deck'>" +
+                                            item + "</div></div>";
+                                        $(".carousel-indicators").append('<li data-target="#carouselProductControls" data-slide-to="0" class="active"></li>');
+                                    }
+                                    else {
+                                        carouselString = carouselString + "<div class='carousel-item'> <div class='card-deck' >" +
+                                            item + "</div></div>";
+                                        $(".carousel-indicators").append('<li data-target="#carouselProductControls" data-slide-to="' + i + '"></li>');
+                                    }
+                                });
+
+                                //  $("#displayNoItems").hide();
+                                $("#carouselProductControls").show();
+                                $("#carouselProductList").html(carouselString);
+                                $('.carousel').carousel({
+                                    responsive: {
+                                        0: {
+                                            items: 1,
+                                            nav: true
+                                        },
+                                        600: {
+                                            items: 3,
+                                            nav: false
+                                        },
+                                        1000: {
+                                            items: 5,
+                                            nav: true,
+                                            loop: false
+                                        }
+                                    }
+                                });
+
+                                $(".addtocart-btn").click(function () {
+                                    location.href = "/product/" + $(this).attr('data-id');
+                                });
+                                $("#btnLoadMore").css("display", "inline-block");
+                                $("#btnNoMore").css("display", "none");
+                            }
+                        }
+                        else {
+                            $("#carouselProductControls").hide();
+                            $("#displayNoItems").show();
+                        }
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+     }
+
+    function GetMerchantList() {
+        //$("#hotMerchantList").html("");
+        var merchantList = "";
+        $.ajax({
+            type: "GET",
+            dataType: 'json',
+            url: '@Url.Action("GetMerchantList", "Home")',
+            success: function (response) {
+                if (response.successful) {
+                    if (response.data != null) {
+                        $.each(response.data, function (i, item) {
+                            if (item.logoUrl == "" || item.logoUrl == null) {
+                                return true;
+                            }
+                            merchantList = merchantList + "<a href='/shop/" + item.id + "'> <img data-src='" + item.logoUrl + "' class='img-thumbnail lazyload' alt='" + item.displayName + "'></a>";
+                        });
+                        //  Add giftee merchants
+                        merchantList += "<a href='/shop/1000'><img data-src='https://vodus.my/giftee/sushiking/logo.png' class='img-thumbnail lazyload' alt='Sushi king vouchers'></a>";
+                        merchantList += "<a href='/shop/1001'><img data-src='https://vodus.my/giftee/llaollao/logo.png' class='img-thumbnail lazyload' alt='Llao llao vouchers'></a>";
+                        merchantList += "<a href='/shop/1002'><img data-src='https://vodus.my/giftee/hokkaido/logo.jpeg' class='img-thumbnail lazyload' alt='Hokkaido baked cheese tart vouchers'></a>";
+                        merchantList += "<a href='/shop/1003'><img data-src='https://vodus.my/giftee/bigapple/logo.png' class='img-thumbnail lazyload' alt='big apple donuts vouchers'></a>";
+                        merchantList += "<a href='/shop/1004'><img data-src='https://vodus.my/giftee/tealive/logo.jpeg' class='img-thumbnail lazyload' alt='tealive drinks vouchers'></a>";
+
+                        $("#hotMerchantList").html($("#hotMerchantList").html() + merchantList);
+                        $('.customer-logos').slick({
+                            slidesToShow: 6,
+                            slidesToScroll: 1,
+                            autoplay: true,
+                            autoplaySpeed: 1500,
+                            arrows: false,
+                            dots: false,
+                            pauseOnHover: false,
+                            responsive: [{
+                                breakpoint: 992,
+                                settings: {
+                                    slidesToShow: 5
+                                }
+                            },{
+                                breakpoint: 768,
+                                settings: {
+                                    slidesToShow: 4
+                                }
+                            }, {
+                                breakpoint: 530,
+                                settings: {
+                                    slidesToShow:3
+                                }
+                            }, {
+                                breakpoint: 410,
+                                settings: {
+                                    slidesToShow:2
+                                }
+                            }]
+                        });
+                        $(".customer-logos").css("display", "block");
+
+                    }
+                }
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+
+    function getProductListByType(type) {
+
+        $("#carouselProductControls").hide();
+        var sortBy = $("#orderSorting").val();
+        $(".orderSorting").each(function () {
+            if ($(this).hasClass('active')) {
+                sortBy = $(this).attr('data-sort-by');
+            }
+        });
+        if (clearList) {
+            //$("#productList").html("");
+            $("#noProduct").css("display", "none");
+            $("#carouselProductList").html("");
+            $(".carousel-indicators").html("")
+            $('.carousel').carousel();
+        }
+
+        $.ajax({
+            type: 'GET',
+            data: { type: type },
+            url: '@Url.Action("GetProductByType", "Home")',
+            success: function (response) {
+                if (response.successful) {
+                    if (response.data.length > 0) {
+                        var count = 0;
+                        var productGroup = [""];
+                        $.each(response.data, function (i, item) {
+                            var productlist = "";
+                            if (count < 2) {
+                                productlist = productGroup[productGroup.length - 1];
+                            }
+                            else {
+                                count = 0;
+                                productGroup.push(productlist);
+                            }
+                            var url = "/product/" + item.id;
+                            var template = $("#newProductTemplate").children().clone();
+
+                            template.find('.img-fluid').attr('data-src', item.imageFolderUrl[0]).attr('alt', item.title).addClass("lazyload");
+                            template.find('.card-title').html(item.title);
+                            template.find('.card-category').html(item.productCategory);
+                            if (item.dealTypeId == 1)
+                                template.find('.product-price').html(item.pointsRequired + " VPoints");
+                            else if (item.dealTypeId == 2) {
+                                if (item.discountRate == 0) {
+                                     template.find('.product-price').html("RM" + item.discountedPrice.toFixed(2));
+                                }
+                                else {
+                                    template.find('.product-price').html("<del>RM" + item.price.toFixed(2) + "</del> RM" + item.discountedPrice.toFixed(2));
+                                    template.find('.badge').html(item.discountRate + " % OFF");
+                                    template.find('.product-discount').show();
+                                }
+                            }
+                            template.find('.card-merchant').html(item.merchantName);
+                            if (item.totalOutlets == 1) {
+                                template.find('.card-location').html(item.outletName[0]);
+                            }
+                            else {
+                                template.find('.card-location').html("Available in " + item.totalOutlets + " locations");
+                            }
+                            template.find('.product-link').attr('href', url);
+                            productlist = productlist + $(template).html();
+                            productGroup[productGroup.length - 1] = productlist;
+                            count++;
+                        });
+                        var carouselString = "";
+                        $.each(productGroup, function (i, item) {
+                            if (i == 0) {
+                                carouselString = carouselString + "<div class='carousel-item active'> <div class='card-deck'>" +
+                                    item + "</div></div>";
+                                $(".carousel-indicators").append('<li data-target="#carouselProductControls" data-slide-to="0" class="active"></li>');
+                            }
+                            else {
+                                carouselString = carouselString + "<div class='carousel-item'> <div class='card-deck'>" +
+                                    item + "</div></div>";
+                                $(".carousel-indicators").append('<li data-target="#carouselProductControls" data-slide-to="'+i+'"></li>');
+
+                            }
+                        });
+                        $("#carouselProductControls").show();
+                        $("#displayNoItems").hide();
+                        $("#carouselProductList").html(carouselString);
+                        $('.carousel').carousel();
+                        console.log(carouselString);
+                    }
+                    else {
+                        $("#carouselProductControls").hide();
+                        $("#displayNoItems").show();
+                        if (currentPage == 1) {
+                            $("#noProduct").css("display", "block");
+                        }
+                        else {
+
+
+                        }
+                    }
+                }
+            },
+            error: function () {
+                $("#loaderContainer").hide();
+            }
+        });
+    }
+
+
+    function GetProductSubcategoryList(categoryId) {
+        $.ajax({
+            type: "GET",
+            dataType: 'json',
+            async: true,
+            data: { categoryId: categoryId },
+            url: '@Url.Action("GetProductSubcategoryList", "Home")',
+            success: function (response) {
+                if (response.successful) {
+                    if (response.data != null) {
+                        var categoryList = "";
+                        $.each(response.data, function (i, item) {
+                            categoryList = categoryList + "<div class='custom-control custom-checkbox'>" +
+                                "<input type='checkbox' class='subcategoryfilter custom-control-input' id='cat-" + item.id + "' data-id='" + item.id + "'>" +
+                                "<label class='custom-control-label' for='cat-" + item.id + "'>" + item.name + "</label></div>";
+                        });
+                        $("#productSubategoryFilter").html(categoryList);
+                        $(".subcategoryfilter").change(function () {
+                            var filterList = Array();
+                            $(".subcategoryfilter").each(function () {
+                                if ($(this).prop("checked")) {
+                                    filterList.push($(this).attr("data-id"));
+                                }
+                            });
+
+                            GetProductBySubcategoryList(filterList);
+                        });
+                    }
+                } else
+                    toastr.error(response.message);
+            },
+            error: function (error) {
+                toastr.error(error);
+            }
+        });
+    }
+    function GetProductBySubcategoryList(type) {
+        $("#carouselProductControls").hide();
+        var sortBy = $("#orderSorting").val();
+        $(".orderSorting").each(function () {
+            if ($(this).hasClass('active')) {
+                sortBy = $(this).attr('data-sort-by');
+            }
+        });
+        if (clearList) {
+            //$("#productList").html("");
+            $("#noProduct").css("display", "none");
+            $("#carouselProductList").html("");
+            $(".carousel-indicators").html("");
+            $('.carousel').carousel();
+        }
+        $.ajax({
+            type: 'GET',
+            dataType: "json",
+            contentType: 'application/json',
+            data: { filter: JSON.stringify(type) },
+            url: '@Url.Action("GetProductBySubcategoryList", "Home")',
+            success: function (response) {
+                if (response.successful) {
+                    if (response.data.length > 0) {
+                        var count = 0;
+                        var productGroup = [""];
+                        $.each(response.data, function (i, item) {
+                            var productlist = "";
+                            if (count < 2) {
+                                productlist = productGroup[productGroup.length - 1];
+                            }
+                            else {
+                                count = 0;
+                                productGroup.push(productlist);
+                            }
+                            var url = "/product/" + item.id;
+                            var template = $("#newProductTemplate").children().clone();
+
+                            template.find('.img-fluid').attr('data-src', item.imageFolderUrl[0]).attr('alt', item.title).addClass("lazyload");
+                            template.find('.card-title').html(item.title);
+                            template.find('.card-category').html(item.productCategory);
+                            if (item.dealTypeId == 1)
+                                template.find('.product-price').html(item.pointsRequired + " VPoints");
+                            else if (item.dealTypeId == 2) {
+                                if (item.discountRate == 0) {
+                                    template.find('.product-price').html("RM" + item.discountedPrice.toFixed(2));
+                                }
+                                else {
+                                    template.find('.product-price').html("<del>RM" + item.price.toFixed(2) + "</del> RM" + item.discountedPrice.toFixed(2));
+                                    template.find('.badge').html(item.discountRate + " % OFF");
+                                    template.find('.product-discount').show();
+                                }
+                            }
+                            template.find('.card-merchant').html(item.merchantName);
+                            if (item.totalOutlets == 1) {
+                                template.find('.card-location').html(item.outletName[0]);
+                            }
+                            else {
+                                template.find('.card-location').html("Available in " + item.totalOutlets + " locations");
+                            }
+                            template.find('.product-link').attr('href', url);
+                            productlist = productlist + $(template).html();
+                            productGroup[productGroup.length - 1] = productlist;
+                            count++;
+                        });
+                            var carouselString = "";
+                            $.each(productGroup, function (i, item) {
+                                if (i == 0) {
+                                    carouselString = carouselString + "<div class='carousel-item active'> <div class='card-deck'>" +
+                                        item + "</div></div>";
+                                    $(".carousel-indicators").append('<li data-target="#carouselProductControls" data-slide-to="0" class="active"></li>');
+                                }
+                                else {
+                                    carouselString = carouselString + "<div class='carousel-item'> <div class='card-deck'>" +
+                                        item + "</div></div>";
+                                    $(".carousel-indicators").append('<li data-target="#carouselProductControls" data-slide-to="'+i+'"></li>');
+
+                                }
+                            });
+                            $("#carouselProductControls").show();
+                            $("#displayNoItems").hide();
+                            $("#carouselProductList").html(carouselString);
+                            $('.carousel').carousel();
+                        }
+                        else {
+                            $("#carouselProductControls").hide();
+                            $("#displayNoItems").show();
+                            if (currentPage == 1) {
+                            $("#noProduct").css("display", "block");
+                        }
+                        else {
+
+
+                        }
+                    }
+                }
+                else {
+                    toastr.error(response.message);
+                }
+            },
+            error: function () {
+                $("#loaderContainer").hide();
+            }
+        });
+    }
+
+    //Rotating word
+    var $intro_h = $('.intro p');
+    var rotate_classes = 'rotate-title ' + $('.intro').data('animation');
+    $intro_h.addClass(rotate_classes);
+    var animationDelay = 2500
+        , barAnimationDelay = 3800
+        , barWaiting = barAnimationDelay - 3000
+        , lettersDelay = 50
+        , typeLettersDelay = 150
+        , selectionDuration = 500
+        , typeAnimationDelay = selectionDuration + 800
+        , revealDuration = 600
+        , revealAnimationDelay = 1500;
+    initHeadline();
+    function initHeadline() {
+        singleLetters($('.rotate-title.letters').find('strong'));
+        animateHeadline($('.intro p'))
+    }
+    function singleLetters($words) {
+        $words.each(function () {
+            var word = $(this)
+                , letters = word.text().split('')
+                , selected = word.hasClass('is-visible');
+            for (var i in letters) {
+                if (word.parents('.rotate-2').length > 0)
+                    letters[i] = '<em>' + letters[i] + '</em>';
+                letters[i] = (selected) ? '<i class="in">' + letters[i] + '</i>' : '<i>' + letters[i] + '</i>'
+            }
+            var newLetters = letters.join('');
+            word.html(newLetters).css('opacity', 1)
+        })
+    }
+    function animateHeadline($headlines) {
+        var duration = animationDelay;
+        $headlines.each(function () {
+            var headline = $(this);
+            if (headline.hasClass('loading-bar')) {
+                duration = barAnimationDelay;
+                setTimeout(function () {
+                    headline.find('.words-wrapper').addClass('is-loading')
+                }, barWaiting)
+            } else if (headline.hasClass('clip')) {
+                var spanWrapper = headline.find('.words-wrapper')
+                    , newWidth = spanWrapper.width() + 10
+                spanWrapper.css('width', newWidth)
+            }
+            ; setTimeout(function () {
+                hideWord(headline.find('.is-visible').eq(0))
+            }, duration)
+        })
+    }
+    function hideWord($word) {
+        var nextWord = takeNext($word);
+        if ($word.parents('.rotate-title').hasClass('type')) {
+            var parentSpan = $word.parent('.words-wrapper');
+            parentSpan.addClass('selected').removeClass('waiting');
+            setTimeout(function () {
+                parentSpan.removeClass('selected');
+                $word.removeClass('is-visible').addClass('is-hidden').children('i').removeClass('in').addClass('out')
+            }, selectionDuration);
+            setTimeout(function () {
+                showWord(nextWord, typeLettersDelay)
+            }, typeAnimationDelay)
+        } else if ($word.parents('.rotate-title').hasClass('letters')) {
+            var bool = ($word.children('i').length >= nextWord.children('i').length) ? !0 : !1; hideLetter($word.find('i').eq(0), $word, bool, lettersDelay);
+            showLetter(nextWord.find('i').eq(0), nextWord, bool, lettersDelay)
+        } else if ($word.parents('.rotate-title').hasClass('clip')) {
+            $word.parents('.words-wrapper').animate({
+                width: '2px'
+            }, revealDuration, function () {
+                switchWord($word, nextWord); showWord(nextWord)
+            })
+        } else if ($word.parents('.rotate-title').hasClass('loading-bar')) {
+            $word.parents('.words-wrapper').removeClass('is-loading');
+            switchWord($word, nextWord); setTimeout(function () {
+                hideWord(nextWord)
+            }, barAnimationDelay);
+            setTimeout(function () {
+                $word.parents('.words-wrapper').addClass('is-loading')
+            }, barWaiting)
+        } else {
+            switchWord($word, nextWord);
+            setTimeout(function () { hideWord(nextWord) }, animationDelay)
+        }
+    }
+
+    function takeNext($word) {
+        return (!$word.is(':last-child')) ? $word.next() : $word.parent().children().eq(0)
+    }
+
+    function takePrev($word) {
+        return (!$word.is(':first-child')) ? $word.prev() : $word.parent().children().last()
+    }
+
+    function switchWord($oldWord, $newWord) {
+        $oldWord.removeClass('is-visible').addClass('is-hidden');
+        $newWord.removeClass('is-hidden').addClass('is-visible')
+    }
+
+
+        function addVPointDiscount(template, item) {
+            var discountedPriceList = [];
+
+            var maxDiscountedPrice = Math.max.apply(Math, discountedPriceList);
+            var VPointDiscountRate = 0;
+            if (maxDiscountedPrice < 50) {
+                VPointDiscountRate = 0.12;
+            } else if (maxDiscountedPrice < 100) {
+                VPointDiscountRate = 0.08;
+            } else if (maxDiscountedPrice < 200) {
+                VPointDiscountRate = 0.06;
+            } else if (maxDiscountedPrice < 300) {
+                VPointDiscountRate = 0.05;
+            } else if (maxDiscountedPrice < 400) {
+                VPointDiscountRate = 0.04;
+            }
+
+            var newItemdiscountPrice = item.discountedPrice * (1 - VPointDiscountRate);
+            if (item.price > 0) {
+                var originalPrice = item.price
+            } else {
+                var originalPrice = item.discountedPrice
+            }
+            var newItemdiscountRate = (100 * (originalPrice - newItemdiscountPrice) / originalPrice).toFixed(0);
+
+            if (newItemdiscountRate == 0) {
+                template.find('.product-price').html("RM" + newItemdiscountPrice.toFixed(2));
+            }
+            else {
+                template.find('.product-price').html("<del>RM" + originalPrice.toFixed(2) + "</del> RM" + newItemdiscountPrice.toFixed(2));
+                template.find('.badge').html(newItemdiscountRate + " % OFF");
+                template.find('.product-discount').show();
+            }
+        }
+
+
+    function getProductsByCategory(type) {
+        $.ajax({
+            type: 'GET',
+            data: { type: type, page: 1 },
+            url: '@Url.Action("GetProductByType", "Home")',
+            success: function (response) {
+                if (response.successful) {
+                    if (response.data.length > 0) {
+                        $(response.data).each(function () {
+                           
+                            var item = this;
+                            if (item.productImage == null || item.productImage == "") {
+                                return;
+                            }
+
+                            var url = "/product/" + item.id;
+                            if (item.externalItemId != null && item.externalItemId != "") {
+                                url += "?i=" + item.externalItemId + "&s=" + item.externalShopId + "&t=" + item.externalTypeId;
+                            }
+                            var template = $("#productTemplate").children().clone();
+
+                            if (item.totalSold == 0) {
+                                template.find('.sold-box').hide();
+                            } else {
+                                template.find('.product-total-sold').text(numberWithCommas(item.totalSold));
+                            }
+
+                            if (item.externalItemId != null && item.externalItemId != "") {
+                                addVPointDiscount(template, item);
+                            } else {
+                                if (item.dealTypeId == 1)
+                                    template.find('.product-price').html(item.pointsRequired + " VPoints");
+                                else if (item.dealTypeId == 2) {
+                                    if (item.discountRate == 0) {
+                                        template.find('.product-price').html("RM" + item.discountedPrice.toFixed(2));
+                                    }
+                                    else {
+                                        template.find('.product-price').html("<del>RM" + item.price.toFixed(2) + "</del> RM" + item.discountedPrice.toFixed(2));
+                                        template.find('.badge').html(item.discountRate + " % OFF");
+                                        template.find('.product-discount').show();
+                                    }
+                                }
+                            }
+
+                            template.attr("product-id", item.id);
+                            template.find('.product-img').attr('data-src', item.productImage).addClass("lazyload");
+
+                            template.find('.product-name').html(item.title);
+                            template.find('.product-link').attr('href', url);
+                            template.find('.product-type-name').html(item.productSubCategory);
+                            template.find('.merchant-name').html(item.merchantName);
+                            $(".product-by-category-" + type).append(template);
+
+                        });
+                        $(".product-by-category-" + type).addClass("owl-carousel");
+
+                        $(".product-by-category-" + type).owlCarousel({
+                            margin: 5,
+                            nav: true,
+                            responsive: {
+                                0: {
+                                    items: 2,
+                                    stagePadding: 7,
+                                    margin: 7
+                                },
+                                600: {
+                                    items: 3,
+                                    stagePadding: 7,
+                                    margin: 0,
+                                },
+                                1000: {
+                                    items: 4,
+                                    stagePadding: 0,
+                                    margin: 0,
+                                },
+                                1200: {
+                                    items: 5,
+                                    stagePadding: 0,
+                                    margin: 0,
+                                },
+                                1600: {
+                                    items: 6,
+                                    stagePadding: 0,
+                                    margin: 0,
+                                },
+                                1800: {
+                                    items: 7,
+                                    stagePadding: 0,
+                                    margin: 0,
+                                }
+                            },
+                            lazyLoad: true,
+                            lazyLoadEager: 7,
+                            dots: false,
+
+                        });
+                    }
+                    else {
+                        $("#carouselProductControls").hide();
+                        $("#displayNoItems").show();
+                        
+                    }
+                }
+            },
+            error: function () {
+                $("#loaderContainer").hide();
+            }
+        });
+    }
+
+    </script>
+}

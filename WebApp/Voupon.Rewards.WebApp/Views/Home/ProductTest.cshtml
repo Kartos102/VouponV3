@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewData["Title"] = "ProductTest";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>ProductTest</h1>
+
+<!-- Normal form embed code, add an ID -->
+<iframe id="gform" src="https://docs.google.com/forms/d/e/1FAIpQLSfVBnK1jI7v2nYtYCV9-AAi2Wqr37ARvwmk9HjBAZkrW5tTNQ/viewform?fbzx=6074573064717870278" width="640" height="487" frameborder="0" marginheight="0" marginwidth="0" style="margin:0 auto; max-width:100%;">Loading…</iframe>
+
+<script type="text/javascript">
+    var load = 0;
+
+    document.getElementById('gform').onload = function () {
+        /*Execute on every reload on iFrame*/
+        load++;
+        if (load > 1) {
+            /*Second reload is a submit*/
+            //document.location = "https://www.google.com/search?q=thanks&tbm=isch";
+            alert("first google Form submitted ");
+        }
+    }
+</script>
